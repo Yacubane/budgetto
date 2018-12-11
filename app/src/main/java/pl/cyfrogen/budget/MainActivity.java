@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateUI(FirebaseUser currentUser) {
         Log.d(TAG, "UpdateUI " + currentUser.getUid());
         startActivity(new Intent(MainActivity.this, MainMenuActivity.class));
+        finish();
 
         /*
 

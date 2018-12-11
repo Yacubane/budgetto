@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 public class MainMenuActivity extends BaseActivity {
 
     private Button addBudgetEntryButton;
@@ -25,6 +27,9 @@ public class MainMenuActivity extends BaseActivity {
             }
         });
         actualBudgetTextView = findViewById(R.id.actual_budget);
+
+        FirebaseDatabase.getInstance().getReference().child("entry-categories")
+                .child(getUid()).push().setValue(new EntryCategory("test"));
 
 
     }
