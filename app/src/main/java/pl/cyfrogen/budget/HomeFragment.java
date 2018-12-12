@@ -1,8 +1,10 @@
 package pl.cyfrogen.budget;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ public class HomeFragment extends Fragment {
 
     public static final CharSequence TITLE = "Home";
     private ListView favoriteListView;
+    private FloatingActionButton addEntryButton;
 
     public static HomeFragment newInstance() {
 
@@ -42,6 +45,14 @@ public class HomeFragment extends Fragment {
 
         favoriteListView = view.findViewById(R.id.favourite_categories_list_view);
         favoriteListView.setAdapter(new ItemCategoriesListViewAdapter(testModels, getActivity().getApplicationContext()));
+
+        addEntryButton = view.findViewById(R.id.add_wallet_entry_fab);
+        addEntryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getApplicationContext().startActivity(new Intent(getActivity(), AddBudgetEntryActivity.class));
+            }
+        });
     }
 
 }

@@ -13,8 +13,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true" />
 
-    <Spinner
-        android:id="@+id/select_type_spinner"
+    <EditText
+        android:id="@+id/select_type_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/select_category_spinner"
@@ -24,7 +24,15 @@
         android:id="@+id/choose_date_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/select_type_spinner"
+        android:layout_below="@+id/select_type_edittext"
         android:layout_centerHorizontal="true"
         android:text="Button" />
+
+    <Button
+        android:id="@+id/add_entry_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/choose_date_button"
+        android:layout_alignStart="@+id/choose_date_button"
+        android:text="Add" />
 </RelativeLayout>

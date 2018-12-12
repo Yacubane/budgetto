@@ -1,14 +1,10 @@
 package pl.cyfrogen.budget;
 
 import android.content.Context;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -25,7 +21,7 @@ public class ItemCategoriesListViewAdapter extends ArrayAdapter<CategoryModel> i
     }
 
     public ItemCategoriesListViewAdapter(ArrayList<CategoryModel> data, Context context) {
-        super(context, R.layout.row_item, data);
+        super(context, R.layout.favorites_listview_row, data);
         this.dataSet = data;
         this.mContext=context;
 
@@ -51,7 +47,7 @@ public class ItemCategoriesListViewAdapter extends ArrayAdapter<CategoryModel> i
 
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.row_item, parent, false);
+            convertView = inflater.inflate(R.layout.favorites_listview_row, parent, false);
             viewHolder.txtName = convertView.findViewById(R.id.item_category);
             viewHolder.txtSum = convertView.findViewById(R.id.item_sum);
 

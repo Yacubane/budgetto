@@ -20,10 +20,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class MainActivity extends AppCompatActivity {
-
+    static {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+    }
     private static final int RC_SIGN_IN = 123;
     private static final String TAG = "Budgettio";
     private FirebaseAuth mAuth;

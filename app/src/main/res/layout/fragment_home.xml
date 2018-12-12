@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/add_wallet_entry_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -20,15 +20,22 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="270dp"
-        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="60"
+        >
 
 
         <pl.cyfrogen.budget.Gauge
             android:id="@+id/gauge2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="25dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             app:gaugeEndValue="1000"
             app:gaugePointEndColor="@color/colorAccent"
             app:gaugePointSize="6"
@@ -36,8 +43,12 @@
             app:gaugeStartAngle="135"
             app:gaugeStartValue="0"
             app:gaugeStrokeCap="ROUND"
-            app:gaugeStrokeWidth="10dp"
-            app:gaugeSweepAngle="270"></pl.cyfrogen.budget.Gauge>
+            app:gaugeStrokeWidth="12dp"
+            app:gaugeSweepAngle="270"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"></pl.cyfrogen.budget.Gauge>
 
         <TextView
             android:id="@+id/textView2"
@@ -54,29 +65,36 @@
             app:layout_constraintTop_toBottomOf="@+id/gauge2" />
     </android.support.constraint.ConstraintLayout>
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
+        android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ListView
-            android:id="@+id/favourite_categories_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="160dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:paddingBottom="80dp"
-            android:clipToPadding="false"
-            android:scrollbarStyle="outsideOverlay" />
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        app:layout_constraintVertical_weight="40"
+        >
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
             android:max="100"
             android:progress="50"
-            app:layout_constraintBottom_toTopOf="@+id/favourite_categories_list_view"/>
-    </android.support.constraint.ConstraintLayout>
+            app:layout_constraintBottom_toTopOf="@+id/favourite_categories_list_view" />
+
+        <ListView
+            android:id="@+id/favourite_categories_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="80dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
