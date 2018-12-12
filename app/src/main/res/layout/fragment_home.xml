@@ -1,18 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="test"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:src="@drawable/baseline_add_white_18dp"
+        app:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <pl.cyfrogen.budget.Gauge
+            android:id="@+id/gauge2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:gaugeEndValue="1000"
+            app:gaugePointEndColor="@color/colorAccent"
+            app:gaugePointSize="6"
+            app:gaugePointStartColor="@color/colorAccent"
+            app:gaugeStartAngle="135"
+            app:gaugeStartValue="0"
+            app:gaugeStrokeCap="ROUND"
+            app:gaugeStrokeWidth="10dp"
+            app:gaugeSweepAngle="270"></pl.cyfrogen.budget.Gauge>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="100000,12$"
+            android:textSize="32dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/gauge2"
+            app:layout_constraintEnd_toStartOf="@+id/gauge2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/gauge2"
+            app:layout_constraintTop_toBottomOf="@+id/gauge2" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/favourite_categories_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false"
+            android:scrollbarStyle="outsideOverlay" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:max="100"
+            android:progress="50"
+            app:layout_constraintBottom_toTopOf="@+id/favourite_categories_list_view"/>
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
