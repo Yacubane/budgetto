@@ -3,7 +3,6 @@ package pl.cyfrogen.budget;
 import android.app.DatePickerDialog;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -20,6 +19,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+
+import pl.cyfrogen.budget.models.EntryCategory;
+import pl.cyfrogen.budget.models.EntryType;
+import pl.cyfrogen.budget.models.WalletEntry;
 
 public class AddBudgetEntryActivity extends BaseActivity {
 
@@ -39,7 +43,7 @@ public class AddBudgetEntryActivity extends BaseActivity {
 
         choosedDate = Calendar.getInstance();
 
-        addEntryButton = findViewById(R.id.add_budget_entry);
+       // addEntryButton = findViewById(R.id.add_budget_entry);
         selectCategorySpinner = findViewById(R.id.select_category_spinner);
         selectTypeSpinner = findViewById(R.id.select_type_spinner);
         chooseDateButton = findViewById(R.id.choose_date_button);
@@ -105,9 +109,15 @@ public class AddBudgetEntryActivity extends BaseActivity {
             }
         });
 
+        //todo save event listener and remove it on finish
 
 
+    }
 
+    public void addToWallet(long balanceDifference, Date entryDate, EntryCategory entryCategory, EntryType entryType) {
+        //FirebaseDatabase.getInstance().getReference().child("wallet-entries").child(getUid())
+       //         .child(walletID).push().setValue(new WalletEntry(entryCategory.category, entryType.type, entryDate.getTime(), balanceDifference));
+       // finish();
     }
 
     private void pickDate() {

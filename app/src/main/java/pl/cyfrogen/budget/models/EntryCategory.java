@@ -1,9 +1,7 @@
-package pl.cyfrogen.budget;
-
+package pl.cyfrogen.budget.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
-// [START comment_class]
 @IgnoreExtraProperties
 public class EntryCategory {
 
