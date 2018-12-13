@@ -97,7 +97,7 @@ public class FirebaseQueryLiveData extends LiveData<ListDataSet<WalletEntry>> {
             String key = dataSnapshot.getKey();
 
             if (walletEntriesIds.contains(key)) {
-                int index = walletEntries.indexOf(key);
+                int index = walletEntriesIds.indexOf(key);
                 WalletEntry oldItem = walletEntries.get(index);
                 walletEntries.set(index, item);
                 //notifyItemChanged(index);
@@ -113,6 +113,7 @@ public class FirebaseQueryLiveData extends LiveData<ListDataSet<WalletEntry>> {
 
             if (walletEntriesIds.contains(key)) {
                 int index = walletEntriesIds.indexOf(key);
+                if(index == -1) return;
                 WalletEntry item = walletEntries.get(index);
 
                 walletEntriesIds.remove(index);
@@ -121,7 +122,6 @@ public class FirebaseQueryLiveData extends LiveData<ListDataSet<WalletEntry>> {
                 //notifyItemRemoved(index);
                 walletEntriesLiveDataSet.setItemRemoved(index);
                 setValue(walletEntriesLiveDataSet);
-
             }
         }
 
