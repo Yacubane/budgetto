@@ -13,7 +13,7 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:src="@drawable/baseline_add_white_18dp"
-        app:backgroundTint="@color/colorAccent"
+        app:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -21,7 +21,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#3f3f4c"
+        android:background="#212121"
         app:layout_constraintBottom_toTopOf="@+id/bottom_layout"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_weight="50">
@@ -50,7 +50,7 @@
                 app:layout_constraintHorizontal_bias="0.95"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
                 app:layout_constraintTop_toTopOf="@+id/gauge2"
-                app:layout_constraintVertical_bias="0.9" />
+                app:layout_constraintVertical_bias="0.93" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -85,7 +85,7 @@
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="@+id/gauge2"
                 app:layout_constraintTop_toTopOf="@+id/gauge2"
-                app:layout_constraintVertical_bias="0.9" />
+                app:layout_constraintVertical_bias="0.93" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/guideline2"

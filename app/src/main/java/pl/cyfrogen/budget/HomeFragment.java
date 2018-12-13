@@ -69,7 +69,7 @@ public class HomeFragment extends BaseFragment {
         });
 
         gauge = view.findViewById(R.id.gauge2);
-        gauge.setValue(20);
+        gauge.setValue(50);
 
     }
 
