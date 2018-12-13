@@ -105,7 +105,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/gauge2"
                 app:layout_constraintHorizontal_bias="0.076"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
             <TextView
                 android:id="@+id/textView7"
@@ -154,9 +154,8 @@
                 android:id="@+id/gauge2"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:gaugeEndValue="1000"
+                app:gaugeEndValue="100"
                 app:gaugePointEndColor="#eceff1"
-                app:gaugePointSize="6"
                 app:gaugePointStartColor="#eceff1"
                 app:gaugeStartAngle="135"
                 app:gaugeStartValue="0"
@@ -165,8 +164,10 @@
                 app:gaugeSweepAngle="270"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"></pl.cyfrogen.budget.Gauge>
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"></pl.cyfrogen.budget.Gauge>
         </android.support.constraint.ConstraintLayout>
 
 
@@ -181,17 +182,27 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
         app:layout_constraintVertical_weight="50"
         >
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:max="100"
-            android:progress="50"
-            app:layout_constraintBottom_toTopOf="@+id/favourite_categories_list_view" />
+            android:background="#dedede"
+            android:orientation="vertical"
+            android:padding="10dp">
 
+            <TextView
+                android:id="@+id/item_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:text="Top categories:"
+                android:textColor="#887f80"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                />
+
+
+        </RelativeLayout>
         <ListView
             android:id="@+id/favourite_categories_list_view"
             android:layout_width="match_parent"

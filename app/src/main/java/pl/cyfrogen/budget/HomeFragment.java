@@ -23,6 +23,7 @@ public class HomeFragment extends BaseFragment {
     public static final CharSequence TITLE = "Home";
     private ListView favoriteListView;
     private FloatingActionButton addEntryButton;
+    private Gauge gauge;
 
     public static HomeFragment newInstance() {
 
@@ -66,6 +67,9 @@ public class HomeFragment extends BaseFragment {
 
             }
         });
+
+        gauge = view.findViewById(R.id.gauge2);
+        gauge.setValue(20);
 
     }
 
