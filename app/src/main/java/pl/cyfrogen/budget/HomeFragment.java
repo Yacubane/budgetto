@@ -1,11 +1,11 @@
 package pl.cyfrogen.budget;
 
-import android.app.AlertDialog;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +13,12 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class HomeFragment extends Fragment {
+import pl.cyfrogen.budget.firebase.ListDataSet;
+import pl.cyfrogen.budget.firebase.WalletEntriesViewModel;
+import pl.cyfrogen.budget.firebase.WalletEntriesViewModelFactory;
+import pl.cyfrogen.budget.models.WalletEntry;
+
+public class HomeFragment extends BaseFragment {
 
     public static final CharSequence TITLE = "Home";
     private ListView favoriteListView;
@@ -53,6 +58,15 @@ public class HomeFragment extends Fragment {
                 getActivity().getApplicationContext().startActivity(new Intent(getActivity(), AddBudgetEntryActivity.class));
             }
         });
+
+        final WalletEntriesViewModel myViewModel = ViewModelProviders.of(getActivity(), new WalletEntriesViewModelFactory(getUid())).get(WalletEntriesViewModel.class);
+        myViewModel.getDataSnapshotLiveData().observe(this, new Observer<ListDataSet<WalletEntry>>() {
+            @Override
+            public void onChanged(@Nullable ListDataSet<WalletEntry> walletEntryListDataSet) {
+
+            }
+        });
+
     }
 
 }
