@@ -12,7 +12,7 @@ import com.google.firebase.database.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.cyfrogen.budget.models.WalletEntry;
+import pl.cyfrogen.budget.firebase.models.WalletEntry;
 
 public class FirebaseQueryLiveData extends LiveData<ListDataSet<WalletEntry>> {
     private static final String LOG_TAG = "FirebaseQueryLiveData";

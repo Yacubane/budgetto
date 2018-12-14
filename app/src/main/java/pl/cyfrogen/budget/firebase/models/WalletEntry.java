@@ -1,7 +1,6 @@
-package pl.cyfrogen.budget.models;
+package pl.cyfrogen.budget.firebase.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
-import com.google.firebase.database.ServerValue;
 
 @IgnoreExtraProperties
 public class WalletEntry {

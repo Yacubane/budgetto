@@ -8,8 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,8 @@ import java.util.ArrayList;
 import pl.cyfrogen.budget.firebase.ListDataSet;
 import pl.cyfrogen.budget.firebase.WalletEntriesViewModel;
 import pl.cyfrogen.budget.firebase.WalletEntriesViewModelFactory;
-import pl.cyfrogen.budget.models.WalletEntry;
+import pl.cyfrogen.budget.libraries.Gauge;
+import pl.cyfrogen.budget.firebase.models.WalletEntry;
 
 public class HomeFragment extends BaseFragment {
 

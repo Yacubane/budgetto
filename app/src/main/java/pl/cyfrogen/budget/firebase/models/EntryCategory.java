@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.models;
+package pl.cyfrogen.budget.firebase.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 

@@ -19,7 +19,7 @@ import java.util.List;
 import pl.cyfrogen.budget.firebase.ListDataSet;
 import pl.cyfrogen.budget.firebase.WalletEntriesViewModel;
 import pl.cyfrogen.budget.firebase.WalletEntriesViewModelFactory;
-import pl.cyfrogen.budget.models.WalletEntry;
+import pl.cyfrogen.budget.firebase.models.WalletEntry;
 
 public class HistoryFragment extends BaseFragment {
     public static final CharSequence TITLE = "History";

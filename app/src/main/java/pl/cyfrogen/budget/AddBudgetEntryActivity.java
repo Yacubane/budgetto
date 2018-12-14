@@ -1,18 +1,10 @@
 package pl.cyfrogen.budget;
 
 import android.app.DatePickerDialog;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
-import android.transition.Fade;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -30,13 +22,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import pl.cyfrogen.budget.libraries.GUIUtils;
-import pl.cyfrogen.budget.libraries.OnRevealAnimationListener;
-import pl.cyfrogen.budget.models.EntryCategory;
-import pl.cyfrogen.budget.models.EntryType;
-import pl.cyfrogen.budget.models.WalletEntry;
+import pl.cyfrogen.budget.activityModels.CircullarRevealActivity;
+import pl.cyfrogen.budget.firebase.models.EntryCategory;
+import pl.cyfrogen.budget.firebase.models.WalletEntry;
 
-public class AddBudgetEntryActivity extends BaseActivity {
+public class AddBudgetEntryActivity extends CircullarRevealActivity {
 
     private Button addEntryButton;
     private Spinner selectCategorySpinner;
@@ -44,24 +34,13 @@ public class AddBudgetEntryActivity extends BaseActivity {
     private Button chooseDateButton;
     private Calendar choosedDate;
     private DatabaseReference mDatabase;
-    private View mFab;
-    private View mRlContainer;
-    private View mRlContainer2;
+
+    public AddBudgetEntryActivity() {
+        super(R.layout.activity_add_budget_entry, R.id.activity_contact_fab, R.id.root_layout, R.id.root_layout2);
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_budget_entry);
-
-        mFab = findViewById(R.id.activity_contact_fab);
-        mRlContainer = findViewById(R.id.root_layout);
-        mRlContainer2 = findViewById(R.id.root_layout2);
-        mRlContainer2.setVisibility(View.INVISIBLE);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setupEnterAnimation();
-            setupExitAnimation();
-        }
-
+    public void onInitialized(Bundle savedInstanceState) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         choosedDate = Calendar.getInstance();
@@ -176,137 +155,5 @@ public class AddBudgetEntryActivity extends BaseActivity {
         datePickerDialog.show();
     }
 
-    private void setupEnterAnimation() {
-        Transition transition = TransitionInflater.from(this)
-                .inflateTransition(R.transition.changebounds_with_arcmotion);
-        getWindow().setSharedElementEnterTransition(transition);
-        transition.addListener(new Transition.TransitionListener() {
-            @Override
-            public void onTransitionStart(Transition transition) {
 
-            }
-
-            @Override
-            public void onTransitionEnd(Transition transition) {
-                transition.removeListener(this);
-                animateRevealShow(mRlContainer);
-            }
-
-            @Override
-            public void onTransitionCancel(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionPause(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionResume(Transition transition) {
-
-            }
-        });
-    }
-
-
-
-    private void animateRevealShow(final View viewRoot) {
-        int cx = (viewRoot.getLeft() + viewRoot.getRight()) / 2;
-        int cy = (viewRoot.getTop() + viewRoot.getBottom()) / 2;
-        GUIUtils.animateRevealShow(this, mRlContainer, mFab.getWidth() / 2, R.color.colorPrimary,
-                cx, cy, new OnRevealAnimationListener() {
-                    @Override
-                    public void onRevealHide() {
-
-                    }
-
-                    @Override
-                    public void onRevealShow() {
-                        initViews();
-                    }
-                });
-    }
-
-    private void initViews() {
-        new Handler(Looper.getMainLooper()).post(() -> {
-            Animation animation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
-            animation.setDuration(600);
-            mRlContainer2.startAnimation(animation);
-            mRlContainer2.setVisibility(View.VISIBLE);
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-        Animation animation = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
-        animation.setDuration(200);
-        mRlContainer2.startAnimation(animation);
-        animation.setAnimationListener(new Animation.AnimationListener(){
-            @Override
-            public void onAnimationStart(Animation arg0) {
-            }
-            @Override
-            public void onAnimationRepeat(Animation arg0) {
-            }
-            @Override
-            public void onAnimationEnd(Animation arg0) {
-                mRlContainer2.setVisibility(View.INVISIBLE);
-                GUIUtils.animateRevealHide(AddBudgetEntryActivity.this, mRlContainer, R.color.colorPrimary, mFab.getWidth() / 2,
-                        new OnRevealAnimationListener() {
-                            @Override
-                            public void onRevealHide() {
-                                backPressed();
-
-                            }
-
-                            @Override
-                            public void onRevealShow() {
-
-                            }
-                        });
-            }
-        });
-
-
-    }
-
-
-
-    private void backPressed() {
-        super.onBackPressed();
-    }
-
-    private void setupExitAnimation() {
-        Transition transition = TransitionInflater.from(this)
-                .inflateTransition(R.transition.changebounds_with_arcmotion);
-        getWindow().setSharedElementReturnTransition(transition);
-        transition.addListener(new Transition.TransitionListener() {
-            @Override
-            public void onTransitionStart(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionEnd(Transition transition) {
-                transition.removeListener(this);
-            }
-
-            @Override
-            public void onTransitionCancel(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionPause(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionResume(Transition transition) {
-
-            }
-        });
-
-    }
 }

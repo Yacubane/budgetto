@@ -151,7 +151,7 @@
                 app:layout_constraintStart_toEndOf="@+id/gauge2"
                 app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-            <pl.cyfrogen.budget.Gauge
+            <pl.cyfrogen.budget.libraries.Gauge
                 android:id="@+id/gauge2"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -168,7 +168,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"></pl.cyfrogen.budget.Gauge>
+                app:layout_constraintVertical_bias="0.0"></pl.cyfrogen.budget.libraries.Gauge>
         </android.support.constraint.ConstraintLayout>
 
 

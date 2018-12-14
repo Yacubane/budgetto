@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
-import pl.cyfrogen.budget.models.WalletEntry;
+import pl.cyfrogen.budget.firebase.models.WalletEntry;
 
 public class WalletEntriesViewModel extends ViewModel {
 
