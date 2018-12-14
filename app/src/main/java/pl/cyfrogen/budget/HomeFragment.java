@@ -1,11 +1,15 @@
 package pl.cyfrogen.budget;
 
+import android.app.ActivityOptions;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +60,15 @@ public class HomeFragment extends BaseFragment {
         addEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getApplicationContext().startActivity(new Intent(getActivity(), AddBudgetEntryActivity.class));
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ActivityOptions options =
+                            ActivityOptions.makeSceneTransitionAnimation(getActivity(), addEntryButton, addEntryButton.getTransitionName());
+                    startActivity(new Intent(getActivity(), AddBudgetEntryActivity.class), options.toBundle());
+                } else {
+                    startActivity(new Intent(getActivity(), AddBudgetEntryActivity.class));
+                }
+
             }
         });
 

@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.FloatingActionButton
+        android:transitionName="transition_reveal"
         android:id="@+id/add_wallet_entry_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,7 +22,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#212121"
+        android:background="@color/backgroundBlack"
         app:layout_constraintBottom_toTopOf="@+id/bottom_layout"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_weight="50">
