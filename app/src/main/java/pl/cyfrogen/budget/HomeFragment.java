@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.cyfrogen.budget.firebase.ListDataSet;
-import pl.cyfrogen.budget.firebase.WalletEntriesViewModel;
 import pl.cyfrogen.budget.firebase.WalletEntriesViewModelFactory;
 import pl.cyfrogen.budget.libraries.Gauge;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
@@ -72,9 +71,8 @@ public class HomeFragment extends BaseFragment {
             }
         });
 
-        final WalletEntriesViewModel myViewModel = ViewModelProviders.of(getActivity(), new WalletEntriesViewModelFactory(getUid())).get(WalletEntriesViewModel.class);
-        dataUpdated(myViewModel.getDataSnapshotLiveData().getValue());
-        myViewModel.getDataSnapshotLiveData().observe(this, new Observer<ListDataSet<WalletEntry>>() {
+        final WalletEntriesViewModelFactory.Model myViewModel = WalletEntriesViewModelFactory.getModel(getUid(), getActivity());
+        myViewModel.observe(this, new Observer<ListDataSet<WalletEntry>>() {
             @Override
             public void onChanged(@Nullable ListDataSet<WalletEntry> walletEntryListDataSet) {
                 dataUpdated(walletEntryListDataSet);

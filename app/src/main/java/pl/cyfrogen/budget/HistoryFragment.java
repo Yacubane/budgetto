@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.List;
 
 import pl.cyfrogen.budget.firebase.ListDataSet;
-import pl.cyfrogen.budget.firebase.WalletEntriesViewModel;
 import pl.cyfrogen.budget.firebase.WalletEntriesViewModelFactory;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
 
@@ -89,8 +88,8 @@ public class HistoryFragment extends BaseFragment {
         public WalletEntriesAdapter(final Context context, DatabaseReference ref) {
             this.context = context;
 
-            WalletEntriesViewModel myViewModel = ViewModelProviders.of(getActivity(), new WalletEntriesViewModelFactory(getUid())).get(WalletEntriesViewModel.class);
-            myViewModel.getDataSnapshotLiveData().observe(getActivity(), new Observer<ListDataSet<WalletEntry>>() {
+            WalletEntriesViewModelFactory.Model myViewModel = WalletEntriesViewModelFactory.getModel(getUid(), getActivity());
+            myViewModel.observe(getActivity(), new Observer<ListDataSet<WalletEntry>>() {
 
                 @Override
                 public void onChanged(@Nullable ListDataSet<WalletEntry> walletEntryListDataSet) {

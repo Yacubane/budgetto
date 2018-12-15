@@ -10,15 +10,16 @@ import com.google.firebase.database.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FirebaseQueryLiveData<T> extends LiveData<ListDataSet<T>> {
+public class FirebaseQueryLiveDataSet<T> extends LiveData<ListDataSet<T>> {
     private final Class<T> genericTypeClass;
     private Query query;
-    private ValueEventListener listener = new ValueEventListener();
+    private ValueEventListener listener;
     ListDataSet<T> walletEntriesLiveDataSet;
     private List<T> walletEntries;
     private ArrayList<String> walletEntriesIds;
 
-    public FirebaseQueryLiveData(Class<T> genericTypeClass, Query query) {
+    public FirebaseQueryLiveDataSet(Class<T> genericTypeClass, Query query) {
+        listener = new ValueEventListener();
         walletEntriesLiveDataSet = new ListDataSet<>();
         walletEntries = walletEntriesLiveDataSet.getList();
         walletEntriesIds = walletEntriesLiveDataSet.getIDList();
