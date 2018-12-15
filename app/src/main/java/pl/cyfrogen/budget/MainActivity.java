@@ -20,7 +20,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
+
+import pl.cyfrogen.budget.firebase.models.User;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -59,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null)
-            updateUI(currentUser);
+        updateUI(currentUser);
     }
 
     private void signIn() {
@@ -96,57 +103,64 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
                             updateUI(null);
                         }
-
-                        // ...
                     }
                 });
     }
 
     private void updateUI(FirebaseUser currentUser) {
-        Log.d(TAG, "UpdateUI " + currentUser.getUid());
-        startActivity(new Intent(MainActivity.this, MainMenuActivity.class));
-        finish();
-
-        /*
-
-        final DatabaseReference mDatabase =  FirebaseDatabase.getInstance().getReference("message");
-
-        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
+        if(currentUser == null) return;
+        final DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
+        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                mDatabase.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // This method is called once with the initial value and again
-                        // whenever data at this location is updated.
-                        String value = dataSnapshot.getValue(String.class);
-                        Log.d(TAG, "Value is: " + value);
-                    }
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null) {
+                    startActivity(new Intent(MainActivity.this, MainMenuActivity.class));
+                    finish();
+                } else {
+                    runTransaction(userReference);
+                }
 
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                        // Failed to read value
-                        Log.w(TAG, "Failed to read value.", error.toException());
-                    }
-                });
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-
-                mDatabase.setValue("Hello, World!");
             }
         });
-        */
 
 
+    }
+
+    private void runTransaction(DatabaseReference userReference) {
+        userReference.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                User user = mutableData.getValue(User.class);
+                if (user == null) {
+                    mutableData.setValue(new User());
+                    return Transaction.success(mutableData);
+                }
+
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean committed,
+                                   DataSnapshot dataSnapshot) {
+                if (committed) {
+                    startActivity(new Intent(MainActivity.this, MainMenuActivity.class));
+                    finish();
+                } else {
+                    //todo show error connection
+                }
+            }
+        });
     }
 
 }

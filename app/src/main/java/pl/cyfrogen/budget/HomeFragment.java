@@ -79,6 +79,7 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onChanged(@Nullable ListDataSet<WalletEntry> walletEntryListDataSet) {
+                HomeFragment.this.walletEntryListDataSet = walletEntryListDataSet;
                 dataUpdated();
             }
         });
@@ -87,6 +88,7 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onChanged(@Nullable User user) {
+                HomeFragment.this.userData = user;
                 dataUpdated();
             }
         });

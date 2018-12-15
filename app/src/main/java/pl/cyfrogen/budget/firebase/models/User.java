@@ -4,10 +4,10 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class User {
-    int dayOfMonthStart;
-    int dayOfWeekStart;
-    long limit;
-    int homeCounterType;
+    public int dayOfMonthStart;
+    public int dayOfWeekStart;
+    public long limit;
+    public int homeCounterType;
     public User() {
 
     }
