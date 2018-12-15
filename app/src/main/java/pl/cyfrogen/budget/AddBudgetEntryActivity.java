@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -44,10 +45,10 @@ public class AddBudgetEntryActivity extends CircullarRevealActivity {
 
     private Button addEntryButton;
     private Spinner selectCategorySpinner;
-    private EditText selectNameEditText;
+    private TextInputEditText selectNameEditText;
     private Calendar choosedDate;
     private DatabaseReference mDatabase;
-    private EditText selectAmountEditText;
+    private TextInputEditText selectAmountEditText;
     private TextView chooseDayTextView;
     private TextView chooseTimeTextView;
     private Spinner selectTypeSpinner;

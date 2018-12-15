@@ -9,6 +9,7 @@
     <color name="backgroundPrimary">#FFFFFF</color>
     <color name="backgroundBlack">#212121</color>
     <color name="primary_text_material_light">#de000000</color>
+    <color name="divider_color">#9e9e9e</color>
     <color name="primary_text_expense">#ef5350</color>
     <color name="primary_text_income">#66bb6a</color>
     <color name="gauge_gray">#ababab</color>

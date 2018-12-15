@@ -8,25 +8,20 @@ import android.support.v7.app.AppCompatActivity;
 
 public class MainMenuActivity extends AppCompatActivity {
 
-    private ViewPager mViewPager;
-    private ViewPagerAdapter mViewPagerAdapter;
-    private TabLayout mTabLayout;
+    private ViewPager viewPager;
+    private ViewPagerAdapter viewPagerAdapter;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        setViewPager();
+        viewPager = findViewById(R.id.pager);
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(viewPagerAdapter);
 
-    }
+        tabLayout = findViewById(R.id.tab);
+        tabLayout.setupWithViewPager(viewPager);
 
-    private void setViewPager() {
-
-        mViewPager = findViewById(R.id.pager);
-        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mViewPagerAdapter);
-
-        mTabLayout = findViewById(R.id.tab);
-        mTabLayout.setupWithViewPager(mViewPager);
     }
 }
