@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     static {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
+
     private static final int RC_SIGN_IN = 123;
     private static final String TAG = "Budgettio";
     private FirebaseAuth mAuth;
@@ -52,21 +53,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
-
-
-
-
+        if (currentUser != null)
+            updateUI(currentUser);
     }
+
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 

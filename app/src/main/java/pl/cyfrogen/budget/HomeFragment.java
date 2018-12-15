@@ -18,11 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.cyfrogen.budget.firebase.ListDataSet;
+import pl.cyfrogen.budget.firebase.UserProfileViewModelFactory;
 import pl.cyfrogen.budget.firebase.WalletEntriesViewModelFactory;
+import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.libraries.Gauge;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
 
 public class HomeFragment extends BaseFragment {
+    private User userData;
+    private ListDataSet<WalletEntry> walletEntryListDataSet;
 
     public static final CharSequence TITLE = "Home";
     private ListView favoriteListView;
@@ -43,8 +47,8 @@ public class HomeFragment extends BaseFragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
 
 
-
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         testModels = new ArrayList<>();
@@ -71,11 +75,19 @@ public class HomeFragment extends BaseFragment {
             }
         });
 
-        final WalletEntriesViewModelFactory.Model myViewModel = WalletEntriesViewModelFactory.getModel(getUid(), getActivity());
-        myViewModel.observe(this, new Observer<ListDataSet<WalletEntry>>() {
+        WalletEntriesViewModelFactory.getModel(getUid(), getActivity()).observe(this, new Observer<ListDataSet<WalletEntry>>() {
+
             @Override
             public void onChanged(@Nullable ListDataSet<WalletEntry> walletEntryListDataSet) {
-                dataUpdated(walletEntryListDataSet);
+                dataUpdated();
+            }
+        });
+
+        UserProfileViewModelFactory.getModel(getUid(), getActivity()).observe(this, new Observer<User>() {
+
+            @Override
+            public void onChanged(@Nullable User user) {
+                dataUpdated();
             }
         });
 
@@ -84,19 +96,21 @@ public class HomeFragment extends BaseFragment {
 
     }
 
-    private void dataUpdated(ListDataSet<WalletEntry> walletEntryListDataSet) {
+    private void dataUpdated() {
+        if(userData == null || walletEntryListDataSet == null) return;
+
         int sum = 0;
         List<WalletEntry> entryList = walletEntryListDataSet.getList();
         ArrayList<CategoryModel> categoryModels = new ArrayList<>();
-        for(WalletEntry walletEntry : entryList) {
+        for (WalletEntry walletEntry : entryList) {
             sum += walletEntry.balanceDifference;
             CategoryModel categoryModel = DefaultCategoryModels.searchCategory(walletEntry.categoryID);
-            if(!categoryModels.contains(categoryModel)) categoryModels.add(categoryModel);
+            if (!categoryModels.contains(categoryModel)) categoryModels.add(categoryModel);
         }
 
         testModels.clear();
-        for(CategoryModel categoryModel : categoryModels) {
-            testModels.add(new CategoryModelHome(categoryModel.getCategoryVisibleName(getContext()),Currency.USD, 100));
+        for (CategoryModel categoryModel : categoryModels) {
+            testModels.add(new CategoryModelHome(categoryModel.getCategoryVisibleName(getContext()), Currency.USD, 100));
         }
 
         adapter.notifyDataSetChanged();
