@@ -217,7 +217,7 @@ public class AddBudgetEntryActivity extends CircullarRevealActivity {
     public void addToWallet(long balanceDifference, Date entryDate, String entryCategory, String entryType) {
         FirebaseDatabase.getInstance().getReference().child("wallet-entries").child(getUid())
                 .child("default").push().setValue(new WalletEntry(entryCategory, entryType, entryDate.getTime(), balanceDifference));
-        finish();
+        finishWithAnimation();
     }
 
     private void pickTime() {

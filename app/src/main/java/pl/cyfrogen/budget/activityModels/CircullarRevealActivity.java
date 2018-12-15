@@ -111,8 +111,13 @@ public abstract class CircullarRevealActivity extends BaseActivity {
         });
     }
 
+
     @Override
     public void onBackPressed() {
+        finishWithAnimation();
+    }
+
+    protected void finishWithAnimation() {
         Animation animation = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
         animation.setDuration(200);
         container2.startAnimation(animation);
@@ -143,7 +148,6 @@ public abstract class CircullarRevealActivity extends BaseActivity {
                         });
             }
         });
-
 
     }
 
