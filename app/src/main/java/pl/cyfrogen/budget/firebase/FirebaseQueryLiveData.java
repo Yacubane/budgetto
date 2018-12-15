@@ -22,9 +22,9 @@ public class FirebaseQueryLiveData extends LiveData<ListDataSet<WalletEntry>> {
     private final String uid;
     private String walletID = "default";
 
-    private List<String> walletEntriesIds = new ArrayList<>();
     ListDataSet<WalletEntry> walletEntriesLiveDataSet = new ListDataSet<>();
     private List<WalletEntry> walletEntries = walletEntriesLiveDataSet.getList();
+    private ArrayList<String> walletEntriesIds = walletEntriesLiveDataSet.getIDList();
 
     public FirebaseQueryLiveData(String uid) {
         this.uid = uid;

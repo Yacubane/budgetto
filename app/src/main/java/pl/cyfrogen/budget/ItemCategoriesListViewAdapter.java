@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ItemCategoriesListViewAdapter extends ArrayAdapter<CategoryModel> implements View.OnClickListener{
+public class ItemCategoriesListViewAdapter extends ArrayAdapter<CategoryModelHome> implements View.OnClickListener{
 
-    private ArrayList<CategoryModel> dataSet;
+    private ArrayList<CategoryModelHome> dataSet;
     Context mContext;
 
     // View lookup cache
@@ -20,7 +20,7 @@ public class ItemCategoriesListViewAdapter extends ArrayAdapter<CategoryModel> i
         TextView txtName;
     }
 
-    public ItemCategoriesListViewAdapter(ArrayList<CategoryModel> data, Context context) {
+    public ItemCategoriesListViewAdapter(ArrayList<CategoryModelHome> data, Context context) {
         super(context, R.layout.favorites_listview_row, data);
         this.dataSet = data;
         this.mContext=context;
@@ -37,7 +37,7 @@ public class ItemCategoriesListViewAdapter extends ArrayAdapter<CategoryModel> i
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        CategoryModel dataModel = getItem(position);
+        CategoryModelHome dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 

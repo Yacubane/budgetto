@@ -183,12 +183,15 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
         app:layout_constraintVertical_weight="50"
         >
+
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#dedede"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
 
             <TextView
                 android:id="@+id/item_category"
@@ -196,11 +199,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
+                android:fontFamily="sans-serif-medium"
                 android:text="Top categories:"
-                android:textColor="#887f80"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                />
+                android:textColor="@color/secondary_text_material_light"
+                android:textSize="16sp" />
 
 
         </RelativeLayout>

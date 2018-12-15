@@ -4,83 +4,91 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    android:elevation="10dp">
+    android:elevation="10dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="92dp"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp">
 
+        <ImageView
+            android:id="@+id/icon_imageview"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/icon_background_circle"
+            android:src="@drawable/category_briefcase"
+            android:tint="#FFFFFF"
+            android:backgroundTint="@color/colorPrimary"/>
 
         <TextView
             android:id="@+id/money_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:text="23$"
-            android:textAppearance="?android:attr/textAppearanceButton"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
+            android:textColor="@color/primary_text_material_light"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="100dp"
-            android:layout_height="70dp"
+        <TextView
+            android:id="@+id/category_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
-            android:layout_toEndOf="@+id/imageView"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_marginEnd="16dp"
+            android:text="Foods"
+            android:textColor="@color/primary_text_material_light"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/money_textview"
+            app:layout_constraintStart_toEndOf="@+id/icon_imageview"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/name_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_below="@+id/category_textview"
-                android:layout_marginBottom="8dp"
-                android:gravity="fill_vertical"
-                android:text="Kebab"
-                android:textColor="@android:color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/category_textview" />
-
-            <TextView
-                android:id="@+id/category_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="8dp"
-                android:gravity="fill_vertical"
-                android:text="Foods"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/name_textview"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </android.support.constraint.ConstraintLayout>
-
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="63dp"
-            android:layout_height="70dp"
-            android:layout_alignParentStart="true"
+        <TextView
+            android:id="@+id/date_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="15.12.2018 15:00"
+            android:textColor="@color/secondary_text_material_light"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars[0]" />
+            app:layout_constraintEnd_toStartOf="@+id/money_textview"
+            app:layout_constraintStart_toEndOf="@+id/icon_imageview" />
+
+        <TextView
+            android:id="@+id/name_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Kebab"
+            android:textColor="@color/secondary_text_material_light"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/money_textview"
+            app:layout_constraintStart_toEndOf="@+id/icon_imageview"
+            app:layout_constraintTop_toBottomOf="@+id/category_textview" />
+
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

@@ -1,27 +1,49 @@
 package pl.cyfrogen.budget;
 
+import android.content.Context;
+import android.graphics.Color;
+
 public class CategoryModel {
-    private final long money;
-    private final Currency currency;
-    private String categoryName;
-    private long sum;
+    private final String id;
+    private String visibleName;
+    private final int iconResourceID;
+    private final int backgroundColor;
+    private int visibleNameResourceID;
 
-    public CategoryModel(String categoryName, Currency currency, long money) {
-        this.categoryName = categoryName;
-        this.currency = currency;
-        this.money = money;
-
+    public CategoryModel(String id, int visibleNameResourceID, int iconResourceID, int backgroundColor) {
+        this.id = id;
+        this.visibleNameResourceID = visibleNameResourceID;
+        this.iconResourceID = iconResourceID;
+        this.backgroundColor = backgroundColor;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public CategoryModel(String id, String visibleName, int iconResourceID, int backgroundColor) {
+        this.id = id;
+        this.visibleName = visibleName;
+        this.iconResourceID = iconResourceID;
+        this.backgroundColor = backgroundColor;
     }
 
-    public Currency getCurrency() {
-        return currency;
+    public String getCategoryID() {
+        return id;
     }
 
-    public long getMoney() {
-        return money;
+    public String getCategoryVisibleName(Context context) {
+        if (visibleName != null)
+            return visibleName;
+        return context.getResources().getString(visibleNameResourceID);
+    }
+
+    public int getIconResourceID() {
+        return iconResourceID;
+    }
+
+    public int getIconColor() {
+        return backgroundColor;
+    }
+
+    @Override
+    public String toString() {
+        return getCategoryID();
     }
 }

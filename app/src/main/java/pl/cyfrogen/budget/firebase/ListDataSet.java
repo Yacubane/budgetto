@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListDataSet<T> {
+    private ArrayList<String> ids = new ArrayList<>();
     List<T> list;
     private Operation lastOperation;
     private int index;
@@ -62,10 +63,15 @@ public class ListDataSet<T> {
 
     public void clear() {
         list.clear();
+        ids.clear();
         lastOperation = Operation.ITEMS_CLEARED;
     }
 
     public Operation getLastOperation() {
         return lastOperation;
+    }
+
+    public ArrayList<String> getIDList() {
+        return ids;
     }
 }

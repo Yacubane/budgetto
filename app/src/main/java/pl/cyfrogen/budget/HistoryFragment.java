@@ -1,19 +1,29 @@
 package pl.cyfrogen.budget;
+
+import android.app.AlertDialog;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import pl.cyfrogen.budget.firebase.ListDataSet;
@@ -44,23 +54,28 @@ public class HistoryFragment extends BaseFragment {
 
 
         DatabaseReference walletEntriesReference = FirebaseDatabase.getInstance().getReference()
-                .child("wallet-entries").child(getUid()).child("default"); //todo wallet-id is always 1
+                .child("wallet-entries").child(getUid()).child("default"); //todo wallet-id is always default
         historyRecyclerViewAdapter = new WalletEntriesAdapter(getActivity().getApplicationContext(), walletEntriesReference);
         historyRecyclerView.setAdapter(historyRecyclerViewAdapter);
     }
 
     private static class WalletEntryHolder extends RecyclerView.ViewHolder {
 
-        public TextView moneyTextView;
-        public TextView categoryTextView;
-        public TextView nameTextView;
+        private final TextView dateTextView;
+        private final TextView moneyTextView;
+        private final TextView categoryTextView;
+        private final TextView nameTextView;
+        private final ImageView iconImageView;
+        public View view;
 
         public WalletEntryHolder(View itemView) {
             super(itemView);
-
+            this.view = itemView;
             moneyTextView = itemView.findViewById(R.id.money_textview);
             categoryTextView = itemView.findViewById(R.id.category_textview);
             nameTextView = itemView.findViewById(R.id.name_textview);
+            dateTextView = itemView.findViewById(R.id.date_textview);
+            iconImageView = itemView.findViewById(R.id.icon_imageview);
 
         }
     }
@@ -68,7 +83,7 @@ public class HistoryFragment extends BaseFragment {
     private class WalletEntriesAdapter extends RecyclerView.Adapter<WalletEntryHolder> {
 
         private Context context;
-        private List<WalletEntry> walletEntries;
+        private ListDataSet<WalletEntry> walletEntries;
 
 
         public WalletEntriesAdapter(final Context context, DatabaseReference ref) {
@@ -79,7 +94,7 @@ public class HistoryFragment extends BaseFragment {
 
                 @Override
                 public void onChanged(@Nullable ListDataSet<WalletEntry> walletEntryListDataSet) {
-                    walletEntries = walletEntryListDataSet.getList();
+                    walletEntries = walletEntryListDataSet;
                     walletEntryListDataSet.notifyRecycler(WalletEntriesAdapter.this);
 
                 }
@@ -96,19 +111,58 @@ public class HistoryFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(WalletEntryHolder holder, int position) {
-            WalletEntry walletEntry = walletEntries.get(position);
-            holder.categoryTextView.setText(walletEntry.categoryName);
+            String id = walletEntries.getIDList().get(position);
+            WalletEntry walletEntry = walletEntries.getList().get(position);
+            CategoryModel categoryModel = DefaultCategoryModels.searchCategory(walletEntry.categoryID);
+            holder.iconImageView.setImageResource(categoryModel.getIconResourceID());
+            holder.iconImageView.setBackgroundTintList(ColorStateList.valueOf(categoryModel.getIconColor()));
+            holder.categoryTextView.setText(categoryModel.getCategoryVisibleName(getContext()));
             holder.nameTextView.setText(walletEntry.name);
-            holder.moneyTextView.setText(walletEntry.balanceDifference+"");
+
+            Date date = new Date(-walletEntry.timestamp);
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            holder.dateTextView.setText(dateFormat.format(date));
+            holder.moneyTextView.setText(walletEntry.balanceDifference + "");
+
+            holder.view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    createDeleteDialog(id);
+                    return false;
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
-            if(walletEntries == null) return 0;
-            return walletEntries.size();
+            if (walletEntries == null) return 0;
+            return walletEntries.getList().size();
         }
 
 
+    }
+
+    private void createDeleteDialog(String id) {
+        new AlertDialog.Builder(getContext())
+                .setMessage("Do you want to delete?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("wallet-entries").child(getUid()).child("default").child(id).removeValue();
+                        dialog.dismiss();
+                    }
+
+                })
+
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+                    }
+                })
+                .create().show();
 
     }
 

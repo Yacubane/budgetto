@@ -5,7 +5,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class WalletEntry {
 
-    public String categoryName;
+    public String categoryID;
     public String name;
     public long timestamp;
     public long balanceDifference;
@@ -13,8 +13,8 @@ public class WalletEntry {
 
     }
 
-    public WalletEntry(String categoryName, String name, long timestamp, long balanceDifference) {
-        this.categoryName = categoryName;
+    public WalletEntry(String categoryID, String name, long timestamp, long balanceDifference) {
+        this.categoryID = categoryID;
         this.name = name;
         this.timestamp = -timestamp;
         this.balanceDifference = balanceDifference;

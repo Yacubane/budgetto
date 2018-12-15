@@ -43,13 +43,13 @@ public class HomeFragment extends BaseFragment {
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ArrayList<CategoryModel> testModels = new ArrayList<>();
-        testModels.add(new CategoryModel("Food", Currency.USD, 100));
-        testModels.add(new CategoryModel("Pharmacy", Currency.USD, 200));
-        testModels.add(new CategoryModel("Gaming", Currency.USD, 300));
-        testModels.add(new CategoryModel("Gaming", Currency.USD, 300));
-        testModels.add(new CategoryModel("Gaming", Currency.USD, 300));
-        testModels.add(new CategoryModel("Gaming", Currency.USD, 300));
+        ArrayList<CategoryModelHome> testModels = new ArrayList<>();
+        testModels.add(new CategoryModelHome("Food", Currency.USD, 100));
+        testModels.add(new CategoryModelHome("Pharmacy", Currency.USD, 200));
+        testModels.add(new CategoryModelHome("Gaming", Currency.USD, 300));
+        testModels.add(new CategoryModelHome("Gaming", Currency.USD, 300));
+        testModels.add(new CategoryModelHome("Gaming", Currency.USD, 300));
+        testModels.add(new CategoryModelHome("Gaming", Currency.USD, 300));
 
 
         favoriteListView = view.findViewById(R.id.favourite_categories_list_view);
