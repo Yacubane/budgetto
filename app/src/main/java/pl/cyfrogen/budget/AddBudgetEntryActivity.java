@@ -1,15 +1,26 @@
 package pl.cyfrogen.budget;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.res.ColorStateList;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -21,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -33,10 +43,13 @@ public class AddBudgetEntryActivity extends CircullarRevealActivity {
 
     private Button addEntryButton;
     private Spinner selectCategorySpinner;
-    private EditText selectTypeSpinner;
-    private Button chooseDateButton;
+    private EditText selectNameEditText;
     private Calendar choosedDate;
     private DatabaseReference mDatabase;
+    private EditText selectAmountEditText;
+    private TextView chooseDayTextView;
+    private TextView chooseTimeTextView;
+    private Spinner selectTypeSpinner;
 
     public AddBudgetEntryActivity() {
         super(R.layout.activity_add_budget_entry, R.id.activity_contact_fab, R.id.root_layout, R.id.root_layout2);
@@ -49,18 +62,69 @@ public class AddBudgetEntryActivity extends CircullarRevealActivity {
         choosedDate = Calendar.getInstance();
 
         // addEntryButton = findViewById(R.id.add_budget_entry);
+        selectAmountEditText = findViewById(R.id.select_amount_edittext);
+        Currency currency = Currency.DEFAULT;
+
+        selectAmountEditText.setText(currency.formatString(0), TextView.BufferType.EDITABLE);
+        selectAmountEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            private String current = "";
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().equals(current)) {
+                    selectAmountEditText.removeTextChangedListener(this);
+
+
+                    current = currency.formatString(Long.valueOf(getLongMoney(s)));
+                    selectAmountEditText.setText(current);
+                    selectAmountEditText.setSelection(current.length() -
+                            (currency.isLeftFormatted() ? 0 : currency.getStringAddition().length()));
+
+                    selectAmountEditText.addTextChangedListener(this);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
         selectCategorySpinner = findViewById(R.id.select_category_spinner);
-        selectTypeSpinner = findViewById(R.id.select_type_edittext);
+        selectNameEditText = findViewById(R.id.select_name_edittext);
+        selectTypeSpinner = findViewById(R.id.select_type_spinner);
         addEntryButton = findViewById(R.id.add_entry_button);
-        chooseDateButton = findViewById(R.id.choose_date_button);
-        setChooseDateButtonText();
-        chooseDateButton.setOnClickListener(new View.OnClickListener() {
+        chooseTimeTextView = findViewById(R.id.choose_time_textview);
+        chooseDayTextView = findViewById(R.id.choose_day_textview);
+
+        EntryTypeArrayAdapter typeAdapter = new EntryTypeArrayAdapter(this,
+                R.layout.new_entry_type_spinner_row, Arrays.asList(
+                new EntryType("Expense", ContextCompat.getColor(getApplicationContext(), R.color.gauge_expense),
+                        R.drawable.category_clothing),
+                new EntryType("Income", ContextCompat.getColor(getApplicationContext(), R.color.gauge_income),
+                        R.drawable.category_clothing)));
+
+        selectTypeSpinner.setAdapter(typeAdapter);
+
+
+        updateDate();
+        chooseDayTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickDate();
             }
         });
-
+        chooseTimeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickTime();
+            }
+        });
 
         final ArrayList<EntryCategory> entryCategories = new ArrayList<>();
         final ArrayList<String> entryCategoriesIds = new ArrayList<>();
@@ -68,11 +132,10 @@ public class AddBudgetEntryActivity extends CircullarRevealActivity {
         final List<CategoryModel> categoryModels = Arrays.asList(DefaultCategoryModels.getCategoryModels());
 
 
-        final ArrayAdapter<CategoryModel> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, categoryModels);
-        //adapter.add(new EntryCategory("Test")); //todo remove
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectCategorySpinner.setAdapter(adapter);
+        EntryCategoryArrayAdapter categoryAdapter = new EntryCategoryArrayAdapter(this,
+                R.layout.new_entry_type_spinner_row, categoryModels);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectCategorySpinner.setAdapter(categoryAdapter);
 
 
         mDatabase.child("entry-categories").child(getUid()).addChildEventListener(new ChildEventListener() {
@@ -81,7 +144,7 @@ public class AddBudgetEntryActivity extends CircullarRevealActivity {
                 EntryCategory comment = dataSnapshot.getValue(EntryCategory.class);
                 entryCategoriesIds.add(dataSnapshot.getKey());
                 entryCategories.add(comment);
-                adapter.notifyDataSetChanged();
+                categoryAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -91,7 +154,7 @@ public class AddBudgetEntryActivity extends CircullarRevealActivity {
                 int commentIndex = entryCategoriesIds.indexOf(commentKey);
                 if (commentIndex > -1) {
                     entryCategories.set(commentIndex, newComment);
-                    adapter.notifyDataSetChanged();
+                    categoryAdapter.notifyDataSetChanged();
                 }
 
             }
@@ -103,7 +166,7 @@ public class AddBudgetEntryActivity extends CircullarRevealActivity {
                 if (commentIndex > -1) {
                     entryCategoriesIds.remove(commentIndex);
                     entryCategories.remove(commentIndex);
-                    adapter.notifyDataSetChanged();
+                    categoryAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -123,18 +186,30 @@ public class AddBudgetEntryActivity extends CircullarRevealActivity {
         addEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addToWallet(100, choosedDate.getTime(),
-                        selectCategorySpinner.getSelectedItem().toString(), selectTypeSpinner.getText().toString());
-                //todo change balance difference
+                addToWallet(((selectTypeSpinner.getSelectedItemPosition() * 2) - 1) *
+                                getLongMoney(selectAmountEditText.getText().toString()),
+                        choosedDate.getTime(),
+                        ((CategoryModel)selectCategorySpinner.getSelectedItem()).getCategoryID(),
+                        selectNameEditText.getText().toString());
             }
         });
 
 
     }
 
-    private void setChooseDateButtonText() {
+    private long getLongMoney(CharSequence s) {
+        String cleanString = s.toString().replaceAll("[^0-9]", "");
+        return Long.valueOf(cleanString);
+
+    }
+
+
+    private void updateDate() {
         SimpleDateFormat dataFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        chooseDateButton.setText(dataFormatter.format(choosedDate.getTime()));
+        chooseDayTextView.setText(dataFormatter.format(choosedDate.getTime()));
+
+        SimpleDateFormat dataFormatter2 = new SimpleDateFormat("HH:mm");
+        chooseTimeTextView.setText(dataFormatter2.format(choosedDate.getTime()));
     }
 
     public void addToWallet(long balanceDifference, Date entryDate, String entryCategory, String entryType) {
@@ -143,23 +218,121 @@ public class AddBudgetEntryActivity extends CircullarRevealActivity {
         finish();
     }
 
+    private void pickTime() {
+        new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                choosedDate.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                choosedDate.set(Calendar.MINUTE, minute);
+                updateDate();
+
+            }
+        }, choosedDate.get(Calendar.HOUR_OF_DAY), choosedDate.get(Calendar.MINUTE), true).show();
+    }
+
     private void pickDate() {
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+        new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         choosedDate.set(year, monthOfYear, dayOfMonth);
-                        setChooseDateButtonText();
+                        updateDate();
 
                     }
-                }, year, month, day);
-        datePickerDialog.show();
+                }, year, month, day).show();
+    }
+
+    public class EntryCategoryArrayAdapter extends ArrayAdapter<String> {
+
+        private final List<CategoryModel> items;
+        private final Context context;
+
+        public EntryCategoryArrayAdapter(Context context, int resource,
+                                         List objects) {
+            super(context, resource, 0, objects);
+            this.context = context;
+            items = objects;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView,
+                                    ViewGroup parent) {
+            return createItemView(position, convertView, parent);
+        }
+
+        @Override
+        public @NonNull
+        View getView(int position, View convertView, ViewGroup parent) {
+            return createItemView(position, convertView, parent);
+        }
+
+        private View createItemView(int position, View convertView, ViewGroup parent) {
+            final View view = LayoutInflater.from(context).inflate(R.layout.new_entry_type_spinner_row, parent, false);
+
+            TextView textView = view.findViewById(R.id.item_category);
+            ImageView iconImageView = view.findViewById(R.id.icon_imageview);
+
+            iconImageView.setImageResource(items.get(position).getIconResourceID());
+            iconImageView.setBackgroundTintList(ColorStateList.valueOf(items.get(position).getIconColor()));
+            textView.setText(items.get(position).getCategoryVisibleName(context));
+
+            return view;
+        }
+    }
+
+    public class EntryTypeArrayAdapter extends ArrayAdapter<String> {
+
+        private final List<EntryType> items;
+        private final Context context;
+
+        public EntryTypeArrayAdapter(Context context, int resource,
+                                     List objects) {
+            super(context, resource, 0, objects);
+            this.context = context;
+            items = objects;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView,
+                                    ViewGroup parent) {
+            return createItemView(position, convertView, parent);
+        }
+
+        @Override
+        public @NonNull
+        View getView(int position, View convertView, ViewGroup parent) {
+            return createItemView(position, convertView, parent);
+        }
+
+        private View createItemView(int position, View convertView, ViewGroup parent) {
+            final View view = LayoutInflater.from(context).inflate(R.layout.new_entry_type_spinner_row, parent, false);
+
+            TextView textView = view.findViewById(R.id.item_category);
+            ImageView iconImageView = view.findViewById(R.id.icon_imageview);
+
+            iconImageView.setImageResource(items.get(position).iconID);
+            iconImageView.setBackgroundTintList(ColorStateList.valueOf(items.get(position).color));
+            textView.setText(items.get(position).name);
+
+            return view;
+        }
     }
 
 
+    private class EntryType {
+        public final String name;
+        public final int color;
+        public final int iconID;
+
+        public EntryType(String name, int color, int iconID) {
+            this.name = name;
+            this.color = color;
+            this.iconID = iconID;
+        }
+    }
 }

@@ -41,5 +41,9 @@ public class UserProfileViewModelFactory implements ViewModelProvider.Factory {
             observer.onChanged(liveData.getValue());
             liveData.observe(owner, observer);
         }
+
+        public void removeObserver(Observer<User> observer) {
+            liveData.removeObserver(observer);
+        }
     }
 }

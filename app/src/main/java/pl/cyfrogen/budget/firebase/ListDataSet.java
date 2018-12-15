@@ -3,6 +3,7 @@ package pl.cyfrogen.budget.firebase;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ListDataSet<T> {
@@ -18,7 +19,7 @@ public class ListDataSet<T> {
 
 
     public List<T> getList() {
-        return list;
+        return Collections.unmodifiableList(list);
     }
 
     public void setItemChanged(int index) {

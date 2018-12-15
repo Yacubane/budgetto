@@ -1,12 +1,14 @@
 package pl.cyfrogen.budget;
 
 public class CategoryModelHome {
-    private final long money;
+    private long money;
     private final Currency currency;
+    private final CategoryModel categoryModel;
     private String categoryName;
     private long sum;
 
-    public CategoryModelHome(String categoryName, Currency currency, long money) {
+    public CategoryModelHome(CategoryModel categoryModel, String categoryName, Currency currency, long money) {
+        this.categoryModel = categoryModel;
         this.categoryName = categoryName;
         this.currency = currency;
         this.money = money;
@@ -23,5 +25,13 @@ public class CategoryModelHome {
 
     public long getMoney() {
         return money;
+    }
+
+    public CategoryModel getCategoryModel() {
+        return categoryModel;
+    }
+
+    public void addMoney(long balanceDifference) {
+        money += balanceDifference;
     }
 }

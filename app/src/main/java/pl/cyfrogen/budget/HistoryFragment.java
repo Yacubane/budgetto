@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 
 import pl.cyfrogen.budget.firebase.ListDataSet;
+import pl.cyfrogen.budget.firebase.Operation;
 import pl.cyfrogen.budget.firebase.WalletEntriesViewModelFactory;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
 
@@ -94,6 +96,8 @@ public class HistoryFragment extends BaseFragment {
                 @Override
                 public void onChanged(@Nullable ListDataSet<WalletEntry> walletEntryListDataSet) {
                     walletEntries = walletEntryListDataSet;
+                    if (walletEntryListDataSet.getLastOperation() == Operation.ITEM_INSERTED)
+                        historyRecyclerView.smoothScrollToPosition(0);
                     walletEntryListDataSet.notifyRecycler(WalletEntriesAdapter.this);
 
                 }
@@ -121,7 +125,9 @@ public class HistoryFragment extends BaseFragment {
             Date date = new Date(-walletEntry.timestamp);
             DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             holder.dateTextView.setText(dateFormat.format(date));
-            holder.moneyTextView.setText(walletEntry.balanceDifference + "");
+            holder.moneyTextView.setText(Currency.DEFAULT.formatString(walletEntry.balanceDifference));
+            holder.moneyTextView.setTextColor(ContextCompat.getColor(context,
+                    walletEntry.balanceDifference < 0 ? R.color.primary_text_expense : R.color.primary_text_income));
 
             holder.view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override

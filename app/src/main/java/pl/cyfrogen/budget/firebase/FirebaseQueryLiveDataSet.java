@@ -21,7 +21,7 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<ListDataSet<T>> {
     public FirebaseQueryLiveDataSet(Class<T> genericTypeClass, Query query) {
         listener = new ValueEventListener();
         walletEntriesLiveDataSet = new ListDataSet<>();
-        walletEntries = walletEntriesLiveDataSet.getList();
+        walletEntries = walletEntriesLiveDataSet.list;
         walletEntriesIds = walletEntriesLiveDataSet.getIDList();
         setValue(walletEntriesLiveDataSet);
         this.genericTypeClass = genericTypeClass;

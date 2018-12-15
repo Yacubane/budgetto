@@ -9,6 +9,13 @@
     <color name="backgroundPrimary">#FFFFFF</color>
     <color name="backgroundBlack">#212121</color>
     <color name="primary_text_material_light">#de000000</color>
+    <color name="primary_text_expense">#ef5350</color>
+    <color name="primary_text_income">#66bb6a</color>
+    <color name="gauge_gray">#ababab</color>
+    <color name="gauge_income">#81c784</color>
+    <color name="gauge_expense">#e57373</color>
+    <color name="gauge_white">#FFFFFF</color>
+
     <color name="secondary_text_material_light">#8a000000</color>
 
 </resources>

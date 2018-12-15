@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 
 import com.google.firebase.database.FirebaseDatabase;
 
+import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
 
 public class WalletEntriesViewModelFactory implements ViewModelProvider.Factory {
@@ -39,6 +40,10 @@ public class WalletEntriesViewModelFactory implements ViewModelProvider.Factory 
         public void observe(LifecycleOwner owner, Observer<ListDataSet<WalletEntry>> observer) {
             observer.onChanged(liveData.getValue());
             liveData.observe(owner, observer);
+        }
+
+        public void removeObserver(Observer<ListDataSet<WalletEntry>> observer) {
+            liveData.removeObserver(observer);
         }
     }
 }
