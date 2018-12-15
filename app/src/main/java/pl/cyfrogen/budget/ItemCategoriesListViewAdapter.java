@@ -2,6 +2,7 @@ package pl.cyfrogen.budget;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,10 @@ public class ItemCategoriesListViewAdapter extends ArrayAdapter<CategoryModelHom
 
         categoryNameTextView.setText(dataModel.getCategoryName());
         sumTextView.setText(dataModel.getCurrency().formatString(dataModel.getMoney()));
+        if (dataModel.getMoney() < 0)
+            sumTextView.setTextColor(ContextCompat.getColor(context, R.color.gauge_expense));
+        else
+            sumTextView.setTextColor(ContextCompat.getColor(context, R.color.gauge_income));
         return listItem;
     }
 }

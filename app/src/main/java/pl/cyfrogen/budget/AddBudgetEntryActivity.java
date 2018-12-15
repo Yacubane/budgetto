@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
@@ -104,10 +105,10 @@ public class AddBudgetEntryActivity extends CircullarRevealActivity {
 
         EntryTypeArrayAdapter typeAdapter = new EntryTypeArrayAdapter(this,
                 R.layout.new_entry_type_spinner_row, Arrays.asList(
-                new EntryType("Expense", ContextCompat.getColor(getApplicationContext(), R.color.gauge_expense),
-                        R.drawable.category_clothing),
-                new EntryType("Income", ContextCompat.getColor(getApplicationContext(), R.color.gauge_income),
-                        R.drawable.category_clothing)));
+                new EntryType("Expense", Color.parseColor("#ef5350"),
+                        R.drawable.money_icon),
+                new EntryType("Income", Color.parseColor("#66bb6a"),
+                        R.drawable.money_icon)));
 
         selectTypeSpinner.setAdapter(typeAdapter);
 
