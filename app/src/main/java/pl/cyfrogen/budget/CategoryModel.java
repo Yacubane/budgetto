@@ -3,6 +3,8 @@ package pl.cyfrogen.budget;
 import android.content.Context;
 import android.graphics.Color;
 
+import java.util.Objects;
+
 public class CategoryModel {
     private final String id;
     private String visibleName;
@@ -46,4 +48,18 @@ public class CategoryModel {
     public String toString() {
         return getCategoryID();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CategoryModel that = (CategoryModel) o;
+        return iconResourceID == that.iconResourceID &&
+                backgroundColor == that.backgroundColor &&
+                visibleNameResourceID == that.visibleNameResourceID &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(visibleName, that.visibleName);
+    }
+
+
 }

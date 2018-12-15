@@ -8,7 +8,7 @@ import java.util.List;
 public class ListDataSet<T> {
     private ArrayList<String> ids = new ArrayList<>();
     List<T> list;
-    private Operation lastOperation;
+    private Operation lastOperation = Operation.NOTHING;
     private int index;
     private int index2;
 

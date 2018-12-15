@@ -12,8 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import pl.cyfrogen.budget.firebase.ListDataSet;
 import pl.cyfrogen.budget.firebase.WalletEntriesViewModel;
@@ -27,6 +29,9 @@ public class HomeFragment extends BaseFragment {
     private ListView favoriteListView;
     private FloatingActionButton addEntryButton;
     private Gauge gauge;
+    private ItemCategoriesListViewAdapter adapter;
+    private ArrayList<CategoryModelHome> testModels;
+    private TextView totalBalanceTextView;
 
     public static HomeFragment newInstance() {
 
@@ -43,17 +48,13 @@ public class HomeFragment extends BaseFragment {
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ArrayList<CategoryModelHome> testModels = new ArrayList<>();
-        testModels.add(new CategoryModelHome("Food", Currency.USD, 100));
-        testModels.add(new CategoryModelHome("Pharmacy", Currency.USD, 200));
-        testModels.add(new CategoryModelHome("Gaming", Currency.USD, 300));
-        testModels.add(new CategoryModelHome("Gaming", Currency.USD, 300));
-        testModels.add(new CategoryModelHome("Gaming", Currency.USD, 300));
-        testModels.add(new CategoryModelHome("Gaming", Currency.USD, 300));
+        testModels = new ArrayList<>();
 
+        totalBalanceTextView = view.findViewById(R.id.total_balance_textview);
 
         favoriteListView = view.findViewById(R.id.favourite_categories_list_view);
-        favoriteListView.setAdapter(new ItemCategoriesListViewAdapter(testModels, getActivity().getApplicationContext()));
+        adapter = new ItemCategoriesListViewAdapter(testModels, getActivity().getApplicationContext());
+        favoriteListView.setAdapter(adapter);
 
         addEntryButton = view.findViewById(R.id.add_wallet_entry_fab);
         addEntryButton.setOnClickListener(new View.OnClickListener() {
@@ -72,16 +73,37 @@ public class HomeFragment extends BaseFragment {
         });
 
         final WalletEntriesViewModel myViewModel = ViewModelProviders.of(getActivity(), new WalletEntriesViewModelFactory(getUid())).get(WalletEntriesViewModel.class);
+        dataUpdated(myViewModel.getDataSnapshotLiveData().getValue());
         myViewModel.getDataSnapshotLiveData().observe(this, new Observer<ListDataSet<WalletEntry>>() {
             @Override
             public void onChanged(@Nullable ListDataSet<WalletEntry> walletEntryListDataSet) {
-
+                dataUpdated(walletEntryListDataSet);
             }
         });
 
         gauge = view.findViewById(R.id.gauge2);
         gauge.setValue(50);
 
+    }
+
+    private void dataUpdated(ListDataSet<WalletEntry> walletEntryListDataSet) {
+        int sum = 0;
+        List<WalletEntry> entryList = walletEntryListDataSet.getList();
+        ArrayList<CategoryModel> categoryModels = new ArrayList<>();
+        for(WalletEntry walletEntry : entryList) {
+            sum += walletEntry.balanceDifference;
+            CategoryModel categoryModel = DefaultCategoryModels.searchCategory(walletEntry.categoryID);
+            if(!categoryModels.contains(categoryModel)) categoryModels.add(categoryModel);
+        }
+
+        testModels.clear();
+        for(CategoryModel categoryModel : categoryModels) {
+            testModels.add(new CategoryModelHome(categoryModel.getCategoryVisibleName(getContext()),Currency.USD, 100));
+        }
+
+        adapter.notifyDataSetChanged();
+
+        totalBalanceTextView.setText(Currency.USD.formatString(sum));
     }
 
 }
