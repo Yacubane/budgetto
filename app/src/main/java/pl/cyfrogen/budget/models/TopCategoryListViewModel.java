@@ -1,12 +1,12 @@
 package pl.cyfrogen.budget.models;
 
-public class CategoryListViewModel {
+public class TopCategoryListViewModel {
     private long money;
     private final Currency currency;
     private final Category category;
     private String categoryName;
 
-    public CategoryListViewModel(Category category, String categoryName, Currency currency, long money) {
+    public TopCategoryListViewModel(Category category, String categoryName, Currency currency, long money) {
         this.category = category;
         this.categoryName = categoryName;
         this.currency = currency;

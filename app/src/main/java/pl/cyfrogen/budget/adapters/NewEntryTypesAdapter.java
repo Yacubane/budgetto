@@ -12,11 +12,10 @@ import android.widget.TextView;
 import java.util.List;
 
 import pl.cyfrogen.budget.R;
-import pl.cyfrogen.budget.activities.AddWalletEntryActivity;
-import pl.cyfrogen.budget.models.EntryType;
+import pl.cyfrogen.budget.models.NewEntryTypeListViewModel;
 
 public class NewEntryTypesAdapter extends ArrayAdapter<String> {
-    private final List<EntryType> items;
+    private final List<NewEntryTypeListViewModel> items;
     private final Context context;
 
     public NewEntryTypesAdapter(Context context, int resource,

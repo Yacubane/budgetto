@@ -13,16 +13,16 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import pl.cyfrogen.budget.models.Category;
-import pl.cyfrogen.budget.models.CategoryListViewModel;
+import pl.cyfrogen.budget.models.TopCategoryListViewModel;
 import pl.cyfrogen.budget.R;
 
-public class TopCategoriesAdapter extends ArrayAdapter<CategoryListViewModel> implements View.OnClickListener {
+public class TopCategoriesAdapter extends ArrayAdapter<TopCategoryListViewModel> implements View.OnClickListener {
 
-    private ArrayList<CategoryListViewModel> dataSet;
+    private ArrayList<TopCategoryListViewModel> dataSet;
     Context context;
 
 
-    public TopCategoriesAdapter(ArrayList<CategoryListViewModel> data, Context context) {
+    public TopCategoriesAdapter(ArrayList<TopCategoryListViewModel> data, Context context) {
         super(context, R.layout.favorites_listview_row, data);
         this.dataSet = data;
         this.context = context;
@@ -41,7 +41,7 @@ public class TopCategoriesAdapter extends ArrayAdapter<CategoryListViewModel> im
         if (listItem == null)
             listItem = LayoutInflater.from(context).inflate(R.layout.favorites_listview_row, parent, false);
 
-        CategoryListViewModel dataModel = getItem(position);
+        TopCategoryListViewModel dataModel = getItem(position);
         Category category = dataModel.getCategory();
 
         TextView categoryNameTextView = listItem.findViewById(R.id.item_category);

@@ -31,7 +31,7 @@ import pl.cyfrogen.budget.models.DefaultCategories;
 import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.firebase.models.EntryCategory;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
-import pl.cyfrogen.budget.models.EntryType;
+import pl.cyfrogen.budget.models.NewEntryTypeListViewModel;
 
 public class AddWalletEntryActivity extends CircullarRevealActivity {
 
@@ -68,9 +68,9 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
 
         NewEntryTypesAdapter typeAdapter = new NewEntryTypesAdapter(this,
                 R.layout.new_entry_type_spinner_row, Arrays.asList(
-                new EntryType("Expense", Color.parseColor("#ef5350"),
+                new NewEntryTypeListViewModel("Expense", Color.parseColor("#ef5350"),
                         R.drawable.money_icon),
-                new EntryType("Income", Color.parseColor("#66bb6a"),
+                new NewEntryTypeListViewModel("Income", Color.parseColor("#66bb6a"),
                         R.drawable.money_icon)));
 
         selectTypeSpinner.setAdapter(typeAdapter);

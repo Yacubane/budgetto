@@ -27,7 +27,7 @@ import java.util.Map;
 
 import pl.cyfrogen.budget.activities.AddWalletEntryActivity;
 import pl.cyfrogen.budget.models.Category;
-import pl.cyfrogen.budget.models.CategoryListViewModel;
+import pl.cyfrogen.budget.models.TopCategoryListViewModel;
 import pl.cyfrogen.budget.models.Currency;
 import pl.cyfrogen.budget.models.DefaultCategories;
 import pl.cyfrogen.budget.adapters.TopCategoriesAdapter;
@@ -48,7 +48,7 @@ public class HomeFragment extends BaseFragment {
     private FloatingActionButton addEntryButton;
     private Gauge gauge;
     private TopCategoriesAdapter adapter;
-    private ArrayList<CategoryListViewModel> categoryModelsHome;
+    private ArrayList<TopCategoryListViewModel> categoryModelsHome;
     private TextView totalBalanceTextView;
     private TextView gaugeLeftBalanceTextView;
     private TextView gaugeLeftLine1TextView;
@@ -177,12 +177,12 @@ public class HomeFragment extends BaseFragment {
 
         categoryModelsHome.clear();
         for (Map.Entry<Category, Long> categoryModel : categoryModels.entrySet()) {
-            categoryModelsHome.add(new CategoryListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()), Currency.DEFAULT, categoryModel.getValue()));
+            categoryModelsHome.add(new TopCategoryListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()), Currency.DEFAULT, categoryModel.getValue()));
         }
 
-        Collections.sort(categoryModelsHome, new Comparator<CategoryListViewModel>() {
+        Collections.sort(categoryModelsHome, new Comparator<TopCategoryListViewModel>() {
             @Override
-            public int compare(CategoryListViewModel o1, CategoryListViewModel o2) {
+            public int compare(TopCategoryListViewModel o1, TopCategoryListViewModel o2) {
                 return Long.compare(o1.getMoney(), o2.getMoney());
             }
         });
