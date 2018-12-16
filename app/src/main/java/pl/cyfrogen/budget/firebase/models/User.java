@@ -4,10 +4,8 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class User {
-    public int dayOfMonthStart;
-    public int dayOfWeekStart;
-    public long limit;
-    public int homeCounterType;
+    public Currency currency = new Currency("$", true, true);
+    public UserSettings userSettings = new UserSettings();
     public User() {
 
     }

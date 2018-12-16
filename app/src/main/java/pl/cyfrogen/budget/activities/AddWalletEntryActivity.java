@@ -26,7 +26,7 @@ import java.util.List;
 import pl.cyfrogen.budget.adapters.NewEntryCategoriesAdapter;
 import pl.cyfrogen.budget.adapters.NewEntryTypesAdapter;
 import pl.cyfrogen.budget.models.Category;
-import pl.cyfrogen.budget.models.Currency;
+import pl.cyfrogen.budget.models.CurrencyHelper;
 import pl.cyfrogen.budget.models.DefaultCategories;
 import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.firebase.models.EntryCategory;
@@ -43,7 +43,7 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
     private TextView chooseDayTextView;
     private TextView chooseTimeTextView;
     private Spinner selectTypeSpinner;
-    private Currency currency;
+    private CurrencyHelper currencyHelper;
 
     public AddWalletEntryActivity() {
         super(R.layout.activity_add_budget_entry, R.id.activity_contact_fab, R.id.root_layout, R.id.root_layout2);
@@ -62,7 +62,7 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
 
         choosedDate = Calendar.getInstance();
 
-        currency = Currency.DEFAULT;
+        currencyHelper = CurrencyHelper.DEFAULT;
         setupAmountEditText();
 
 
@@ -112,7 +112,7 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
     }
 
     private void setupAmountEditText() {
-        selectAmountEditText.setText(currency.formatString(0), TextView.BufferType.EDITABLE);
+        selectAmountEditText.setText(currencyHelper.formatString(0), TextView.BufferType.EDITABLE);
         selectAmountEditText.addTextChangedListener(new TextWatcher() {
             private String current = "";
             @Override
@@ -124,10 +124,10 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 if (!charSequence.toString().equals(current)) {
                     selectAmountEditText.removeTextChangedListener(this);
-                    current = currency.formatString(convertAmountStringToLong(charSequence));
+                    current = currencyHelper.formatString(convertAmountStringToLong(charSequence));
                     selectAmountEditText.setText(current);
                     selectAmountEditText.setSelection(current.length() -
-                            (currency.isLeftFormatted() ? 0 : currency.getStringAddition().length()));
+                            (currencyHelper.isLeftFormatted() ? 0 : currencyHelper.getStringAddition().length()));
 
                     selectAmountEditText.addTextChangedListener(this);
                 }

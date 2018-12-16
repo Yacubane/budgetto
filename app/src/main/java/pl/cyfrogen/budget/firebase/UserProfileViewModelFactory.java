@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.firebase.database.FirebaseDatabase;
@@ -18,6 +19,11 @@ public class UserProfileViewModelFactory implements ViewModelProvider.Factory {
     private UserProfileViewModelFactory(String uid) {
         this.uid = uid;
 
+    }
+
+    public static void saveModel(String uid, User user) {
+        FirebaseDatabase.getInstance().getReference()
+                .child("users").child(uid).setValue(user);
     }
 
     @Override
@@ -37,13 +43,15 @@ public class UserProfileViewModelFactory implements ViewModelProvider.Factory {
                     .child("users").child(uid));
         }
 
-        public void observe(LifecycleOwner owner, Observer<User> observer) {
-            observer.onChanged(liveData.getValue());
-            liveData.observe(owner, observer);
-        }
+        public void observe(LifecycleOwner owner, FirebaseObserver<FirebaseElement<User>> observer) {
+            if(liveData.getValue() != null) observer.onChanged(liveData.getValue());
+            liveData.observe(owner, new Observer<FirebaseElement<User>>() {
+                @Override
+                public void onChanged(@Nullable FirebaseElement<User> firebaseElement) {
+                    if(firebaseElement != null) observer.onChanged(firebaseElement);
 
-        public void removeObserver(Observer<User> observer) {
-            liveData.removeObserver(observer);
+                }
+            });
         }
     }
 }

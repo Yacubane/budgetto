@@ -52,7 +52,7 @@ public class TopCategoriesAdapter extends ArrayAdapter<TopCategoryListViewModel>
         iconImageView.setBackgroundTintList(ColorStateList.valueOf(category.getIconColor()));
 
         categoryNameTextView.setText(dataModel.getCategoryName());
-        sumTextView.setText(dataModel.getCurrency().formatString(dataModel.getMoney()));
+        sumTextView.setText(dataModel.getCurrencyHelper().formatString(dataModel.getMoney()));
         if (dataModel.getMoney() < 0)
             sumTextView.setTextColor(ContextCompat.getColor(context, R.color.gauge_expense));
         else

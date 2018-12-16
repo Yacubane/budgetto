@@ -26,9 +26,11 @@ import java.util.List;
 import java.util.Map;
 
 import pl.cyfrogen.budget.activities.AddWalletEntryActivity;
+import pl.cyfrogen.budget.firebase.FirebaseElement;
+import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.models.Category;
+import pl.cyfrogen.budget.models.CurrencyHelper;
 import pl.cyfrogen.budget.models.TopCategoryListViewModel;
-import pl.cyfrogen.budget.models.Currency;
 import pl.cyfrogen.budget.models.DefaultCategories;
 import pl.cyfrogen.budget.adapters.TopCategoriesAdapter;
 import pl.cyfrogen.budget.R;
@@ -118,16 +120,16 @@ public class HomeFragment extends BaseFragment {
             }
         });
 
-        UserProfileViewModelFactory.getModel(getUid(), getActivity()).observe(this, new Observer<User>() {
 
+        UserProfileViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
             @Override
-            public void onChanged(@Nullable User user) {
-                HomeFragment.this.userData = user;
-                dataUpdated();
+            public void onChanged(FirebaseElement<User> firebaseElement) {
+                if (firebaseElement.hasNoError()) {
+                    HomeFragment.this.userData = firebaseElement.getElement();
+                    dataUpdated();
+                }
             }
         });
-
-
 
 
     }
@@ -177,7 +179,7 @@ public class HomeFragment extends BaseFragment {
 
         categoryModelsHome.clear();
         for (Map.Entry<Category, Long> categoryModel : categoryModels.entrySet()) {
-            categoryModelsHome.add(new TopCategoryListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()), Currency.DEFAULT, categoryModel.getValue()));
+            categoryModelsHome.add(new TopCategoryListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()), CurrencyHelper.DEFAULT, categoryModel.getValue()));
         }
 
         Collections.sort(categoryModelsHome, new Comparator<TopCategoryListViewModel>() {
@@ -189,23 +191,24 @@ public class HomeFragment extends BaseFragment {
 
 
         adapter.notifyDataSetChanged();
-        totalBalanceTextView.setText(Currency.DEFAULT.formatString(sum));
+        totalBalanceTextView.setText(CurrencyHelper.DEFAULT.formatString(sum));
 
         boolean showLimit = false;
         if (showLimit) {
 
         } else {
-            gaugeLeftBalanceTextView.setText(Currency.DEFAULT.formatString(incomesSumInDateRange));
+            gaugeLeftBalanceTextView.setText(CurrencyHelper.DEFAULT.formatString(incomesSumInDateRange));
             gaugeLeftLine1TextView.setText("Incomes");
             gaugeLeftLine2TextView.setVisibility(View.INVISIBLE);
-            gaugeRightBalanceTextView.setText(Currency.DEFAULT.formatString(expensesSumInDateRange));
+            gaugeRightBalanceTextView.setText(CurrencyHelper.DEFAULT.formatString(expensesSumInDateRange));
             gaugeRightLine1TextView.setText("Expenses");
             gaugeRightLine2TextView.setVisibility(View.INVISIBLE);
 
             gauge.setPointStartColor(ContextCompat.getColor(getContext(), R.color.gauge_income));
             gauge.setPointEndColor(ContextCompat.getColor(getContext(), R.color.gauge_income));
             gauge.setStrokeColor(ContextCompat.getColor(getContext(), R.color.gauge_expense));
-            gauge.setValue((int) (incomesSumInDateRange * 100 / (incomesSumInDateRange - expensesSumInDateRange)));
+            if (incomesSumInDateRange - expensesSumInDateRange != 0)
+                gauge.setValue((int) (incomesSumInDateRange * 100 / (incomesSumInDateRange - expensesSumInDateRange)));
 
             gaugeBalanceLeftTextView.setText(dateFormat.format(startDate.getTime()) + " - " +
                     dateFormat.format(endDate.getTime()));

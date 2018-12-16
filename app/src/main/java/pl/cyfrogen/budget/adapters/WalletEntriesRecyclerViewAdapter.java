@@ -22,11 +22,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import pl.cyfrogen.budget.R;
+import pl.cyfrogen.budget.firebase.FirebaseElement;
+import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.ListDataSet;
+import pl.cyfrogen.budget.firebase.UserProfileViewModelFactory;
 import pl.cyfrogen.budget.firebase.WalletEntriesViewModelFactory;
+import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
 import pl.cyfrogen.budget.models.Category;
-import pl.cyfrogen.budget.models.Currency;
+import pl.cyfrogen.budget.models.CurrencyHelper;
 import pl.cyfrogen.budget.models.DefaultCategories;
 
 public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<WalletEntriesRecyclerViewAdapter.WalletEntryHolder> {
@@ -34,20 +38,30 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
     private final String uid;
     private final FragmentActivity fragmentActivity;
     private ListDataSet<WalletEntry> walletEntries;
+    private User user;
+    boolean firstUserSync = false;
 
 
     public WalletEntriesRecyclerViewAdapter(FragmentActivity fragmentActivity, String uid) {
         this.fragmentActivity = fragmentActivity;
         this.uid = uid;
 
-        WalletEntriesViewModelFactory.Model myViewModel = WalletEntriesViewModelFactory.getModel(uid, fragmentActivity);
-        myViewModel.observe(fragmentActivity, new Observer<ListDataSet<WalletEntry>>() {
-
+        UserProfileViewModelFactory.getModel(uid,fragmentActivity).observe(fragmentActivity, new FirebaseObserver<FirebaseElement<User>>() {
             @Override
-            public void onChanged(@Nullable ListDataSet<WalletEntry> walletEntryListDataSet) {
-                walletEntries = walletEntryListDataSet;
-                walletEntryListDataSet.notifyRecycler(WalletEntriesRecyclerViewAdapter.this);
-
+            public void onChanged(FirebaseElement<User> element) {
+                if(!element.hasNoError()) return;
+                WalletEntriesRecyclerViewAdapter.this.user = element.getElement();
+                if(!firstUserSync) {
+                    WalletEntriesViewModelFactory.getModel(uid, fragmentActivity).observe(fragmentActivity, new Observer<ListDataSet<WalletEntry>>() {
+                        @Override
+                        public void onChanged(@Nullable ListDataSet<WalletEntry> walletEntryListDataSet) {
+                            walletEntries = walletEntryListDataSet;
+                            walletEntryListDataSet.notifyRecycler(WalletEntriesRecyclerViewAdapter.this);
+                        }
+                    });
+                }
+                notifyDataSetChanged();
+                firstUserSync = true;
             }
         });
 
@@ -73,7 +87,7 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
         Date date = new Date(-walletEntry.timestamp);
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         holder.dateTextView.setText(dateFormat.format(date));
-        holder.moneyTextView.setText(Currency.DEFAULT.formatString(walletEntry.balanceDifference));
+        holder.moneyTextView.setText(CurrencyHelper.formatCurrency(user.currency, walletEntry.balanceDifference));
         holder.moneyTextView.setTextColor(ContextCompat.getColor(fragmentActivity,
                 walletEntry.balanceDifference < 0 ? R.color.primary_text_expense : R.color.primary_text_income));
 
