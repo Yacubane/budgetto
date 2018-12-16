@@ -7,6 +7,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class ListDataSet<T> {
+    public enum Operation {
+        ITEM_CHANGED, ITEM_INSERTED, ITEM_REMOVED, ITEM_MOVED, ITEMS_CLEARED, NOTHING;
+    }
+
     private ArrayList<String> ids = new ArrayList<>();
     List<T> list;
     private Operation lastOperation = Operation.NOTHING;

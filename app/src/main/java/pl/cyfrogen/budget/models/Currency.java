@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget;
+package pl.cyfrogen.budget.models;
 
 public class Currency {
     public static final Currency USD = new Currency("$", true);

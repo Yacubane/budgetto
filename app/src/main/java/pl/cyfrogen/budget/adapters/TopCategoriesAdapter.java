@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget;
+package pl.cyfrogen.budget.adapters;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -12,13 +12,17 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ItemCategoriesListViewAdapter extends ArrayAdapter<CategoryModelHome> implements View.OnClickListener {
+import pl.cyfrogen.budget.models.Category;
+import pl.cyfrogen.budget.models.CategoryListViewModel;
+import pl.cyfrogen.budget.R;
 
-    private ArrayList<CategoryModelHome> dataSet;
+public class TopCategoriesAdapter extends ArrayAdapter<CategoryListViewModel> implements View.OnClickListener {
+
+    private ArrayList<CategoryListViewModel> dataSet;
     Context context;
 
 
-    public ItemCategoriesListViewAdapter(ArrayList<CategoryModelHome> data, Context context) {
+    public TopCategoriesAdapter(ArrayList<CategoryListViewModel> data, Context context) {
         super(context, R.layout.favorites_listview_row, data);
         this.dataSet = data;
         this.context = context;
@@ -37,15 +41,15 @@ public class ItemCategoriesListViewAdapter extends ArrayAdapter<CategoryModelHom
         if (listItem == null)
             listItem = LayoutInflater.from(context).inflate(R.layout.favorites_listview_row, parent, false);
 
-        CategoryModelHome dataModel = getItem(position);
-        CategoryModel categoryModel = dataModel.getCategoryModel();
+        CategoryListViewModel dataModel = getItem(position);
+        Category category = dataModel.getCategory();
 
         TextView categoryNameTextView = listItem.findViewById(R.id.item_category);
         TextView sumTextView = listItem.findViewById(R.id.item_sum);
         ImageView iconImageView = listItem.findViewById(R.id.icon_imageview);
 
-        iconImageView.setImageResource(categoryModel.getIconResourceID());
-        iconImageView.setBackgroundTintList(ColorStateList.valueOf(categoryModel.getIconColor()));
+        iconImageView.setImageResource(category.getIconResourceID());
+        iconImageView.setBackgroundTintList(ColorStateList.valueOf(category.getIconColor()));
 
         categoryNameTextView.setText(dataModel.getCategoryName());
         sumTextView.setText(dataModel.getCurrency().formatString(dataModel.getMoney()));

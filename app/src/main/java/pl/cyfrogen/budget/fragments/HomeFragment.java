@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget;
+package pl.cyfrogen.budget.fragments;
 
 import android.app.ActivityOptions;
 import android.arch.lifecycle.Observer;
@@ -25,6 +25,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import pl.cyfrogen.budget.activities.AddWalletEntryActivity;
+import pl.cyfrogen.budget.models.Category;
+import pl.cyfrogen.budget.models.CategoryListViewModel;
+import pl.cyfrogen.budget.models.Currency;
+import pl.cyfrogen.budget.models.DefaultCategories;
+import pl.cyfrogen.budget.adapters.TopCategoriesAdapter;
+import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.firebase.ListDataSet;
 import pl.cyfrogen.budget.firebase.UserProfileViewModelFactory;
 import pl.cyfrogen.budget.firebase.WalletEntriesViewModelFactory;
@@ -40,8 +47,8 @@ public class HomeFragment extends BaseFragment {
     private ListView favoriteListView;
     private FloatingActionButton addEntryButton;
     private Gauge gauge;
-    private ItemCategoriesListViewAdapter adapter;
-    private ArrayList<CategoryModelHome> categoryModelsHome;
+    private TopCategoriesAdapter adapter;
+    private ArrayList<CategoryListViewModel> categoryModelsHome;
     private TextView totalBalanceTextView;
     private TextView gaugeLeftBalanceTextView;
     private TextView gaugeLeftLine1TextView;
@@ -83,7 +90,7 @@ public class HomeFragment extends BaseFragment {
 
 
         favoriteListView = view.findViewById(R.id.favourite_categories_list_view);
-        adapter = new ItemCategoriesListViewAdapter(categoryModelsHome, getActivity().getApplicationContext());
+        adapter = new TopCategoriesAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
 
         addEntryButton = view.findViewById(R.id.add_wallet_entry_fab);
@@ -94,9 +101,9 @@ public class HomeFragment extends BaseFragment {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     ActivityOptions options =
                             ActivityOptions.makeSceneTransitionAnimation(getActivity(), addEntryButton, addEntryButton.getTransitionName());
-                    startActivity(new Intent(getActivity(), AddBudgetEntryActivity.class), options.toBundle());
+                    startActivity(new Intent(getActivity(), AddWalletEntryActivity.class), options.toBundle());
                 } else {
-                    startActivity(new Intent(getActivity(), AddBudgetEntryActivity.class));
+                    startActivity(new Intent(getActivity(), AddWalletEntryActivity.class));
                 }
 
             }
@@ -153,29 +160,29 @@ public class HomeFragment extends BaseFragment {
         long expensesSumInDateRange = 0;
         long incomesSumInDateRange = 0;
 
-        HashMap<CategoryModel, Long> categoryModels = new HashMap<>();
+        HashMap<Category, Long> categoryModels = new HashMap<>();
         for (WalletEntry walletEntry : entryList) {
             if (walletEntry.balanceDifference > 0) {
                 incomesSumInDateRange += walletEntry.balanceDifference;
                 continue;
             }
             expensesSumInDateRange += walletEntry.balanceDifference;
-            CategoryModel categoryModel = DefaultCategoryModels.searchCategory(walletEntry.categoryID);
-            if (categoryModels.get(categoryModel) != null)
-                categoryModels.put(categoryModel, categoryModels.get(categoryModel) + walletEntry.balanceDifference);
+            Category category = DefaultCategories.searchCategory(walletEntry.categoryID);
+            if (categoryModels.get(category) != null)
+                categoryModels.put(category, categoryModels.get(category) + walletEntry.balanceDifference);
             else
-                categoryModels.put(categoryModel, walletEntry.balanceDifference);
+                categoryModels.put(category, walletEntry.balanceDifference);
 
         }
 
         categoryModelsHome.clear();
-        for (Map.Entry<CategoryModel, Long> categoryModel : categoryModels.entrySet()) {
-            categoryModelsHome.add(new CategoryModelHome(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()), Currency.DEFAULT, categoryModel.getValue()));
+        for (Map.Entry<Category, Long> categoryModel : categoryModels.entrySet()) {
+            categoryModelsHome.add(new CategoryListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()), Currency.DEFAULT, categoryModel.getValue()));
         }
 
-        Collections.sort(categoryModelsHome, new Comparator<CategoryModelHome>() {
+        Collections.sort(categoryModelsHome, new Comparator<CategoryListViewModel>() {
             @Override
-            public int compare(CategoryModelHome o1, CategoryModelHome o2) {
+            public int compare(CategoryListViewModel o1, CategoryListViewModel o2) {
                 return Long.compare(o1.getMoney(), o2.getMoney());
             }
         });

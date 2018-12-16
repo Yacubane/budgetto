@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.activityModels;
+package pl.cyfrogen.budget.activities;
 
 import android.os.Build;
 import android.os.Handler;
@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import pl.cyfrogen.budget.BaseActivity;
 import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.libraries.GUIUtils;
 import pl.cyfrogen.budget.libraries.OnRevealAnimationListener;

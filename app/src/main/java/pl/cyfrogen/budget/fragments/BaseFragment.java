@@ -1,12 +1,11 @@
-package pl.cyfrogen.budget;
+package pl.cyfrogen.budget.fragments;
 
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseFragment extends Fragment {
     public String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
-
     }
 }

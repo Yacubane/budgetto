@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#212121"
-    tools:context=".AddBudgetEntryActivity">
+    tools:context=".activities.AddWalletEntryActivity">
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/activity_contact_fab"
         android:layout_width="wrap_content"

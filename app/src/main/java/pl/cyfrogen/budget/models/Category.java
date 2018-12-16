@@ -1,25 +1,24 @@
-package pl.cyfrogen.budget;
+package pl.cyfrogen.budget.models;
 
 import android.content.Context;
-import android.graphics.Color;
 
 import java.util.Objects;
 
-public class CategoryModel {
+public class Category {
     private final String id;
     private String visibleName;
     private final int iconResourceID;
     private final int backgroundColor;
     private int visibleNameResourceID;
 
-    public CategoryModel(String id, int visibleNameResourceID, int iconResourceID, int backgroundColor) {
+    public Category(String id, int visibleNameResourceID, int iconResourceID, int backgroundColor) {
         this.id = id;
         this.visibleNameResourceID = visibleNameResourceID;
         this.iconResourceID = iconResourceID;
         this.backgroundColor = backgroundColor;
     }
 
-    public CategoryModel(String id, String visibleName, int iconResourceID, int backgroundColor) {
+    public Category(String id, String visibleName, int iconResourceID, int backgroundColor) {
         this.id = id;
         this.visibleName = visibleName;
         this.iconResourceID = iconResourceID;
@@ -58,7 +57,7 @@ public class CategoryModel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CategoryModel that = (CategoryModel) o;
+        Category that = (Category) o;
         return iconResourceID == that.iconResourceID &&
                 backgroundColor == that.backgroundColor &&
                 visibleNameResourceID == that.visibleNameResourceID &&

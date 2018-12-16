@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget;
+package pl.cyfrogen.budget.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +10,7 @@ import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
+import pl.cyfrogen.budget.R;
 
 public class OptionsFragment extends Fragment {
     public static final CharSequence TITLE = "Options";

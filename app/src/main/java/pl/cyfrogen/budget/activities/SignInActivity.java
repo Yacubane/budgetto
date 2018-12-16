@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget;
+package pl.cyfrogen.budget.activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -28,10 +28,11 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.firebase.models.User;
 
 
-public class MainActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity {
     static {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
@@ -120,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 if (user != null) {
-                    startActivity(new Intent(MainActivity.this, MainMenuActivity.class));
+                    startActivity(new Intent(SignInActivity.this, MainActivity.class));
                     finish();
                 } else {
                     runTransaction(userReference);
@@ -154,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(DatabaseError databaseError, boolean committed,
                                    DataSnapshot dataSnapshot) {
                 if (committed) {
-                    startActivity(new Intent(MainActivity.this, MainMenuActivity.class));
+                    startActivity(new Intent(SignInActivity.this, MainActivity.class));
                     finish();
                 } else {
                     //todo show error connection

@@ -1,9 +1,13 @@
-package pl.cyfrogen.budget;
+package pl.cyfrogen.budget.adapters;
 
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import pl.cyfrogen.budget.fragments.HistoryFragment;
+import pl.cyfrogen.budget.fragments.HomeFragment;
+import pl.cyfrogen.budget.fragments.OptionsFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
