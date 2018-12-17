@@ -12,7 +12,10 @@ import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +36,6 @@ public class OptionsFragment extends PreferenceFragmentCompat {
     User user;
 
     ArrayList<Preference> preferences = new ArrayList<>();
-    private Preference currencyPreference;
 
     public static OptionsFragment newInstance() {
 
@@ -91,13 +93,13 @@ public class OptionsFragment extends PreferenceFragmentCompat {
             preference.setEnabled(true);
         }
 
-        currencyPreference = findPreference(getString(R.string.pref_key_currency));
+        Preference currencyPreference = findPreference(getString(R.string.pref_key_currency));
         currencyPreference.setSummary(user.currency.symbol);
         currencyPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setTitle("Info");
+                alert.setTitle("Set currency");
                 View layout = getLayoutInflater().inflate(R.layout.set_currency_dialog, null);
 
                 TextInputEditText currencyEditText = layout.findViewById(R.id.currency_edittext);
@@ -107,17 +109,10 @@ public class OptionsFragment extends PreferenceFragmentCompat {
                 CheckBox addSpaceCheckBox = layout.findViewById(R.id.add_space_currency_checkbox);
                 addSpaceCheckBox.setChecked(user.currency.space);
 
-
                 alert.setView(layout);
-                alert.setCancelable(false);
-                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                alert.setNegativeButton("Cancel", null);
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-
-                alert.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -127,13 +122,98 @@ public class OptionsFragment extends PreferenceFragmentCompat {
                         saveUser(user);
                     }
                 });
-                AlertDialog dialog = alert.create();
-                dialog.show();
-
-                return false;
+                alert.create().show();
+                return true;
             }
         });
 
+
+        Preference firstWeekDayPreference = findPreference(getString(R.string.pref_key_first_week_day));
+        firstWeekDayPreference.setSummary(getDayString(user.userSettings.dayOfWeekStart));
+        firstWeekDayPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                alert.setTitle("Set first week day:");
+                View layout = getLayoutInflater().inflate(R.layout.set_first_day_of_week_dialog, null);
+                RadioGroup radioGroup = layout.findViewById(R.id.radio_group);
+                ((RadioButton)radioGroup.getChildAt(user.userSettings.dayOfWeekStart)).setChecked(true);
+                alert.setView(layout);
+                alert.setNegativeButton("Cancel", null);
+                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        user.userSettings.dayOfWeekStart = radioGroup.getCheckedRadioButtonId();
+                        saveUser(user);
+                    }
+                });
+                alert.create().show();
+                return true;
+            }
+        });
+
+
+        Preference firstMonthDayPreference = findPreference(getString(R.string.pref_key_first_month_day));
+        firstMonthDayPreference.setSummary(""+(user.userSettings.dayOfMonthStart+1));
+        firstMonthDayPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                alert.setTitle("Set first month day:");
+                View layout = getLayoutInflater().inflate(R.layout.set_first_day_of_month_dialog, null);
+                TextInputEditText editText = layout.findViewById(R.id.edittext);
+                editText.setText(""+(user.userSettings.dayOfMonthStart+1));
+                alert.setView(layout);
+                alert.setNegativeButton("Cancel", null);
+                alert.setPositiveButton("OK", null);
+                AlertDialog alertDialog = alert.create();
+                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        Button button = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                        button.setOnClickListener(new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                try{
+                                    int number = Integer.parseInt(editText.getText().toString());
+                                    if(number <= 0 || number >= 29) {
+                                        editText.setError("Number must be in 1-29 range");
+                                    } else {
+                                        user.userSettings.dayOfMonthStart = number-1;
+                                        saveUser(user);
+                                        alertDialog.dismiss();
+                                    }
+                                }catch (NumberFormatException e) {
+                                    editText.setError("You must write number");
+                                }
+
+                            }
+                        });
+                    }
+                });
+                alertDialog.show();
+                return true;
+            }
+        });
+
+
+
+    }
+
+    private String getDayString(int dayOfWeek) {
+        switch (dayOfWeek) {
+            case 0: return "Monday";
+            case 1: return "Tuesday";
+            case 2: return "Wednesday";
+            case 3: return "Thursday";
+            case 4: return "Friday";
+            case 5: return "Saturday";
+            case 6: return "Sunday";
+        }
+        return "";
     }
 
     private void saveUser(User user) {

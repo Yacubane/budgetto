@@ -9,28 +9,16 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Currency">
+        android:hint="First day of month">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/currency_edittext"
+            android:id="@+id/edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            android:inputType="number" />
 
     </android.support.design.widget.TextInputLayout>
 
-    <CheckBox
-        android:id="@+id/show_currency_on_left_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Show currency symbol on left side" />
-
-    <CheckBox
-        android:id="@+id/add_space_currency_checkbox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Add space bettwen money and currency symbol" />
 
 </LinearLayout>
