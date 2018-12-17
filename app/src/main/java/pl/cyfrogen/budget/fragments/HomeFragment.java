@@ -118,7 +118,7 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onChanged(FirebaseElement<ListDataSet<WalletEntry>> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
-                    HomeFragment.this.walletEntryListDataSet = walletEntryListDataSet;
+                    HomeFragment.this.walletEntryListDataSet = firebaseElement.getElement();
                     dataUpdated();
                 }
             }
