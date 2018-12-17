@@ -77,7 +77,6 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        System.out.println("#FRAGMENT VIEW");
         categoryModelsHome = new ArrayList<>();
 
         gauge = view.findViewById(R.id.gauge);
