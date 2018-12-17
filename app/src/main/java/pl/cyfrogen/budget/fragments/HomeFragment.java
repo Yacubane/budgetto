@@ -220,7 +220,7 @@ public class HomeFragment extends BaseFragment {
 
     private Calendar getStartDate(User userData) {
         Calendar cal = Calendar.getInstance();
-        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        cal.setFirstDayOfWeek(getUserFirstDayOfWeek(userData));
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.clear(Calendar.MINUTE);
         cal.clear(Calendar.SECOND);
@@ -230,9 +230,11 @@ public class HomeFragment extends BaseFragment {
         return cal;
     }
 
+
+
     private Calendar getEndDate(User userData) {
         Calendar cal = Calendar.getInstance();
-        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        cal.setFirstDayOfWeek(getUserFirstDayOfWeek(userData));
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
@@ -240,5 +242,18 @@ public class HomeFragment extends BaseFragment {
         cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
         cal.add(Calendar.DAY_OF_YEAR, 6);
         return cal;
+    }
+
+    private int getUserFirstDayOfWeek(User userData) {
+        switch (userData.userSettings.dayOfWeekStart) {
+            case 0 : return Calendar.MONDAY;
+            case 1 : return Calendar.TUESDAY;
+            case 2 : return Calendar.WEDNESDAY;
+            case 3 : return Calendar.THURSDAY;
+            case 4 : return Calendar.FRIDAY;
+            case 5 : return Calendar.SATURDAY;
+            case 6 : return Calendar.SUNDAY;
+        }
+        return 0;
     }
 }

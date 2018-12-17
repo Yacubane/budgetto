@@ -144,7 +144,8 @@ public class OptionsFragment extends PreferenceFragmentCompat {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        user.userSettings.dayOfWeekStart = radioGroup.getCheckedRadioButtonId();
+                        int index = radioGroup.indexOfChild(layout.findViewById(radioGroup.getCheckedRadioButtonId()));
+                        user.userSettings.dayOfWeekStart = index;
                         saveUser(user);
                     }
                 });
