@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.Map;
 import pl.cyfrogen.budget.activities.AddWalletEntryActivity;
 import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
+import pl.cyfrogen.budget.firebase.models.UserSettings;
 import pl.cyfrogen.budget.models.Category;
 import pl.cyfrogen.budget.models.CurrencyHelper;
 import pl.cyfrogen.budget.models.TopCategoryListViewModel;
@@ -194,8 +196,25 @@ public class HomeFragment extends BaseFragment {
         adapter.notifyDataSetChanged();
         totalBalanceTextView.setText(CurrencyHelper.formatCurrency(userData.currency, sum));
 
-        boolean showLimit = false;
-        if (showLimit) {
+        if (userData.userSettings.homeCounterType == UserSettings.HOME_COUNTER_TYPE_SHOW_LIMIT) {
+            gaugeLeftBalanceTextView.setText(CurrencyHelper.formatCurrency(userData.currency, 0));
+            gaugeLeftLine1TextView.setText(dateFormat.format(startDate.getTime()));
+            gaugeLeftLine2TextView.setVisibility(View.INVISIBLE);
+            gaugeRightBalanceTextView.setText(CurrencyHelper.formatCurrency(userData.currency, userData.userSettings.limit));
+            gaugeRightLine1TextView.setText(dateFormat.format(endDate.getTime()));
+            gaugeRightLine2TextView.setVisibility(View.INVISIBLE);
+
+            gauge.setPointStartColor(ContextCompat.getColor(getContext(), R.color.gauge_white));
+            gauge.setPointEndColor(ContextCompat.getColor(getContext(), R.color.gauge_white));
+            gauge.setStrokeColor(ContextCompat.getColor(getContext(), R.color.gauge_gray));
+
+            long limit = userData.userSettings.limit;
+            long expenses = -expensesSumInDateRange;
+            int percentage = (int) (expenses * 100 /(double) limit);
+            if(percentage > 100) percentage = 100;
+            gauge.setValue(percentage);
+            gaugeBalanceLeftTextView.setText(CurrencyHelper.formatCurrency(userData.currency, limit-expenses) + " left");
+
 
         } else {
             gaugeLeftBalanceTextView.setText(CurrencyHelper.formatCurrency(userData.currency, incomesSumInDateRange));
@@ -209,12 +228,10 @@ public class HomeFragment extends BaseFragment {
             gauge.setPointEndColor(ContextCompat.getColor(getContext(), R.color.gauge_income));
             gauge.setStrokeColor(ContextCompat.getColor(getContext(), R.color.gauge_expense));
             if (incomesSumInDateRange - expensesSumInDateRange != 0)
-                gauge.setValue((int) (incomesSumInDateRange * 100 / (incomesSumInDateRange - expensesSumInDateRange)));
+                gauge.setValue((int) (incomesSumInDateRange * 100 /(double) (incomesSumInDateRange - expensesSumInDateRange)));
 
             gaugeBalanceLeftTextView.setText(dateFormat.format(startDate.getTime()) + " - " +
                     dateFormat.format(endDate.getTime()));
-
-
         }
     }
 
@@ -225,11 +242,19 @@ public class HomeFragment extends BaseFragment {
         cal.clear(Calendar.MINUTE);
         cal.clear(Calendar.SECOND);
         cal.clear(Calendar.MILLISECOND);
-        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+        if(userData.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
+            cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+            if(new Date().getTime() < cal.getTime().getTime())
+                cal.add(Calendar.DATE, -7);
+        }
+         else {
+            cal.set(Calendar.DAY_OF_MONTH, userData.userSettings.dayOfMonthStart+1);
+            if(new Date().getTime() < cal.getTime().getTime())
+                cal.add(Calendar.MONTH, -1);
+        }
 
         return cal;
     }
-
 
 
     private Calendar getEndDate(User userData) {
@@ -239,8 +264,19 @@ public class HomeFragment extends BaseFragment {
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
         cal.clear(Calendar.MILLISECOND);
-        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-        cal.add(Calendar.DAY_OF_YEAR, 6);
+        if(userData.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
+            cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+            if(new Date().getTime() < cal.getTime().getTime())
+                cal.add(Calendar.DATE, -7);
+            cal.add(Calendar.DATE, 6);
+        }
+        else {
+            cal.set(Calendar.DAY_OF_MONTH, userData.userSettings.dayOfMonthStart+1);
+            if(new Date().getTime() < cal.getTime().getTime())
+                cal.add(Calendar.MONTH, -1);
+            cal.add(Calendar.MONTH, 1);
+            cal.add(Calendar.DATE, -1);
+        }
         return cal;
     }
 

@@ -6,11 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
-import android.support.v14.preference.PreferenceFragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.preference.CheckBoxPreference;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -24,11 +21,13 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import pl.cyfrogen.budget.R;
+import pl.cyfrogen.budget.activities.AddWalletEntryActivity;
 import pl.cyfrogen.budget.activities.SignInActivity;
 import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.UserProfileViewModelFactory;
 import pl.cyfrogen.budget.firebase.models.User;
+import pl.cyfrogen.budget.models.CurrencyHelper;
 
 public class OptionsFragment extends PreferenceFragmentCompat {
     public static final CharSequence TITLE = "Options";
@@ -66,7 +65,7 @@ public class OptionsFragment extends PreferenceFragmentCompat {
 
             @Override
             public void onChanged(FirebaseElement<User> element) {
-                if(!element.hasNoError()) return;
+                if (!element.hasNoError()) return;
                 OptionsFragment.this.user = element.getElement();
                 dataUpdated();
             }
@@ -83,7 +82,6 @@ public class OptionsFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
-
 
 
     }
@@ -137,7 +135,7 @@ public class OptionsFragment extends PreferenceFragmentCompat {
                 alert.setTitle("Set first week day:");
                 View layout = getLayoutInflater().inflate(R.layout.set_first_day_of_week_dialog, null);
                 RadioGroup radioGroup = layout.findViewById(R.id.radio_group);
-                ((RadioButton)radioGroup.getChildAt(user.userSettings.dayOfWeekStart)).setChecked(true);
+                ((RadioButton) radioGroup.getChildAt(user.userSettings.dayOfWeekStart)).setChecked(true);
                 alert.setView(layout);
                 alert.setNegativeButton("Cancel", null);
                 alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -156,7 +154,7 @@ public class OptionsFragment extends PreferenceFragmentCompat {
 
 
         Preference firstMonthDayPreference = findPreference(getString(R.string.pref_key_first_month_day));
-        firstMonthDayPreference.setSummary(""+(user.userSettings.dayOfMonthStart+1));
+        firstMonthDayPreference.setSummary("" + (user.userSettings.dayOfMonthStart + 1));
         firstMonthDayPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -164,7 +162,7 @@ public class OptionsFragment extends PreferenceFragmentCompat {
                 alert.setTitle("Set first month day:");
                 View layout = getLayoutInflater().inflate(R.layout.set_first_day_of_month_dialog, null);
                 TextInputEditText editText = layout.findViewById(R.id.edittext);
-                editText.setText(""+(user.userSettings.dayOfMonthStart+1));
+                editText.setText("" + (user.userSettings.dayOfMonthStart + 1));
                 alert.setView(layout);
                 alert.setNegativeButton("Cancel", null);
                 alert.setPositiveButton("OK", null);
@@ -178,16 +176,16 @@ public class OptionsFragment extends PreferenceFragmentCompat {
 
                             @Override
                             public void onClick(View view) {
-                                try{
+                                try {
                                     int number = Integer.parseInt(editText.getText().toString());
-                                    if(number <= 0 || number >= 29) {
+                                    if (number <= 0 || number >= 29) {
                                         editText.setError("Number must be in 1-29 range");
                                     } else {
-                                        user.userSettings.dayOfMonthStart = number-1;
+                                        user.userSettings.dayOfMonthStart = number - 1;
                                         saveUser(user);
                                         alertDialog.dismiss();
                                     }
-                                }catch (NumberFormatException e) {
+                                } catch (NumberFormatException e) {
                                     editText.setError("You must write number");
                                 }
 
@@ -201,18 +199,109 @@ public class OptionsFragment extends PreferenceFragmentCompat {
         });
 
 
+        {
+            Preference counterTypePreference = findPreference(getString(R.string.pref_key_counter_type));
+            View layout = getLayoutInflater().inflate(R.layout.set_counter_type_dialog, null);
+            RadioGroup radioGroup = layout.findViewById(R.id.radio_group);
+            counterTypePreference.setSummary(((RadioButton) radioGroup.getChildAt(user.userSettings.homeCounterType)).getText());
+            counterTypePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                    alert.setTitle("Set counter type:");
+
+                    ((RadioButton) radioGroup.getChildAt(user.userSettings.homeCounterType)).setChecked(true);
+                    alert.setView(layout);
+                    alert.setNegativeButton("Cancel", null);
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            int index = radioGroup.indexOfChild(layout.findViewById(radioGroup.getCheckedRadioButtonId()));
+                            user.userSettings.homeCounterType = index;
+                            saveUser(user);
+                        }
+                    });
+                    alert.create().show();
+                    return true;
+                }
+            });
+
+        }
+
+        {
+            Preference counterTypePreference = findPreference(getString(R.string.pref_key_counter_period));
+            View layout = getLayoutInflater().inflate(R.layout.set_counter_period_dialog, null);
+            RadioGroup radioGroup = layout.findViewById(R.id.radio_group);
+            counterTypePreference.setSummary(((RadioButton) radioGroup.getChildAt(user.userSettings.homeCounterPeriod)).getText());
+            counterTypePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                    alert.setTitle("Set counter period:");
+                    ((RadioButton) radioGroup.getChildAt(user.userSettings.homeCounterPeriod)).setChecked(true);
+                    alert.setView(layout);
+                    alert.setNegativeButton("Cancel", null);
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            int index = radioGroup.indexOfChild(layout.findViewById(radioGroup.getCheckedRadioButtonId()));
+                            user.userSettings.homeCounterPeriod = index;
+                            saveUser(user);
+                        }
+                    });
+                    alert.create().show();
+                    return true;
+                }
+            });
+
+        }
+
+        Preference limitPreference = findPreference(getString(R.string.pref_key_limit));
+        limitPreference.setSummary(CurrencyHelper.formatCurrency(user.currency, user.userSettings.limit));
+        limitPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                alert.setTitle("Set limit:");
+                View layout = getLayoutInflater().inflate(R.layout.set_limit_dialog, null);
+                TextInputEditText editText = layout.findViewById(R.id.edittext);
+                AddWalletEntryActivity.setupAmountEditText(editText, user);
+                alert.setView(layout);
+                alert.setNegativeButton("Cancel", null);
+                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        user.userSettings.limit = AddWalletEntryActivity.convertAmountStringToLong(editText.getText().toString());
+                        saveUser(user);
+                    }
+                });
+                AlertDialog alertDialog = alert.create();
+                alertDialog.show();
+                return true;
+            }
+        });
+
 
     }
 
     private String getDayString(int dayOfWeek) {
         switch (dayOfWeek) {
-            case 0: return "Monday";
-            case 1: return "Tuesday";
-            case 2: return "Wednesday";
-            case 3: return "Thursday";
-            case 4: return "Friday";
-            case 5: return "Saturday";
-            case 6: return "Sunday";
+            case 0:
+                return "Monday";
+            case 1:
+                return "Tuesday";
+            case 2:
+                return "Wednesday";
+            case 3:
+                return "Thursday";
+            case 4:
+                return "Friday";
+            case 5:
+                return "Saturday";
+            case 6:
+                return "Sunday";
         }
         return "";
     }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pref_key_counter_type">counter_type</string>
+    <string name="pref_key_counter_period">counter_period</string>
     <string name="pref_key_limit">limit</string>
     <string name="pref_key_currency">currencyHelper</string>
     <string name="pref_key_first_month_day">first_month_day</string>
