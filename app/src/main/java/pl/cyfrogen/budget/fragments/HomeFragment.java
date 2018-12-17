@@ -179,7 +179,8 @@ public class HomeFragment extends BaseFragment {
 
         categoryModelsHome.clear();
         for (Map.Entry<Category, Long> categoryModel : categoryModels.entrySet()) {
-            categoryModelsHome.add(new TopCategoryListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()), CurrencyHelper.DEFAULT, categoryModel.getValue()));
+            categoryModelsHome.add(new TopCategoryListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()),
+                    userData.currency, categoryModel.getValue()));
         }
 
         Collections.sort(categoryModelsHome, new Comparator<TopCategoryListViewModel>() {
@@ -191,16 +192,16 @@ public class HomeFragment extends BaseFragment {
 
 
         adapter.notifyDataSetChanged();
-        totalBalanceTextView.setText(CurrencyHelper.DEFAULT.formatString(sum));
+        totalBalanceTextView.setText(CurrencyHelper.formatCurrency(userData.currency, sum));
 
         boolean showLimit = false;
         if (showLimit) {
 
         } else {
-            gaugeLeftBalanceTextView.setText(CurrencyHelper.DEFAULT.formatString(incomesSumInDateRange));
+            gaugeLeftBalanceTextView.setText(CurrencyHelper.formatCurrency(userData.currency, incomesSumInDateRange));
             gaugeLeftLine1TextView.setText("Incomes");
             gaugeLeftLine2TextView.setVisibility(View.INVISIBLE);
-            gaugeRightBalanceTextView.setText(CurrencyHelper.DEFAULT.formatString(expensesSumInDateRange));
+            gaugeRightBalanceTextView.setText(CurrencyHelper.formatCurrency(userData.currency, expensesSumInDateRange));
             gaugeRightLine1TextView.setText("Expenses");
             gaugeRightLine2TextView.setVisibility(View.INVISIBLE);
 

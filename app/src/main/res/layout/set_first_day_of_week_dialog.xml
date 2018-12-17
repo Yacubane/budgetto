@@ -11,31 +11,31 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <RadioButton
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="54dp"
             android:text="Monday" />
         <RadioButton
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="54dp"
             android:text="Tuesday" />
         <RadioButton
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="54dp"
             android:text="Wednesday" />
         <RadioButton
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="54dp"
             android:text="Thursday" />
         <RadioButton
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="54dp"
             android:text="Friday" />
         <RadioButton
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="54dp"
             android:text="Saturday" />
         <RadioButton
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="54dp"
             android:text="Sunday" />
     </RadioGroup>

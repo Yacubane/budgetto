@@ -3,10 +3,6 @@ package pl.cyfrogen.budget.models;
 import pl.cyfrogen.budget.firebase.models.Currency;
 
 public class CurrencyHelper {
-    public static final CurrencyHelper USD = new CurrencyHelper("$", true);
-    public static final CurrencyHelper PLN = new CurrencyHelper("zl", false);
-    public static final CurrencyHelper DEFAULT = PLN;
-
     private final String name;
     private final boolean left;
 

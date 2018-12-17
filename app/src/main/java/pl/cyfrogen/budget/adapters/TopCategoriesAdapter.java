@@ -11,8 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Currency;
 
 import pl.cyfrogen.budget.models.Category;
+import pl.cyfrogen.budget.models.CurrencyHelper;
 import pl.cyfrogen.budget.models.TopCategoryListViewModel;
 import pl.cyfrogen.budget.R;
 
@@ -52,7 +54,7 @@ public class TopCategoriesAdapter extends ArrayAdapter<TopCategoryListViewModel>
         iconImageView.setBackgroundTintList(ColorStateList.valueOf(category.getIconColor()));
 
         categoryNameTextView.setText(dataModel.getCategoryName());
-        sumTextView.setText(dataModel.getCurrencyHelper().formatString(dataModel.getMoney()));
+        sumTextView.setText(CurrencyHelper.formatCurrency(dataModel.getCurrency(), dataModel.getMoney()));
         if (dataModel.getMoney() < 0)
             sumTextView.setTextColor(ContextCompat.getColor(context, R.color.gauge_expense));
         else

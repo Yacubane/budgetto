@@ -1,15 +1,17 @@
 package pl.cyfrogen.budget.models;
 
+import pl.cyfrogen.budget.firebase.models.Currency;
+
 public class TopCategoryListViewModel {
     private long money;
-    private final CurrencyHelper currencyHelper;
+    private final Currency currency;
     private final Category category;
     private String categoryName;
 
-    public TopCategoryListViewModel(Category category, String categoryName, CurrencyHelper currencyHelper, long money) {
+    public TopCategoryListViewModel(Category category, String categoryName, Currency currency, long money) {
         this.category = category;
         this.categoryName = categoryName;
-        this.currencyHelper = currencyHelper;
+        this.currency = currency;
         this.money = money;
 
     }
@@ -18,8 +20,8 @@ public class TopCategoryListViewModel {
         return categoryName;
     }
 
-    public CurrencyHelper getCurrencyHelper() {
-        return currencyHelper;
+    public Currency getCurrency() {
+        return currency;
     }
 
     public long getMoney() {

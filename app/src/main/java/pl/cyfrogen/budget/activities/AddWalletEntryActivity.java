@@ -25,6 +25,10 @@ import java.util.List;
 
 import pl.cyfrogen.budget.adapters.NewEntryCategoriesAdapter;
 import pl.cyfrogen.budget.adapters.NewEntryTypesAdapter;
+import pl.cyfrogen.budget.firebase.FirebaseElement;
+import pl.cyfrogen.budget.firebase.FirebaseObserver;
+import pl.cyfrogen.budget.firebase.UserProfileViewModelFactory;
+import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.models.Category;
 import pl.cyfrogen.budget.models.CurrencyHelper;
 import pl.cyfrogen.budget.models.DefaultCategories;
@@ -43,7 +47,7 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
     private TextView chooseDayTextView;
     private TextView chooseTimeTextView;
     private Spinner selectTypeSpinner;
-    private CurrencyHelper currencyHelper;
+    private User user;
 
     public AddWalletEntryActivity() {
         super(R.layout.activity_add_budget_entry, R.id.activity_contact_fab, R.id.root_layout, R.id.root_layout2);
@@ -59,11 +63,18 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
         chooseDayTextView = findViewById(R.id.choose_day_textview);
         selectAmountEditText = findViewById(R.id.select_amount_edittext);
 
-
         choosedDate = Calendar.getInstance();
 
-        currencyHelper = CurrencyHelper.DEFAULT;
-        setupAmountEditText();
+        UserProfileViewModelFactory.getModel(getUid(), this).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
+            @Override
+            public void onChanged(FirebaseElement<User> firebaseElement) {
+                if(firebaseElement.hasNoError()) {
+                    user = firebaseElement.getElement();
+                    setupAmountEditText();
+                }
+            }
+        });
+
 
 
         NewEntryTypesAdapter typeAdapter = new NewEntryTypesAdapter(this,
@@ -112,7 +123,7 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
     }
 
     private void setupAmountEditText() {
-        selectAmountEditText.setText(currencyHelper.formatString(0), TextView.BufferType.EDITABLE);
+        selectAmountEditText.setText(CurrencyHelper.formatCurrency(user.currency,0), TextView.BufferType.EDITABLE);
         selectAmountEditText.addTextChangedListener(new TextWatcher() {
             private String current = "";
             @Override
@@ -124,10 +135,10 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 if (!charSequence.toString().equals(current)) {
                     selectAmountEditText.removeTextChangedListener(this);
-                    current = currencyHelper.formatString(convertAmountStringToLong(charSequence));
+                    current = CurrencyHelper.formatCurrency(user.currency,convertAmountStringToLong(charSequence));
                     selectAmountEditText.setText(current);
                     selectAmountEditText.setSelection(current.length() -
-                            (currencyHelper.isLeftFormatted() ? 0 : currencyHelper.getStringAddition().length()));
+                            (user.currency.left ? 0 : (user.currency.symbol.length() + (user.currency.space ? 1 : 0))));
 
                     selectAmountEditText.addTextChangedListener(this);
                 }
