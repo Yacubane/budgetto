@@ -6,10 +6,6 @@ public class FirebaseElement<T> {
     private T element;
     private DatabaseError databaseError;
 
-    public FirebaseElement() {
-
-    }
-
     public FirebaseElement(T element) {
         this.element = element;
     }

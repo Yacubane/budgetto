@@ -10,7 +10,7 @@ import com.google.firebase.database.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FirebaseQueryLiveDataSet<T> extends LiveData<ListDataSet<T>> {
+public class FirebaseQueryLiveDataSet<T> extends LiveData<FirebaseElement<ListDataSet<T>>> {
     private final Class<T> genericTypeClass;
     private Query query;
     private ValueEventListener listener;
@@ -23,20 +23,29 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<ListDataSet<T>> {
         walletEntriesLiveDataSet = new ListDataSet<>();
         walletEntries = walletEntriesLiveDataSet.list;
         walletEntriesIds = walletEntriesLiveDataSet.getIDList();
-        setValue(walletEntriesLiveDataSet);
+        setValue(new FirebaseElement<>(walletEntriesLiveDataSet));
         this.genericTypeClass = genericTypeClass;
         this.query = query;
     }
 
 
-    @Override
-    protected void onActive() {
+    private void removeListener() {
+        query.removeEventListener(listener);
+    }
+
+    private void setListener() {
         query.addChildEventListener(listener);
     }
 
     @Override
+    protected void onActive() {
+        setListener();
+    }
+
+
+    @Override
     protected void onInactive() {
-        query.removeEventListener(listener);
+        removeListener();
     }
 
     private class ValueEventListener implements ChildEventListener {
@@ -68,7 +77,7 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<ListDataSet<T>> {
 
                 //notifyItemInserted(insertedPosition);
                 walletEntriesLiveDataSet.setItemInserted(insertedPosition);
-                setValue(walletEntriesLiveDataSet);
+                setValue(new FirebaseElement<>(walletEntriesLiveDataSet));
             }
         }
 
@@ -83,7 +92,7 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<ListDataSet<T>> {
                 walletEntries.set(index, item);
                 //notifyItemChanged(index);
                 walletEntriesLiveDataSet.setItemChanged(index);
-                setValue(walletEntriesLiveDataSet);
+                setValue(new FirebaseElement<>(walletEntriesLiveDataSet));
 
             }
         }
@@ -102,7 +111,7 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<ListDataSet<T>> {
 
                 //notifyItemRemoved(index);
                 walletEntriesLiveDataSet.setItemRemoved(index);
-                setValue(walletEntriesLiveDataSet);
+                setValue(new FirebaseElement<>(walletEntriesLiveDataSet));
             }
         }
 
@@ -133,14 +142,16 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<ListDataSet<T>> {
             }
             //notifyItemMoved(index, newPosition);
             walletEntriesLiveDataSet.setItemMoved(index, newPosition);
-            setValue(walletEntriesLiveDataSet);
+            setValue(new FirebaseElement<>(walletEntriesLiveDataSet));
 
 
         }
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-
+            setValue(new FirebaseElement<>(databaseError));
+            removeListener();
+            setListener();
         }
     }
 }

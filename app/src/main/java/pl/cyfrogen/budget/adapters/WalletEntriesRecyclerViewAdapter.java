@@ -52,11 +52,13 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
                 if(!element.hasNoError()) return;
                 WalletEntriesRecyclerViewAdapter.this.user = element.getElement();
                 if(!firstUserSync) {
-                    WalletEntriesViewModelFactory.getModel(uid, fragmentActivity).observe(fragmentActivity, new Observer<ListDataSet<WalletEntry>>() {
+                    WalletEntriesViewModelFactory.getModel(uid, fragmentActivity).observe(fragmentActivity, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
                         @Override
-                        public void onChanged(@Nullable ListDataSet<WalletEntry> walletEntryListDataSet) {
-                            walletEntries = walletEntryListDataSet;
-                            walletEntryListDataSet.notifyRecycler(WalletEntriesRecyclerViewAdapter.this);
+                        public void onChanged(FirebaseElement<ListDataSet<WalletEntry>> element) {
+                            if(element.hasNoError()) {
+                                walletEntries = element.getElement();
+                                element.getElement().notifyRecycler(WalletEntriesRecyclerViewAdapter.this);
+                            }
                         }
                     });
                 }

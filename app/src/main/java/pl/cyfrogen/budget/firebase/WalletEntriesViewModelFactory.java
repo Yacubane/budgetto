@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.firebase.database.FirebaseDatabase;
@@ -37,12 +38,17 @@ public class WalletEntriesViewModelFactory implements ViewModelProvider.Factory 
                     .child("wallet-entries").child(uid).child("default").orderByChild("timestamp"));
         }
 
-        public void observe(LifecycleOwner owner, Observer<ListDataSet<WalletEntry>> observer) {
+        public void observe(LifecycleOwner owner, FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>> observer) {
             observer.onChanged(liveData.getValue());
-            liveData.observe(owner, observer);
+            liveData.observe(owner, new Observer<FirebaseElement<ListDataSet<WalletEntry>>>() {
+                @Override
+                public void onChanged(@Nullable FirebaseElement<ListDataSet<WalletEntry>> element) {
+                    if(element != null) observer.onChanged(element);
+                }
+            });
         }
 
-        public void removeObserver(Observer<ListDataSet<WalletEntry>> observer) {
+        public void removeObserver(Observer<FirebaseElement<ListDataSet<WalletEntry>>> observer) {
             liveData.removeObserver(observer);
         }
     }

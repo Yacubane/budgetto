@@ -113,12 +113,14 @@ public class HomeFragment extends BaseFragment {
             }
         });
 
-        WalletEntriesViewModelFactory.getModel(getUid(), getActivity()).observe(this, new Observer<ListDataSet<WalletEntry>>() {
+        WalletEntriesViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
 
             @Override
-            public void onChanged(@Nullable ListDataSet<WalletEntry> walletEntryListDataSet) {
-                HomeFragment.this.walletEntryListDataSet = walletEntryListDataSet;
-                dataUpdated();
+            public void onChanged(FirebaseElement<ListDataSet<WalletEntry>> firebaseElement) {
+                if (firebaseElement.hasNoError()) {
+                    HomeFragment.this.walletEntryListDataSet = walletEntryListDataSet;
+                    dataUpdated();
+                }
             }
         });
 
