@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
 
 import java.util.Calendar;
@@ -67,18 +68,19 @@ public class HistoryFragment extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.history_fragment_menu, menu);
-        this.menu=menu;
+        this.menu = menu;
         updateCalendarIcon();
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     private void updateCalendarIcon() {
-        MenuItem settingsItem = menu.findItem(R.id.action_date_range);
-        WalletEntriesHistoryViewModelFactory.Model model = WalletEntriesHistoryViewModelFactory.getModel(getUid(),getActivity());
-        if(model.hasDateSet()) {
-            settingsItem.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar_active));
+        MenuItem calendarIcon = menu.findItem(R.id.action_date_range);
+        if (calendarIcon == null) return;
+        WalletEntriesHistoryViewModelFactory.Model model = WalletEntriesHistoryViewModelFactory.getModel(getUid(), getActivity());
+        if (model.hasDateSet()) {
+            calendarIcon.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar_active));
         } else {
-            settingsItem.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar));
+            calendarIcon.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar));
         }
 
     }
@@ -127,7 +129,7 @@ public class HistoryFragment extends BaseFragment {
     }
 
     private void calendarUpdated() {
-        historyRecyclerViewAdapter.setDateRange(calendarStart,calendarEnd);
+        historyRecyclerViewAdapter.setDateRange(calendarStart, calendarEnd);
     }
 
 }

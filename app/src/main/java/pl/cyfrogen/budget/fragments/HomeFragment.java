@@ -130,10 +130,7 @@ public class HomeFragment extends BaseFragment {
 
         DateFormat dateFormat = new SimpleDateFormat("dd-MM");
 
-        long sum = 0;
-        for (WalletEntry walletEntry : entryList) {
-            sum += walletEntry.balanceDifference;
-        }
+
 
 
         long expensesSumInDateRange = 0;
@@ -169,7 +166,7 @@ public class HomeFragment extends BaseFragment {
 
 
         adapter.notifyDataSetChanged();
-        totalBalanceTextView.setText(CurrencyHelper.formatCurrency(userData.currency, sum));
+        totalBalanceTextView.setText(CurrencyHelper.formatCurrency(userData.currency, userData.wallet.sum));
 
         if (userData.userSettings.homeCounterType == UserSettings.HOME_COUNTER_TYPE_SHOW_LIMIT) {
             gaugeLeftBalanceTextView.setText(CurrencyHelper.formatCurrency(userData.currency, 0));

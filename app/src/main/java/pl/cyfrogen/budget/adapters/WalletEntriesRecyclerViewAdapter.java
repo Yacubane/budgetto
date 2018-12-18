@@ -96,7 +96,7 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
         holder.view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                createDeleteDialog(id, uid, fragmentActivity);
+                createDeleteDialog(id, uid, walletEntry.balanceDifference, fragmentActivity);
                 return false;
             }
         });
@@ -108,7 +108,7 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
         return walletEntries.getList().size();
     }
 
-    private void createDeleteDialog(String id, String uid, Context context) {
+    private void createDeleteDialog(String id, String uid, long balanceDifference, Context context) {
         new AlertDialog.Builder(context)
                 .setMessage("Do you want to delete?")
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
@@ -116,6 +116,8 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
                     public void onClick(DialogInterface dialog, int whichButton) {
                         FirebaseDatabase.getInstance().getReference()
                                 .child("wallet-entries").child(uid).child("default").child(id).removeValue();
+                        user.wallet.sum -= balanceDifference;
+                        UserProfileViewModelFactory.saveModel(uid, user);
                         dialog.dismiss();
                     }
 
