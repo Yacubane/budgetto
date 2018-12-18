@@ -6,21 +6,28 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MaterialTheme">
-        <activity android:name=".activities.SignInActivity"
+        <activity
+            android:name=".activities.SignInActivity"
             android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".activities.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.AddWalletEntryActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.AddWalletEntryActivity"
-            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
