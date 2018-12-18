@@ -28,6 +28,14 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<FirebaseElement<ListDa
         this.query = query;
     }
 
+    public void setQuery(Query query) {
+        removeListener();
+        walletEntriesLiveDataSet.clear();
+        setValue(new FirebaseElement<>(walletEntriesLiveDataSet));
+        this.query = query;
+        setListener();
+    }
+
 
     private void removeListener() {
         query.removeEventListener(listener);

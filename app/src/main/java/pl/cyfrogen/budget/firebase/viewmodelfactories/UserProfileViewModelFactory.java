@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.firebase;
+package pl.cyfrogen.budget.firebase.viewmodelfactories;
 
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
@@ -10,8 +10,10 @@ import android.support.v4.app.FragmentActivity;
 
 import com.google.firebase.database.FirebaseDatabase;
 
+import pl.cyfrogen.budget.firebase.FirebaseElement;
+import pl.cyfrogen.budget.firebase.FirebaseObserver;
+import pl.cyfrogen.budget.firebase.FirebaseQueryLiveDataElement;
 import pl.cyfrogen.budget.firebase.models.User;
-import pl.cyfrogen.budget.firebase.models.WalletEntry;
 
 public class UserProfileViewModelFactory implements ViewModelProvider.Factory {
     private String uid;

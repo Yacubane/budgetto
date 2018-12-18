@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -31,4 +32,20 @@
             app:tabTextColor="@color/textColorPrimary"/>
     </android.support.design.widget.AppBarLayout>
     <include layout="@layout/content_main" />
+    <android.support.design.widget.FloatingActionButton
+        android:transitionName="transition_reveal"
+        android:id="@+id/add_wallet_entry_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:src="@drawable/baseline_add_white_18dp"
+        app:backgroundTint="@color/colorPrimary"
+        android:layout_gravity="right|bottom"
+        android:layout_margin="16dp"
+        app:borderWidth="0dp"
+        app:elevation="6dp" />
+
+    -
 </android.support.design.widget.CoordinatorLayout>

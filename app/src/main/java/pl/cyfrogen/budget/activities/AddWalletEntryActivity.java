@@ -28,7 +28,7 @@ import pl.cyfrogen.budget.adapters.NewEntryCategoriesAdapter;
 import pl.cyfrogen.budget.adapters.NewEntryTypesAdapter;
 import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
-import pl.cyfrogen.budget.firebase.UserProfileViewModelFactory;
+import pl.cyfrogen.budget.firebase.viewmodelfactories.UserProfileViewModelFactory;
 import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.models.Category;
 import pl.cyfrogen.budget.models.CurrencyHelper;

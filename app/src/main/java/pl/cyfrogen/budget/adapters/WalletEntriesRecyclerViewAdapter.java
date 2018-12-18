@@ -1,11 +1,9 @@
 package pl.cyfrogen.budget.adapters;
 
 import android.app.AlertDialog;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -19,14 +17,15 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.ListDataSet;
-import pl.cyfrogen.budget.firebase.UserProfileViewModelFactory;
-import pl.cyfrogen.budget.firebase.WalletEntriesViewModelFactory;
+import pl.cyfrogen.budget.firebase.viewmodelfactories.UserProfileViewModelFactory;
+import pl.cyfrogen.budget.firebase.viewmodelfactories.WalletEntriesHistoryViewModelFactory;
 import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
 import pl.cyfrogen.budget.models.Category;
@@ -38,9 +37,9 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
     private final String uid;
     private final FragmentActivity fragmentActivity;
     private ListDataSet<WalletEntry> walletEntries;
+
     private User user;
     boolean firstUserSync = false;
-
 
     public WalletEntriesRecyclerViewAdapter(FragmentActivity fragmentActivity, String uid) {
         this.fragmentActivity = fragmentActivity;
@@ -52,12 +51,13 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
                 if(!element.hasNoError()) return;
                 WalletEntriesRecyclerViewAdapter.this.user = element.getElement();
                 if(!firstUserSync) {
-                    WalletEntriesViewModelFactory.getModel(uid, fragmentActivity).observe(fragmentActivity, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
+                    WalletEntriesHistoryViewModelFactory.getModel(uid, fragmentActivity).observe(fragmentActivity, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
                         @Override
                         public void onChanged(FirebaseElement<ListDataSet<WalletEntry>> element) {
                             if(element.hasNoError()) {
                                 walletEntries = element.getElement();
                                 element.getElement().notifyRecycler(WalletEntriesRecyclerViewAdapter.this);
+
                             }
                         }
                     });
@@ -130,6 +130,10 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
                 })
                 .create().show();
 
+    }
+
+    public void setDateRange(Calendar calendarStart, Calendar calendarEnd) {
+        WalletEntriesHistoryViewModelFactory.getModel(uid, fragmentActivity).setDateFilter(calendarStart, calendarEnd);
     }
 
     public class WalletEntryHolder extends RecyclerView.ViewHolder {

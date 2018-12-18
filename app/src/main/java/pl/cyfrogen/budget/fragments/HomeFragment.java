@@ -1,12 +1,7 @@
 package pl.cyfrogen.budget.fragments;
 
-import android.app.ActivityOptions;
-import android.arch.lifecycle.Observer;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +17,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import pl.cyfrogen.budget.activities.AddWalletEntryActivity;
 import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.models.UserSettings;
@@ -37,8 +30,8 @@ import pl.cyfrogen.budget.models.DefaultCategories;
 import pl.cyfrogen.budget.adapters.TopCategoriesAdapter;
 import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.firebase.ListDataSet;
-import pl.cyfrogen.budget.firebase.UserProfileViewModelFactory;
-import pl.cyfrogen.budget.firebase.WalletEntriesViewModelFactory;
+import pl.cyfrogen.budget.firebase.viewmodelfactories.UserProfileViewModelFactory;
+import pl.cyfrogen.budget.firebase.viewmodelfactories.TopWalletEntriesViewModelFactory;
 import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.libraries.Gauge;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
@@ -49,7 +42,6 @@ public class HomeFragment extends BaseFragment {
 
     public static final CharSequence TITLE = "Home";
     private ListView favoriteListView;
-    private FloatingActionButton addEntryButton;
     private Gauge gauge;
     private TopCategoriesAdapter adapter;
     private ArrayList<TopCategoryListViewModel> categoryModelsHome;
@@ -96,23 +88,8 @@ public class HomeFragment extends BaseFragment {
         adapter = new TopCategoriesAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
 
-        addEntryButton = view.findViewById(R.id.add_wallet_entry_fab);
-        addEntryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ActivityOptions options =
-                            ActivityOptions.makeSceneTransitionAnimation(getActivity(), addEntryButton, addEntryButton.getTransitionName());
-                    startActivity(new Intent(getActivity(), AddWalletEntryActivity.class), options.toBundle());
-                } else {
-                    startActivity(new Intent(getActivity(), AddWalletEntryActivity.class));
-                }
-
-            }
-        });
-
-        WalletEntriesViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
+        TopWalletEntriesViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
 
             @Override
             public void onChanged(FirebaseElement<ListDataSet<WalletEntry>> firebaseElement) {
@@ -130,6 +107,11 @@ public class HomeFragment extends BaseFragment {
                 if (firebaseElement.hasNoError()) {
                     HomeFragment.this.userData = firebaseElement.getElement();
                     dataUpdated();
+
+                    Calendar startDate = getStartDate(userData);
+                    Calendar endDate = getEndDate(userData);
+
+                    TopWalletEntriesViewModelFactory.getModel(getUid(), getActivity()).setDateFilter(startDate, endDate);
                 }
             }
         });
@@ -151,14 +133,6 @@ public class HomeFragment extends BaseFragment {
         long sum = 0;
         for (WalletEntry walletEntry : entryList) {
             sum += walletEntry.balanceDifference;
-        }
-
-
-        Iterator<WalletEntry> iterator = entryList.iterator();
-        while (iterator.hasNext()) {
-            long timestamp = -iterator.next().timestamp;
-            if (timestamp < startDate.getTimeInMillis() || timestamp > endDate.getTimeInMillis())
-                iterator.remove();
         }
 
 
