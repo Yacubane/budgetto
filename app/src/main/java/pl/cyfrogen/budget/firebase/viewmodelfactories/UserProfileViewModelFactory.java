@@ -55,5 +55,6 @@ public class UserProfileViewModelFactory implements ViewModelProvider.Factory {
                 }
             });
         }
+
     }
 }

@@ -31,6 +31,8 @@ public class WalletEntriesHistoryViewModelFactory implements ViewModelProvider.F
 
     public static class Model extends WalletEntriesBaseViewModel {
 
+        private boolean hasDateSet;
+
         public Model(String uid) {
             super(uid, getDefaultQuery(uid));
         }
@@ -41,12 +43,18 @@ public class WalletEntriesHistoryViewModelFactory implements ViewModelProvider.F
 
         public void setDateFilter(Calendar startDate, Calendar endDate) {
             if(startDate != null && endDate != null) {
+                hasDateSet = true;
                 liveData.setQuery(FirebaseDatabase.getInstance().getReference()
                         .child("wallet-entries").child(uid).child("default").orderByChild("timestamp")
                         .startAt(-endDate.getTimeInMillis()).endAt(-startDate.getTimeInMillis()));
             } else {
+                hasDateSet = false;
                 liveData.setQuery(getDefaultQuery(uid));
             }
+        }
+
+        public boolean hasDateSet() {
+            return hasDateSet;
         }
     }
 }
