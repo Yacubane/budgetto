@@ -31,7 +31,7 @@
             app:tabMode="fixed"
             app:tabTextColor="@color/textColorPrimary"/>
     </android.support.design.widget.AppBarLayout>
-    <include layout="@layout/content_main" />
+    <include layout="@layout/content_main_menu" />
     <android.support.design.widget.FloatingActionButton
         android:transitionName="transition_reveal"
         android:id="@+id/add_wallet_entry_fab"
