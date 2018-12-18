@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -43,6 +44,8 @@ public class SignInActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private GoogleSignInClient mGoogleSignInClient;
+    private TextView errorTextView;
+    private SignInButton signInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +58,17 @@ public class SignInActivity extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        SignInButton button = findViewById(R.id.sign_in_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        signInButton = findViewById(R.id.sign_in_button);
+        signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();
+                signInButton.setEnabled(false);
+                errorTextView.setText("");
             }
         });
+
+        errorTextView = findViewById(R.id.error_textview);
     }
 
     @Override
@@ -79,25 +86,18 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e);
-                // ...
+                loginError("Google sign in failed.");
             }
         }
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -107,8 +107,8 @@ public class SignInActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
                         } else {
-                            updateUI(null);
-                        }
+                            loginError("Firebase auth failed.");
+                            }
                     }
                 });
     }
@@ -131,11 +131,17 @@ public class SignInActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                loginError("Firebase fetch user data failed.");
 
             }
         });
 
 
+    }
+
+    private void loginError(String text) {
+        errorTextView.setText(text);
+        signInButton.setEnabled(true);
     }
 
     private void runTransaction(DatabaseReference userReference) {
@@ -158,7 +164,7 @@ public class SignInActivity extends AppCompatActivity {
                     startActivity(new Intent(SignInActivity.this, MainActivity.class));
                     finish();
                 } else {
-                    //todo show error connection
+                    errorTextView.setText("Firebase create user transaction failed.");
                 }
             }
         });
