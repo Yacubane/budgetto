@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.fragments;
+package pl.cyfrogen.budget.ui.main.home;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,15 +23,14 @@ import java.util.Map;
 import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.models.UserSettings;
+import pl.cyfrogen.budget.base.BaseFragment;
 import pl.cyfrogen.budget.models.Category;
-import pl.cyfrogen.budget.models.CurrencyHelper;
-import pl.cyfrogen.budget.models.TopCategoryListViewModel;
+import pl.cyfrogen.budget.util.CurrencyHelper;
 import pl.cyfrogen.budget.models.DefaultCategories;
-import pl.cyfrogen.budget.adapters.TopCategoriesAdapter;
 import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.firebase.ListDataSet;
-import pl.cyfrogen.budget.firebase.viewmodelfactories.UserProfileViewModelFactory;
-import pl.cyfrogen.budget.firebase.viewmodelfactories.TopWalletEntriesViewModelFactory;
+import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFactory;
+import pl.cyfrogen.budget.firebase.viewmodel_factories.TopWalletEntriesViewModelFactory;
 import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.libraries.Gauge;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;

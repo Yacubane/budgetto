@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.activities;
+package pl.cyfrogen.budget.ui.main;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import pl.cyfrogen.budget.R;
-import pl.cyfrogen.budget.adapters.ViewPagerAdapter;
+import pl.cyfrogen.budget.ui.add_entry.AddWalletEntryActivity;
 
 public class MainActivity extends AppCompatActivity {
 

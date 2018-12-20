@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.adapters;
+package pl.cyfrogen.budget.ui.main.home;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -11,11 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Currency;
 
 import pl.cyfrogen.budget.models.Category;
-import pl.cyfrogen.budget.models.CurrencyHelper;
-import pl.cyfrogen.budget.models.TopCategoryListViewModel;
+import pl.cyfrogen.budget.util.CurrencyHelper;
 import pl.cyfrogen.budget.R;
 
 public class TopCategoriesAdapter extends ArrayAdapter<TopCategoryListViewModel> implements View.OnClickListener {

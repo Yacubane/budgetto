@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.adapters;
+package pl.cyfrogen.budget.ui.main.history;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -24,12 +24,12 @@ import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.ListDataSet;
-import pl.cyfrogen.budget.firebase.viewmodelfactories.UserProfileViewModelFactory;
-import pl.cyfrogen.budget.firebase.viewmodelfactories.WalletEntriesHistoryViewModelFactory;
+import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFactory;
+import pl.cyfrogen.budget.firebase.viewmodel_factories.WalletEntriesHistoryViewModelFactory;
 import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
 import pl.cyfrogen.budget.models.Category;
-import pl.cyfrogen.budget.models.CurrencyHelper;
+import pl.cyfrogen.budget.util.CurrencyHelper;
 import pl.cyfrogen.budget.models.DefaultCategories;
 
 public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<WalletEntriesRecyclerViewAdapter.WalletEntryHolder> {

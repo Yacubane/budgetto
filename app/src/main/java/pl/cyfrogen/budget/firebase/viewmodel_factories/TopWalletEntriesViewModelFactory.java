@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.firebase.viewmodelfactories;
+package pl.cyfrogen.budget.firebase.viewmodel_factories;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;

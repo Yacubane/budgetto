@@ -1,6 +1,7 @@
-package pl.cyfrogen.budget.models;
+package pl.cyfrogen.budget.ui.main.home;
 
 import pl.cyfrogen.budget.firebase.models.Currency;
+import pl.cyfrogen.budget.models.Category;
 
 public class TopCategoryListViewModel {
     private long money;

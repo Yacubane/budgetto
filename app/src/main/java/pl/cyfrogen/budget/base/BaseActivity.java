@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.activities;
+package pl.cyfrogen.budget.base;
 
 import android.support.v7.app.AppCompatActivity;
 

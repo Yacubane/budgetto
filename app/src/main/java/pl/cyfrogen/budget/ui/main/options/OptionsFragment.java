@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.fragments;
+package pl.cyfrogen.budget.ui.main.options;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,13 +19,13 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import pl.cyfrogen.budget.R;
-import pl.cyfrogen.budget.activities.AddWalletEntryActivity;
-import pl.cyfrogen.budget.activities.SignInActivity;
+import pl.cyfrogen.budget.ui.add_entry.AddWalletEntryActivity;
+import pl.cyfrogen.budget.ui.signin.SignInActivity;
 import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
-import pl.cyfrogen.budget.firebase.viewmodelfactories.UserProfileViewModelFactory;
+import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFactory;
 import pl.cyfrogen.budget.firebase.models.User;
-import pl.cyfrogen.budget.models.CurrencyHelper;
+import pl.cyfrogen.budget.util.CurrencyHelper;
 
 public class OptionsFragment extends PreferenceFragmentCompat {
     public static final CharSequence TITLE = "Options";

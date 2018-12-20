@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.adapters;
+package pl.cyfrogen.budget.ui.add_entry;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -12,7 +12,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import pl.cyfrogen.budget.R;
-import pl.cyfrogen.budget.models.NewEntryTypeListViewModel;
 
 public class NewEntryTypesAdapter extends ArrayAdapter<String> {
     private final List<NewEntryTypeListViewModel> items;

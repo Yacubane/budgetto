@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.fragments;
+package pl.cyfrogen.budget.ui.main.history;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -18,9 +18,8 @@ import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
 import java.util.Calendar;
 
 import pl.cyfrogen.budget.R;
-import pl.cyfrogen.budget.adapters.WalletEntriesRecyclerViewAdapter;
-import pl.cyfrogen.budget.firebase.viewmodelfactories.UserProfileViewModelFactory;
-import pl.cyfrogen.budget.firebase.viewmodelfactories.WalletEntriesHistoryViewModelFactory;
+import pl.cyfrogen.budget.firebase.viewmodel_factories.WalletEntriesHistoryViewModelFactory;
+import pl.cyfrogen.budget.base.BaseFragment;
 
 public class HistoryFragment extends BaseFragment {
     public static final CharSequence TITLE = "History";

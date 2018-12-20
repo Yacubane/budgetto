@@ -9,15 +9,15 @@
         android:supportsRtl="true"
         android:theme="@style/MaterialTheme">
         <activity
-            android:name=".activities.SignInActivity"
+            android:name=".ui.signin.SignInActivity"
             android:screenOrientation="portrait">
 
         </activity>
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.AddWalletEntryActivity"
+            android:name=".ui.add_entry.AddWalletEntryActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".activities.SplashActivity"
             android:theme="@style/SplashTheme">

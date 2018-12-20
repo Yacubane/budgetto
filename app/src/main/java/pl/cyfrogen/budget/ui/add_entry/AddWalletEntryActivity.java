@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.activities;
+package pl.cyfrogen.budget.ui.add_entry;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -18,25 +18,21 @@ import android.widget.TimePicker;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import pl.cyfrogen.budget.adapters.NewEntryCategoriesAdapter;
-import pl.cyfrogen.budget.adapters.NewEntryTypesAdapter;
+import pl.cyfrogen.budget.activities.CircullarRevealActivity;
 import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
-import pl.cyfrogen.budget.firebase.viewmodelfactories.UserProfileViewModelFactory;
+import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFactory;
 import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.models.Category;
-import pl.cyfrogen.budget.models.CurrencyHelper;
+import pl.cyfrogen.budget.util.CurrencyHelper;
 import pl.cyfrogen.budget.models.DefaultCategories;
 import pl.cyfrogen.budget.R;
-import pl.cyfrogen.budget.firebase.models.EntryCategory;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
-import pl.cyfrogen.budget.models.NewEntryTypeListViewModel;
 
 public class AddWalletEntryActivity extends CircullarRevealActivity {
 
@@ -101,8 +97,6 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
             }
         });
 
-        final ArrayList<EntryCategory> entryCategories = new ArrayList<>();
-        final ArrayList<String> entryCategoriesIds = new ArrayList<>();
 
         final List<Category> categories = Arrays.asList(DefaultCategories.getCategories());
         NewEntryCategoriesAdapter categoryAdapter = new NewEntryCategoriesAdapter(this,

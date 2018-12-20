@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.models;
+package pl.cyfrogen.budget.ui.add_entry;
 
 public class NewEntryTypeListViewModel {
     public final String name;

@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.adapters;
+package pl.cyfrogen.budget.ui.add_entry;
 
 import android.content.Context;
 import android.content.res.ColorStateList;

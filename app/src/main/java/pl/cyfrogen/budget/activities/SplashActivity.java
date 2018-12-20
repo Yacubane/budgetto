@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import pl.cyfrogen.budget.R;
+import pl.cyfrogen.budget.ui.signin.SignInActivity;
 
 public class SplashActivity extends AppCompatActivity {
 

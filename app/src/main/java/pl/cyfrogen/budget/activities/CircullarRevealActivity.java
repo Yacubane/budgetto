@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import pl.cyfrogen.budget.R;
+import pl.cyfrogen.budget.base.BaseActivity;
 import pl.cyfrogen.budget.libraries.GUIUtils;
 import pl.cyfrogen.budget.libraries.OnRevealAnimationListener;
 

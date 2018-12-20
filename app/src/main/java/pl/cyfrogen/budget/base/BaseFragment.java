@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.fragments;
+package pl.cyfrogen.budget.base;
 
 import android.support.v4.app.Fragment;
 
