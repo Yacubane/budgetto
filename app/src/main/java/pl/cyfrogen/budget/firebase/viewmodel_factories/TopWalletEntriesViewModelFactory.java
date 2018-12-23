@@ -12,10 +12,14 @@ import java.util.Calendar;
 import pl.cyfrogen.budget.firebase.viewmodels.WalletEntriesBaseViewModel;
 
 public class TopWalletEntriesViewModelFactory implements ViewModelProvider.Factory {
+    private final Calendar endDate;
+    private final Calendar startDate;
     private String uid;
 
-    TopWalletEntriesViewModelFactory(String uid) {
+    TopWalletEntriesViewModelFactory(String uid, Calendar startDate, Calendar endDate) {
         this.uid = uid;
+        this.startDate=startDate;
+        this.endDate=endDate;
 
     }
 
@@ -24,8 +28,8 @@ public class TopWalletEntriesViewModelFactory implements ViewModelProvider.Facto
         return (T) new Model(uid);
     }
 
-    public static Model getModel(String uid, FragmentActivity activity) {
-        return ViewModelProviders.of(activity, new TopWalletEntriesViewModelFactory(uid)).get(Model.class);
+    public static Model getModel(String uid, Calendar startDate, Calendar endDate, FragmentActivity activity) {
+        return ViewModelProviders.of(activity, new TopWalletEntriesViewModelFactory(uid, startDate, endDate)).get(Model.class);
     }
 
     public static class Model extends WalletEntriesBaseViewModel {

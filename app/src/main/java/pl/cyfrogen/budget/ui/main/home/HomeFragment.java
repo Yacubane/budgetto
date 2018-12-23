@@ -52,6 +52,7 @@ public class HomeFragment extends BaseFragment {
     private TextView gaugeRightLine1TextView;
     private TextView gaugeRightLine2TextView;
     private TextView gaugeBalanceLeftTextView;
+    private boolean firstUserUpdated;
 
     public static HomeFragment newInstance() {
 
@@ -88,16 +89,6 @@ public class HomeFragment extends BaseFragment {
         favoriteListView.setAdapter(adapter);
 
 
-        TopWalletEntriesViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
-
-            @Override
-            public void onChanged(FirebaseElement<ListDataSet<WalletEntry>> firebaseElement) {
-                if (firebaseElement.hasNoError()) {
-                    HomeFragment.this.walletEntryListDataSet = firebaseElement.getElement();
-                    dataUpdated();
-                }
-            }
-        });
 
 
         UserProfileViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
@@ -110,7 +101,26 @@ public class HomeFragment extends BaseFragment {
                     Calendar startDate = getStartDate(userData);
                     Calendar endDate = getEndDate(userData);
 
-                    TopWalletEntriesViewModelFactory.getModel(getUid(), getActivity()).setDateFilter(startDate, endDate);
+                    if(firstUserUpdated) {
+                        TopWalletEntriesViewModelFactory.getModel(getUid(), startDate, endDate, getActivity()).setDateFilter(startDate, endDate);
+
+                    } else {
+                        firstUserUpdated = true;
+                        TopWalletEntriesViewModelFactory.getModel(getUid(), startDate, endDate, getActivity()).observe(HomeFragment.this, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
+
+                            @Override
+                            public void onChanged(FirebaseElement<ListDataSet<WalletEntry>> firebaseElement) {
+                                if (firebaseElement.hasNoError()) {
+                                    HomeFragment.this.walletEntryListDataSet = firebaseElement.getElement();
+                                    dataUpdated();
+                                }
+                            }
+                        });
+
+
+                    }
+                    firstUserUpdated = true;
+
                 }
             }
         });
