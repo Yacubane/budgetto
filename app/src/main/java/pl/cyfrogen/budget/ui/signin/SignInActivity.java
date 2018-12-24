@@ -45,11 +45,13 @@ public class SignInActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private TextView errorTextView;
     private SignInButton signInButton;
+    private View progressView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
+        progressView = findViewById(R.id.progress_view);
         mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -73,11 +75,13 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        showProgressView();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }
 
     private void signIn() {
+        showProgressView();
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -91,6 +95,7 @@ public class SignInActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
+                hideProgressView();
                 loginError("Google sign in failed.");
             }
         }
@@ -107,13 +112,18 @@ public class SignInActivity extends AppCompatActivity {
                             updateUI(user);
                         } else {
                             loginError("Firebase auth failed.");
-                            }
+                            hideProgressView();
+                        }
                     }
                 });
     }
 
     private void updateUI(FirebaseUser currentUser) {
-        if(currentUser == null) return;
+        if (currentUser == null) {
+            progressView.setVisibility(View.GONE);
+            return;
+        }
+        showProgressView();
         final DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
         userReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -131,7 +141,7 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 loginError("Firebase fetch user data failed.");
-
+                hideProgressView();
             }
         });
 
@@ -144,6 +154,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void runTransaction(DatabaseReference userReference) {
+        showProgressView();
         userReference.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -164,9 +175,25 @@ public class SignInActivity extends AppCompatActivity {
                     finish();
                 } else {
                     errorTextView.setText("Firebase create user transaction failed.");
+                    hideProgressView();
                 }
             }
         });
+    }
+
+    private void showProgressView() {
+        progressView.setVisibility(View.VISIBLE);
+
+    }
+
+    private void hideProgressView() {
+        progressView.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 
 }
