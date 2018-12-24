@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.ui.main.chart;
+package pl.cyfrogen.budget.ui.main.statistics;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -16,14 +16,14 @@ import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.models.Category;
 import pl.cyfrogen.budget.util.CurrencyHelper;
 
-public class TopCategoriesChartAdapter extends ArrayAdapter<TopCategoryChartListViewModel> implements View.OnClickListener {
+public class TopCategoriesStatisticsAdapter extends ArrayAdapter<TopCategoryStatisticsListViewModel> implements View.OnClickListener {
 
-    private ArrayList<TopCategoryChartListViewModel> dataSet;
+    private ArrayList<TopCategoryStatisticsListViewModel> dataSet;
     Context context;
 
 
-    public TopCategoriesChartAdapter(ArrayList<TopCategoryChartListViewModel> data, Context context) {
-        super(context, R.layout.top_categories_chart_listview_row, data);
+    public TopCategoriesStatisticsAdapter(ArrayList<TopCategoryStatisticsListViewModel> data, Context context) {
+        super(context, R.layout.top_categories_statistics_listview_row, data);
         this.dataSet = data;
         this.context = context;
 
@@ -39,9 +39,9 @@ public class TopCategoriesChartAdapter extends ArrayAdapter<TopCategoryChartList
     public View getView(int position, View convertView, ViewGroup parent) {
         View listItem = convertView;
         if (listItem == null)
-            listItem = LayoutInflater.from(context).inflate(R.layout.top_categories_chart_listview_row, parent, false);
+            listItem = LayoutInflater.from(context).inflate(R.layout.top_categories_statistics_listview_row, parent, false);
 
-        TopCategoryChartListViewModel dataModel = getItem(position);
+        TopCategoryStatisticsListViewModel dataModel = getItem(position);
         Category category = dataModel.getCategory();
 
         TextView categoryNameTextView = listItem.findViewById(R.id.item_category);

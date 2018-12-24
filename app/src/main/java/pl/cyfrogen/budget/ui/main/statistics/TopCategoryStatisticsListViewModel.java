@@ -1,16 +1,16 @@
-package pl.cyfrogen.budget.ui.main.chart;
+package pl.cyfrogen.budget.ui.main.statistics;
 
 import pl.cyfrogen.budget.firebase.models.Currency;
 import pl.cyfrogen.budget.models.Category;
 
-public class TopCategoryChartListViewModel {
+public class TopCategoryStatisticsListViewModel {
     private final float percentage;
     private long money;
     private final Currency currency;
     private final Category category;
     private String categoryName;
 
-    public TopCategoryChartListViewModel(Category category, String categoryName, Currency currency, long money, float percentage) {
+    public TopCategoryStatisticsListViewModel(Category category, String categoryName, Currency currency, long money, float percentage) {
         this.category = category;
         this.categoryName = categoryName;
         this.currency = currency;

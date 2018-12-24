@@ -5,10 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import pl.cyfrogen.budget.ui.main.chart.ChartFragment;
+import pl.cyfrogen.budget.ui.main.statistics.StatisticsFragment;
 import pl.cyfrogen.budget.ui.main.history.HistoryFragment;
 import pl.cyfrogen.budget.ui.main.home.HomeFragment;
-import pl.cyfrogen.budget.ui.options.OptionsFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -27,7 +26,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 return HistoryFragment.newInstance();
             case 2:
-                return ChartFragment.newInstance();
+                return StatisticsFragment.newInstance();
         }
         return null;
     }
@@ -47,7 +46,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                 return HistoryFragment.TITLE;
 
             case 2:
-                return ChartFragment.TITLE;
+                return StatisticsFragment.TITLE;
         }
         return super.getPageTitle(position);
     }

@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.ui.main.chart;
+package pl.cyfrogen.budget.ui.main.statistics;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,7 +39,7 @@ import pl.cyfrogen.budget.firebase.ListDataSet;
 import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.firebase.models.UserSettings;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
-import pl.cyfrogen.budget.firebase.viewmodel_factories.TopWalletEntriesChartViewModelFactory;
+import pl.cyfrogen.budget.firebase.viewmodel_factories.TopWalletEntriesStatisticsViewModelFactory;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFactory;
 import pl.cyfrogen.budget.models.Category;
 import pl.cyfrogen.budget.models.DefaultCategories;
@@ -47,8 +47,8 @@ import pl.cyfrogen.budget.ui.options.OptionsActivity;
 import pl.cyfrogen.budget.util.CurrencyHelper;
 
 
-public class ChartFragment extends BaseFragment {
-    public static final CharSequence TITLE = "Chart";
+public class StatisticsFragment extends BaseFragment {
+    public static final CharSequence TITLE = "Statistics";
 
     private Menu menu;
     private Calendar calendarStart;
@@ -56,17 +56,17 @@ public class ChartFragment extends BaseFragment {
     private User userData;
     private ListDataSet<WalletEntry> walletEntryListDataSet;
     private PieChart pieChart;
-    private ArrayList<TopCategoryChartListViewModel> categoryModelsHome;
+    private ArrayList<TopCategoryStatisticsListViewModel> categoryModelsHome;
     private ListView favoriteListView;
-    private TopCategoriesChartAdapter adapter;
+    private TopCategoriesStatisticsAdapter adapter;
     private TextView dividerTextView;
     private ProgressBar incomesExpensesProgressBar;
     private TextView incomesTextView;
     private TextView expensesTextView;
 
-    public static ChartFragment newInstance() {
+    public static StatisticsFragment newInstance() {
 
-        return new ChartFragment();
+        return new StatisticsFragment();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ChartFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_chart, container, false);
+        return inflater.inflate(R.layout.fragment_statistics, container, false);
 
 
     }
@@ -94,15 +94,15 @@ public class ChartFragment extends BaseFragment {
 
         categoryModelsHome = new ArrayList<>();
         favoriteListView = view.findViewById(R.id.favourite_categories_list_view);
-        adapter = new TopCategoriesChartAdapter(categoryModelsHome, getActivity().getApplicationContext());
+        adapter = new TopCategoriesStatisticsAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
 
-        TopWalletEntriesChartViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
+        TopWalletEntriesStatisticsViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
 
             @Override
             public void onChanged(FirebaseElement<ListDataSet<WalletEntry>> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
-                    ChartFragment.this.walletEntryListDataSet = firebaseElement.getElement();
+                    StatisticsFragment.this.walletEntryListDataSet = firebaseElement.getElement();
                     dataUpdated();
                 }
             }
@@ -114,7 +114,7 @@ public class ChartFragment extends BaseFragment {
             @Override
             public void onChanged(FirebaseElement<User> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
-                    ChartFragment.this.userData = firebaseElement.getElement();
+                    StatisticsFragment.this.userData = firebaseElement.getElement();
                     dataUpdated();
 
                     calendarStart = getStartDate(userData);
@@ -162,7 +162,7 @@ public class ChartFragment extends BaseFragment {
             for (Map.Entry<Category, Long> categoryModel : categoryModels.entrySet()) {
                 float percentage = categoryModel.getValue() / (float) expensesSumInDateRange;
                 float minPercentageToShowLabelOnChart = 0.1f;
-                categoryModelsHome.add(new TopCategoryChartListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()),
+                categoryModelsHome.add(new TopCategoryStatisticsListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()),
                         userData.currency, categoryModel.getValue(), percentage));
                 pieEntries.add(new PieEntry(-categoryModel.getValue(), percentage > minPercentageToShowLabelOnChart ? categoryModel.getKey().getCategoryVisibleName(getContext()) : ""));
                 pieColors.add(categoryModel.getKey().getIconColor());
@@ -192,9 +192,9 @@ public class ChartFragment extends BaseFragment {
 
             pieChart.invalidate();
 
-            Collections.sort(categoryModelsHome, new Comparator<TopCategoryChartListViewModel>() {
+            Collections.sort(categoryModelsHome, new Comparator<TopCategoryStatisticsListViewModel>() {
                 @Override
-                public int compare(TopCategoryChartListViewModel o1, TopCategoryChartListViewModel o2) {
+                public int compare(TopCategoryStatisticsListViewModel o1, TopCategoryStatisticsListViewModel o2) {
                     return Long.compare(o1.getMoney(), o2.getMoney());
                 }
             });
@@ -219,7 +219,7 @@ public class ChartFragment extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.chart_fragment_menu, menu);
+        inflater.inflate(R.menu.statistics_fragment_menu, menu);
         this.menu = menu;
         updateCalendarIcon(false);
         super.onCreateOptionsMenu(menu, inflater);
@@ -331,7 +331,7 @@ public class ChartFragment extends BaseFragment {
     }
 
     private void calendarUpdated() {
-        TopWalletEntriesChartViewModelFactory.getModel(getUid(), getActivity()).setDateFilter(calendarStart, calendarEnd);
+        TopWalletEntriesStatisticsViewModelFactory.getModel(getUid(), getActivity()).setDateFilter(calendarStart, calendarEnd);
 
     }
 
