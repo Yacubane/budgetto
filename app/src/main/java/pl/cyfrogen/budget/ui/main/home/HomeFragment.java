@@ -151,8 +151,6 @@ public class HomeFragment extends BaseFragment {
         if (userData == null || walletEntryListDataSet == null) return;
 
         List<WalletEntry> entryList = new ArrayList<>(walletEntryListDataSet.getList());
-        System.out.println("#JD LICZNOSC " + entryList.size());
-
 
         Calendar startDate = getStartDate(userData);
         Calendar endDate = getEndDate(userData);

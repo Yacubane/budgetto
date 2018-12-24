@@ -2,6 +2,7 @@ package pl.cyfrogen.budget.ui.main.chart;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -107,9 +108,10 @@ public class ChartFragment extends BaseFragment {
                     ChartFragment.this.userData = firebaseElement.getElement();
                     dataUpdated();
 
-                    calendarStart= getStartDate(userData);
+                    calendarStart = getStartDate(userData);
                     calendarEnd = getEndDate(userData);
 
+                    updateCalendarIcon(false);
                     calendarUpdated();
 
                 }
@@ -120,7 +122,7 @@ public class ChartFragment extends BaseFragment {
 
 
     private void dataUpdated() {
-        if(calendarStart != null && calendarEnd != null) {
+        if (calendarStart != null && calendarEnd != null) {
 
             List<WalletEntry> entryList = new ArrayList<>(walletEntryListDataSet.getList());
 
@@ -149,21 +151,38 @@ public class ChartFragment extends BaseFragment {
             ArrayList<Integer> pieColors = new ArrayList<>();
 
             for (Map.Entry<Category, Long> categoryModel : categoryModels.entrySet()) {
+                float percentage = categoryModel.getValue() / (float) expensesSumInDateRange;
+                float minPercentageToShowLabelOnChart = 0.1f;
                 categoryModelsHome.add(new TopCategoryListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()),
-                        userData.currency, categoryModel.getValue(), categoryModel.getValue() / (float) expensesSumInDateRange));
-                pieEntries.add(new PieEntry(-categoryModel.getValue(), categoryModel.getKey().getCategoryVisibleName(getContext())));
+                        userData.currency, categoryModel.getValue(), percentage));
+                pieEntries.add(new PieEntry(-categoryModel.getValue(), percentage > minPercentageToShowLabelOnChart ? categoryModel.getKey().getCategoryVisibleName(getContext()) : ""));
                 pieColors.add(categoryModel.getKey().getIconColor());
             }
 
             PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
             pieDataSet.setDrawValues(false);
             pieDataSet.setColors(pieColors);
+            pieDataSet.setSliceSpace(2f);
+
             PieData data = new PieData(pieDataSet);
             pieChart.setData(data);
             pieChart.setTouchEnabled(false);
-            pieChart.invalidate();
             pieChart.getLegend().setEnabled(false);
             pieChart.getDescription().setEnabled(false);
+            pieChart.setDrawHoleEnabled(false);
+
+
+            pieChart.setDrawHoleEnabled(true);
+            pieChart.setHoleColor(ContextCompat.getColor(getContext(), R.color.backgroundPrimary));
+            pieChart.setHoleRadius(55f);
+            pieChart.setTransparentCircleRadius(55f);
+            pieChart.setDrawCenterText(true);
+            pieChart.setRotationAngle(270);
+            pieChart.setRotationEnabled(false);
+            pieChart.setHighlightPerTapEnabled(true);
+
+            pieChart.invalidate();
+
             Collections.sort(categoryModelsHome, new Comparator<TopCategoryListViewModel>() {
                 @Override
                 public int compare(TopCategoryListViewModel o1, TopCategoryListViewModel o2) {
@@ -176,19 +195,20 @@ public class ChartFragment extends BaseFragment {
         }
 
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.chart_fragment_menu, menu);
         this.menu = menu;
-        updateCalendarIcon();
+        updateCalendarIcon(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void updateCalendarIcon() {
+    private void updateCalendarIcon(boolean updatedFromUI) {
+        if (menu == null) return;
         MenuItem calendarIcon = menu.findItem(R.id.action_date_range);
         if (calendarIcon == null) return;
-        WalletEntriesHistoryViewModelFactory.Model model = WalletEntriesHistoryViewModelFactory.getModel(getUid(), getActivity());
-        if (model.hasDateSet()) {
+        if (updatedFromUI) {
             calendarIcon.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar_active));
         } else {
             calendarIcon.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar));
@@ -226,7 +246,7 @@ public class ChartFragment extends BaseFragment {
                 calendarEnd.set(Calendar.MINUTE, 59);
                 calendarEnd.set(Calendar.SECOND, 59);
                 calendarUpdated();
-                updateCalendarIcon();
+                updateCalendarIcon(true);
             }
         });
         datePicker.show(getActivity().getFragmentManager(), "TAG");
@@ -240,14 +260,13 @@ public class ChartFragment extends BaseFragment {
         cal.clear(Calendar.MINUTE);
         cal.clear(Calendar.SECOND);
         cal.clear(Calendar.MILLISECOND);
-        if(userData.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
+        if (userData.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
             cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-            if(new Date().getTime() < cal.getTime().getTime())
+            if (new Date().getTime() < cal.getTime().getTime())
                 cal.add(Calendar.DATE, -7);
-        }
-        else {
-            cal.set(Calendar.DAY_OF_MONTH, userData.userSettings.dayOfMonthStart+1);
-            if(new Date().getTime() < cal.getTime().getTime())
+        } else {
+            cal.set(Calendar.DAY_OF_MONTH, userData.userSettings.dayOfMonthStart + 1);
+            if (new Date().getTime() < cal.getTime().getTime())
                 cal.add(Calendar.MONTH, -1);
         }
 
@@ -261,27 +280,35 @@ public class ChartFragment extends BaseFragment {
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
         cal.clear(Calendar.MILLISECOND);
-        if(userData.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
+        if (userData.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
             cal.add(Calendar.DATE, 6);
-        }
-        else {
+        } else {
             cal.add(Calendar.MONTH, 1);
             cal.add(Calendar.DATE, -1);
         }
         return cal;
     }
+
     private int getUserFirstDayOfWeek(User userData) {
         switch (userData.userSettings.dayOfWeekStart) {
-            case 0 : return Calendar.MONDAY;
-            case 1 : return Calendar.TUESDAY;
-            case 2 : return Calendar.WEDNESDAY;
-            case 3 : return Calendar.THURSDAY;
-            case 4 : return Calendar.FRIDAY;
-            case 5 : return Calendar.SATURDAY;
-            case 6 : return Calendar.SUNDAY;
+            case 0:
+                return Calendar.MONDAY;
+            case 1:
+                return Calendar.TUESDAY;
+            case 2:
+                return Calendar.WEDNESDAY;
+            case 3:
+                return Calendar.THURSDAY;
+            case 4:
+                return Calendar.FRIDAY;
+            case 5:
+                return Calendar.SATURDAY;
+            case 6:
+                return Calendar.SUNDAY;
         }
         return 0;
     }
+
     private void calendarUpdated() {
         TopWalletEntriesChartViewModelFactory.getModel(getUid(), getActivity()).setDateFilter(calendarStart, calendarEnd);
 

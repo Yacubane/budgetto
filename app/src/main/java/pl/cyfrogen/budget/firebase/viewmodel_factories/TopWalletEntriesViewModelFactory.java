@@ -43,7 +43,6 @@ public class TopWalletEntriesViewModelFactory implements ViewModelProvider.Facto
         }
 
         public void setDateFilter(Calendar startDate, Calendar endDate) {
-            System.out.println("#JD SETTING FILTER " + startDate.getTimeInMillis() + " " + endDate.getTimeInMillis());
             liveData.setQuery(FirebaseDatabase.getInstance().getReference()
                     .child("wallet-entries").child(uid).child("default").orderByChild("timestamp")
                     .startAt(-endDate.getTimeInMillis()).endAt(-startDate.getTimeInMillis()));
