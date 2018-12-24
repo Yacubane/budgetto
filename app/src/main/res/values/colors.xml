@@ -19,5 +19,6 @@
     <color name="gauge_white">#FFFFFF</color>
 
     <color name="secondary_text_material_light">#8a000000</color>
+    <color name="help_text_material_light">#9b9b9b</color>
 
 </resources>

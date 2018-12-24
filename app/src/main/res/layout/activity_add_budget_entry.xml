@@ -70,7 +70,7 @@
                         android:paddingLeft="12dp"
                         android:paddingTop="8dp"
                         android:text="Choose type:"
-                        android:textColor="@color/primary_text_material_light" />
+                        android:textColor="@color/help_text_material_light" />
 
                     <Spinner
                         android:id="@+id/select_type_spinner"
@@ -92,7 +92,7 @@
                         android:paddingLeft="12dp"
                         android:paddingTop="4dp"
                         android:text="Select category:"
-                        android:textColor="@color/primary_text_material_light" />
+                        android:textColor="@color/help_text_material_light" />
 
                     <Spinner
                         android:id="@+id/select_category_spinner"
@@ -154,7 +154,7 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="12dp"
                             android:text="Select day:"
-                            android:textColor="@color/primary_text_material_light"
+                            android:textColor="@color/help_text_material_light"
                             app:layout_constraintBottom_toTopOf="@+id/choose_day_textview"
                             app:layout_constraintEnd_toStartOf="@+id/guideline3"
                             app:layout_constraintStart_toStartOf="@+id/choose_day_textview"
@@ -167,7 +167,7 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="12dp"
                             android:text="Select time:"
-                            android:textColor="@color/primary_text_material_light"
+                            android:textColor="@color/help_text_material_light"
                             app:layout_constraintEnd_toEndOf="@+id/choose_time_textview"
                             app:layout_constraintStart_toStartOf="@+id/choose_time_textview"
                             app:layout_constraintTop_toTopOf="parent" />
