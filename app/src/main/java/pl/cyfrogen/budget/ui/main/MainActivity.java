@@ -2,7 +2,6 @@ package pl.cyfrogen.budget.ui.main;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 
 import android.support.design.widget.AppBarLayout;
@@ -27,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        Toolbar toolbar = findViewById(R.id.topbar);
-        setSupportActionBar(findViewById(R.id.topbar));
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(findViewById(R.id.toolbar));
 
         addEntryButton = findViewById(R.id.add_wallet_entry_fab);
         addEntryButton.setOnClickListener(new View.OnClickListener() {

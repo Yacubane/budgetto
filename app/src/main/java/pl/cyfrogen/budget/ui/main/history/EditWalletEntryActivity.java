@@ -2,11 +2,15 @@ package pl.cyfrogen.budget.ui.main.history;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -59,6 +63,9 @@ public class EditWalletEntryActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_wallet_entry);
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Edit wallet entry");
 
         walletId = getIntent().getExtras().getString("wallet-entry-id");
 
@@ -116,9 +123,21 @@ public class EditWalletEntryActivity extends BaseActivity {
         removeEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeWalletEntry();
+                showRemoveWalletEntryDialog();
+            }
+
+            public void showRemoveWalletEntryDialog() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditWalletEntryActivity.this);
+                builder.setMessage("Are you sure?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeWalletEntry();
+                    }
+                }).setNegativeButton("No", null).show();
+
             }
         });
+
 
 
         UserProfileViewModelFactory.getModel(getUid(), this).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
@@ -235,6 +254,11 @@ public class EditWalletEntryActivity extends BaseActivity {
                     }
                 }, year, month, day).show();
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem)
+    {
+        onBackPressed();
+        return true;
+    }
 
 }

@@ -5,8 +5,10 @@ import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -52,6 +54,10 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
 
     @Override
     public void onInitialized(Bundle savedInstanceState) {
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Add wallet entry");
+
         selectCategorySpinner = findViewById(R.id.select_category_spinner);
         selectNameEditText = findViewById(R.id.select_name_edittext);
         selectTypeSpinner = findViewById(R.id.select_type_spinner);
@@ -164,7 +170,12 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
                 }, year, month, day).show();
     }
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem)
+    {
+        onBackPressed();
+        return true;
+    }
 
 
 

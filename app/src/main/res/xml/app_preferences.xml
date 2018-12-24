@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:divider="?attr/dividerHorizontal">
     <PreferenceCategory
-        android:title="Settings">
+        android:title="General">
         <Preference
             android:key="@string/pref_key_counter_type"
             android:summary="Compare income and expenses"

@@ -9,15 +9,6 @@
         android:supportsRtl="true"
         android:theme="@style/MaterialTheme">
         <activity
-            android:name=".ui.signin.SignInActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.main.MainActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.add_entry.AddWalletEntryActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -27,8 +18,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.options.OptionsActivity" />
-        <activity android:name=".ui.main.history.EditWalletEntryActivity"></activity>
+        <activity
+            android:name=".ui.signin.SignInActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.add_entry.AddWalletEntryActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.main.MainActivity" />
+        </activity>
+
+        <activity android:name=".ui.options.OptionsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.main.MainActivity" />
+        </activity>
+        <activity android:name=".ui.main.history.EditWalletEntryActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.main.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
