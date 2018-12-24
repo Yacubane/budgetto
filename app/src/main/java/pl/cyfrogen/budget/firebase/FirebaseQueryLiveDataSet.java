@@ -14,24 +14,24 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<FirebaseElement<ListDa
     private final Class<T> genericTypeClass;
     private Query query;
     private ValueEventListener listener;
-    ListDataSet<T> walletEntriesLiveDataSet;
-    private List<T> walletEntries;
-    private ArrayList<String> walletEntriesIds;
+    ListDataSet<T> liveDataSet;
+    private List<T> liveDataSetEntries;
+    private ArrayList<String> liveDataSetIndexes;
 
     public FirebaseQueryLiveDataSet(Class<T> genericTypeClass, Query query) {
         listener = new ValueEventListener();
-        walletEntriesLiveDataSet = new ListDataSet<>();
-        walletEntries = walletEntriesLiveDataSet.list;
-        walletEntriesIds = walletEntriesLiveDataSet.getIDList();
-        setValue(new FirebaseElement<>(walletEntriesLiveDataSet));
+        liveDataSet = new ListDataSet<>();
+        liveDataSetEntries = liveDataSet.list;
+        liveDataSetIndexes = liveDataSet.getIDList();
+        setValue(new FirebaseElement<>(liveDataSet));
         this.genericTypeClass = genericTypeClass;
         this.query = query;
     }
 
     public void setQuery(Query query) {
         removeListener();
-        walletEntriesLiveDataSet.clear();
-        setValue(new FirebaseElement<>(walletEntriesLiveDataSet));
+        liveDataSet.clear();
+        setValue(new FirebaseElement<>(liveDataSet));
         this.query = query;
         setListener();
     }
@@ -54,7 +54,7 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<FirebaseElement<ListDa
     @Override
     protected void onInactive() {
         removeListener();
-        walletEntriesLiveDataSet.clear();
+        liveDataSet.clear();
     }
 
 
@@ -66,28 +66,28 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<FirebaseElement<ListDa
             T item = dataSnapshot.getValue(genericTypeClass);
 
             String key = dataSnapshot.getKey();
-            if (!walletEntriesIds.contains(key)) {
+            if (!liveDataSetIndexes.contains(key)) {
                 int insertedPosition;
                 if (previousChildName == null) {
-                    walletEntries.add(0, item);
-                    walletEntriesIds.add(0, key);
+                    liveDataSetEntries.add(0, item);
+                    liveDataSetIndexes.add(0, key);
                     insertedPosition = 0;
                 } else {
-                    int previousIndex = walletEntriesIds.indexOf(previousChildName);
+                    int previousIndex = liveDataSetIndexes.indexOf(previousChildName);
                     int nextIndex = previousIndex + 1;
-                    if (nextIndex == walletEntries.size()) {
-                        walletEntries.add(item);
-                        walletEntriesIds.add(key);
+                    if (nextIndex == liveDataSetEntries.size()) {
+                        liveDataSetEntries.add(item);
+                        liveDataSetIndexes.add(key);
                     } else {
-                        walletEntries.add(nextIndex, item);
-                        walletEntriesIds.add(nextIndex, key);
+                        liveDataSetEntries.add(nextIndex, item);
+                        liveDataSetIndexes.add(nextIndex, key);
                     }
                     insertedPosition = nextIndex;
                 }
 
                 //notifyItemInserted(insertedPosition);
-                walletEntriesLiveDataSet.setItemInserted(insertedPosition);
-                setValue(new FirebaseElement<>(walletEntriesLiveDataSet));
+                liveDataSet.setItemInserted(insertedPosition);
+                setValue(new FirebaseElement<>(liveDataSet));
             }
         }
 
@@ -96,13 +96,13 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<FirebaseElement<ListDa
             T item = dataSnapshot.getValue(genericTypeClass);
             String key = dataSnapshot.getKey();
 
-            if (walletEntriesIds.contains(key)) {
-                int index = walletEntriesIds.indexOf(key);
-                T oldItem = walletEntries.get(index);
-                walletEntries.set(index, item);
+            if (liveDataSetIndexes.contains(key)) {
+                int index = liveDataSetIndexes.indexOf(key);
+                T oldItem = liveDataSetEntries.get(index);
+                liveDataSetEntries.set(index, item);
                 //notifyItemChanged(index);
-                walletEntriesLiveDataSet.setItemChanged(index);
-                setValue(new FirebaseElement<>(walletEntriesLiveDataSet));
+                liveDataSet.setItemChanged(index);
+                setValue(new FirebaseElement<>(liveDataSet));
 
             }
         }
@@ -111,17 +111,17 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<FirebaseElement<ListDa
         public void onChildRemoved(DataSnapshot dataSnapshot) {
             String key = dataSnapshot.getKey();
 
-            if (walletEntriesIds.contains(key)) {
-                int index = walletEntriesIds.indexOf(key);
+            if (liveDataSetIndexes.contains(key)) {
+                int index = liveDataSetIndexes.indexOf(key);
                 if (index == -1) return;
-                T item = walletEntries.get(index);
+                T item = liveDataSetEntries.get(index);
 
-                walletEntriesIds.remove(index);
-                walletEntries.remove(index);
+                liveDataSetIndexes.remove(index);
+                liveDataSetEntries.remove(index);
 
                 //notifyItemRemoved(index);
-                walletEntriesLiveDataSet.setItemRemoved(index);
-                setValue(new FirebaseElement<>(walletEntriesLiveDataSet));
+                liveDataSet.setItemRemoved(index);
+                setValue(new FirebaseElement<>(liveDataSet));
             }
         }
 
@@ -130,29 +130,29 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<FirebaseElement<ListDa
             T item = dataSnapshot.getValue(genericTypeClass);
             String key = dataSnapshot.getKey();
 
-            int index = walletEntriesIds.indexOf(key);
-            walletEntries.remove(index);
-            walletEntriesIds.remove(index);
+            int index = liveDataSetIndexes.indexOf(key);
+            liveDataSetEntries.remove(index);
+            liveDataSetIndexes.remove(index);
             int newPosition;
             if (previousChildName == null) {
-                walletEntries.add(0, item);
-                walletEntriesIds.add(0, key);
+                liveDataSetEntries.add(0, item);
+                liveDataSetIndexes.add(0, key);
                 newPosition = 0;
             } else {
-                int previousIndex = walletEntriesIds.indexOf(previousChildName);
+                int previousIndex = liveDataSetIndexes.indexOf(previousChildName);
                 int nextIndex = previousIndex + 1;
-                if (nextIndex == walletEntries.size()) {
-                    walletEntries.add(item);
-                    walletEntriesIds.add(key);
+                if (nextIndex == liveDataSetEntries.size()) {
+                    liveDataSetEntries.add(item);
+                    liveDataSetIndexes.add(key);
                 } else {
-                    walletEntries.add(nextIndex, item);
-                    walletEntriesIds.add(nextIndex, key);
+                    liveDataSetEntries.add(nextIndex, item);
+                    liveDataSetIndexes.add(nextIndex, key);
                 }
                 newPosition = nextIndex;
             }
             //notifyItemMoved(index, newPosition);
-            walletEntriesLiveDataSet.setItemMoved(index, newPosition);
-            setValue(new FirebaseElement<>(walletEntriesLiveDataSet));
+            liveDataSet.setItemMoved(index, newPosition);
+            setValue(new FirebaseElement<>(liveDataSet));
 
 
         }
