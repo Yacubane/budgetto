@@ -44,6 +44,22 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.pager);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                ((AppBarLayout) toolbar.getParent()).setExpanded(true, true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+
         tabLayout = findViewById(R.id.tab);
         tabLayout.setupWithViewPager(viewPager);
 
