@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -18,6 +19,8 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -54,6 +57,7 @@ public class ChartFragment extends BaseFragment {
     private ArrayList<TopCategoryChartListViewModel> categoryModelsHome;
     private ListView favoriteListView;
     private TopCategoriesChartAdapter adapter;
+    private TextView dividerTextView;
 
     public static ChartFragment newInstance() {
 
@@ -77,6 +81,7 @@ public class ChartFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         pieChart = view.findViewById(R.id.pie_chart);
+        dividerTextView = view.findViewById(R.id.divider_textview);
         categoryModelsHome = new ArrayList<>();
         favoriteListView = view.findViewById(R.id.favourite_categories_list_view);
         adapter = new TopCategoriesChartAdapter(categoryModelsHome, getActivity().getApplicationContext());
@@ -116,7 +121,7 @@ public class ChartFragment extends BaseFragment {
 
 
     private void dataUpdated() {
-        if (calendarStart != null && calendarEnd != null && walletEntryListDataSet !=  null) {
+        if (calendarStart != null && calendarEnd != null && walletEntryListDataSet != null) {
 
             List<WalletEntry> entryList = new ArrayList<>(walletEntryListDataSet.getList());
 
@@ -186,6 +191,11 @@ public class ChartFragment extends BaseFragment {
 
 
             adapter.notifyDataSetChanged();
+
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
+
+            dividerTextView.setText("Top categories: (" + dateFormat.format(calendarStart.getTime())
+                    + "  -  " + dateFormat.format(calendarEnd.getTime()) + ")");
         }
 
     }
