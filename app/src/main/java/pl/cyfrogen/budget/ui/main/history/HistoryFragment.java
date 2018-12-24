@@ -13,9 +13,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import pl.cyfrogen.budget.R;
@@ -30,6 +33,7 @@ public class HistoryFragment extends BaseFragment {
     private RecyclerView historyRecyclerView;
     private WalletEntriesRecyclerViewAdapter historyRecyclerViewAdapter;
     private Menu menu;
+    private TextView dividerTextView;
 
     public static HistoryFragment newInstance() {
 
@@ -52,6 +56,8 @@ public class HistoryFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        dividerTextView = view.findViewById(R.id.divider_textview);
+        dividerTextView.setText("Last 100 elements:");
         historyRecyclerView = view.findViewById(R.id.history_recycler_view);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         historyRecyclerViewAdapter = new WalletEntriesRecyclerViewAdapter(getActivity(), getUid());
@@ -75,7 +81,6 @@ public class HistoryFragment extends BaseFragment {
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -96,6 +101,11 @@ public class HistoryFragment extends BaseFragment {
         WalletEntriesHistoryViewModelFactory.Model model = WalletEntriesHistoryViewModelFactory.getModel(getUid(), getActivity());
         if (model.hasDateSet()) {
             calendarIcon.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar_active));
+
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
+
+            dividerTextView.setText("Date range: " + dateFormat.format(model.getStartDate().getTime())
+                    + "  -  " + dateFormat.format(model.getEndDate().getTime()));
         } else {
             calendarIcon.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar));
         }

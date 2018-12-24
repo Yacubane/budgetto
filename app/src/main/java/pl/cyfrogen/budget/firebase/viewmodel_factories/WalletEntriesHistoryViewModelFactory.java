@@ -31,30 +31,40 @@ public class WalletEntriesHistoryViewModelFactory implements ViewModelProvider.F
 
     public static class Model extends WalletEntriesBaseViewModel {
 
-        private boolean hasDateSet;
+        private Calendar endDate;
+        private Calendar startDate;
 
         public Model(String uid) {
             super(uid, getDefaultQuery(uid));
         }
+
         private static Query getDefaultQuery(String uid) {
             return FirebaseDatabase.getInstance().getReference()
                     .child("wallet-entries").child(uid).child("default").orderByChild("timestamp").limitToFirst(500);
         }
 
         public void setDateFilter(Calendar startDate, Calendar endDate) {
-            if(startDate != null && endDate != null) {
-                hasDateSet = true;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            if (startDate != null && endDate != null) {
                 liveData.setQuery(FirebaseDatabase.getInstance().getReference()
                         .child("wallet-entries").child(uid).child("default").orderByChild("timestamp")
                         .startAt(-endDate.getTimeInMillis()).endAt(-startDate.getTimeInMillis()));
             } else {
-                hasDateSet = false;
                 liveData.setQuery(getDefaultQuery(uid));
             }
         }
 
         public boolean hasDateSet() {
-            return hasDateSet;
+            return startDate != null && endDate != null;
+        }
+
+        public Calendar getStartDate() {
+            return startDate;
+        }
+
+        public Calendar getEndDate() {
+            return endDate;
         }
     }
 }
