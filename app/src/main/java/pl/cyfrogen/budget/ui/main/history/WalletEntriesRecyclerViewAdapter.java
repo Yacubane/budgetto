@@ -3,6 +3,7 @@ package pl.cyfrogen.budget.ui.main.history;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -98,6 +99,15 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
             public boolean onLongClick(View v) {
                 createDeleteDialog(id, uid, walletEntry.balanceDifference, fragmentActivity);
                 return false;
+            }
+        });
+
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(fragmentActivity, EditWalletEntryActivity.class);
+                intent.putExtra("wallet-entry-id", id);
+                fragmentActivity.startActivity(intent);
             }
         });
     }

@@ -10,7 +10,7 @@
         android:theme="@style/MaterialTheme">
         <activity
             android:name=".ui.signin.SignInActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.main.MainActivity"
             android:screenOrientation="portrait" />
@@ -27,7 +27,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.options.OptionsActivity"></activity>
+        <activity android:name=".ui.options.OptionsActivity" />
+        <activity android:name=".ui.main.history.EditWalletEntryActivity"></activity>
     </application>
 
 </manifest>

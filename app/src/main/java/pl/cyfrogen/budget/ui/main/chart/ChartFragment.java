@@ -122,7 +122,7 @@ public class ChartFragment extends BaseFragment {
 
 
     private void dataUpdated() {
-        if (calendarStart != null && calendarEnd != null) {
+        if (calendarStart != null && calendarEnd != null && walletEntryListDataSet !=  null) {
 
             List<WalletEntry> entryList = new ArrayList<>(walletEntryListDataSet.getList());
 

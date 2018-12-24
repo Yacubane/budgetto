@@ -54,7 +54,10 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<FirebaseElement<ListDa
     @Override
     protected void onInactive() {
         removeListener();
+        walletEntriesLiveDataSet.clear();
     }
+
+
 
     private class ValueEventListener implements ChildEventListener {
 
@@ -63,7 +66,6 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<FirebaseElement<ListDa
             T item = dataSnapshot.getValue(genericTypeClass);
 
             String key = dataSnapshot.getKey();
-
             if (!walletEntriesIds.contains(key)) {
                 int insertedPosition;
                 if (previousChildName == null) {
