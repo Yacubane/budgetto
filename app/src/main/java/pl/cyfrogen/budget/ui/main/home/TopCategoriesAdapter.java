@@ -57,6 +57,9 @@ public class TopCategoriesAdapter extends ArrayAdapter<TopCategoryListViewModel>
             sumTextView.setTextColor(ContextCompat.getColor(context, R.color.gauge_expense));
         else
             sumTextView.setTextColor(ContextCompat.getColor(context, R.color.gauge_income));
+
+        listItem.setClickable(false);
+        listItem.setOnClickListener(null);
         return listItem;
     }
 }

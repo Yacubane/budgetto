@@ -16,13 +16,13 @@ import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.models.Category;
 import pl.cyfrogen.budget.util.CurrencyHelper;
 
-public class TopCategoriesAdapter extends ArrayAdapter<TopCategoryListViewModel> implements View.OnClickListener {
+public class TopCategoriesChartAdapter extends ArrayAdapter<TopCategoryChartListViewModel> implements View.OnClickListener {
 
-    private ArrayList<TopCategoryListViewModel> dataSet;
+    private ArrayList<TopCategoryChartListViewModel> dataSet;
     Context context;
 
 
-    public TopCategoriesAdapter(ArrayList<TopCategoryListViewModel> data, Context context) {
+    public TopCategoriesChartAdapter(ArrayList<TopCategoryChartListViewModel> data, Context context) {
         super(context, R.layout.top_categories_chart_listview_row, data);
         this.dataSet = data;
         this.context = context;
@@ -41,7 +41,7 @@ public class TopCategoriesAdapter extends ArrayAdapter<TopCategoryListViewModel>
         if (listItem == null)
             listItem = LayoutInflater.from(context).inflate(R.layout.top_categories_chart_listview_row, parent, false);
 
-        TopCategoryListViewModel dataModel = getItem(position);
+        TopCategoryChartListViewModel dataModel = getItem(position);
         Category category = dataModel.getCategory();
 
         TextView categoryNameTextView = listItem.findViewById(R.id.item_category);
@@ -60,6 +60,8 @@ public class TopCategoriesAdapter extends ArrayAdapter<TopCategoryListViewModel>
             sumTextView.setTextColor(ContextCompat.getColor(context, R.color.gauge_expense));
         else
             sumTextView.setTextColor(ContextCompat.getColor(context, R.color.gauge_income));
+        listItem.setClickable(false);
+        listItem.setOnClickListener(null);
         return listItem;
     }
 }

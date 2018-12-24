@@ -1,8 +1,6 @@
 package pl.cyfrogen.budget.ui.main.chart;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -18,7 +16,6 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
 
 import java.util.ArrayList;
@@ -39,12 +36,9 @@ import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.firebase.models.UserSettings;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.TopWalletEntriesChartViewModelFactory;
-import pl.cyfrogen.budget.firebase.viewmodel_factories.TopWalletEntriesViewModelFactory;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFactory;
-import pl.cyfrogen.budget.firebase.viewmodel_factories.WalletEntriesHistoryViewModelFactory;
 import pl.cyfrogen.budget.models.Category;
 import pl.cyfrogen.budget.models.DefaultCategories;
-import pl.cyfrogen.budget.ui.main.home.HomeFragment;
 import pl.cyfrogen.budget.ui.options.OptionsActivity;
 
 
@@ -57,9 +51,9 @@ public class ChartFragment extends BaseFragment {
     private User userData;
     private ListDataSet<WalletEntry> walletEntryListDataSet;
     private PieChart pieChart;
-    private ArrayList<TopCategoryListViewModel> categoryModelsHome;
+    private ArrayList<TopCategoryChartListViewModel> categoryModelsHome;
     private ListView favoriteListView;
-    private TopCategoriesAdapter adapter;
+    private TopCategoriesChartAdapter adapter;
 
     public static ChartFragment newInstance() {
 
@@ -85,7 +79,7 @@ public class ChartFragment extends BaseFragment {
         pieChart = view.findViewById(R.id.pie_chart);
         categoryModelsHome = new ArrayList<>();
         favoriteListView = view.findViewById(R.id.favourite_categories_list_view);
-        adapter = new TopCategoriesAdapter(categoryModelsHome, getActivity().getApplicationContext());
+        adapter = new TopCategoriesChartAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
 
         TopWalletEntriesChartViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
@@ -153,7 +147,7 @@ public class ChartFragment extends BaseFragment {
             for (Map.Entry<Category, Long> categoryModel : categoryModels.entrySet()) {
                 float percentage = categoryModel.getValue() / (float) expensesSumInDateRange;
                 float minPercentageToShowLabelOnChart = 0.1f;
-                categoryModelsHome.add(new TopCategoryListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()),
+                categoryModelsHome.add(new TopCategoryChartListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()),
                         userData.currency, categoryModel.getValue(), percentage));
                 pieEntries.add(new PieEntry(-categoryModel.getValue(), percentage > minPercentageToShowLabelOnChart ? categoryModel.getKey().getCategoryVisibleName(getContext()) : ""));
                 pieColors.add(categoryModel.getKey().getIconColor());
@@ -183,9 +177,9 @@ public class ChartFragment extends BaseFragment {
 
             pieChart.invalidate();
 
-            Collections.sort(categoryModelsHome, new Comparator<TopCategoryListViewModel>() {
+            Collections.sort(categoryModelsHome, new Comparator<TopCategoryChartListViewModel>() {
                 @Override
-                public int compare(TopCategoryListViewModel o1, TopCategoryListViewModel o2) {
+                public int compare(TopCategoryChartListViewModel o1, TopCategoryChartListViewModel o2) {
                     return Long.compare(o1.getMoney(), o2.getMoney());
                 }
             });
