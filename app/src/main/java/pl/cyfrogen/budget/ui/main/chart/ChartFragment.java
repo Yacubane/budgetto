@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -43,6 +44,7 @@ import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFacto
 import pl.cyfrogen.budget.models.Category;
 import pl.cyfrogen.budget.models.DefaultCategories;
 import pl.cyfrogen.budget.ui.options.OptionsActivity;
+import pl.cyfrogen.budget.util.CurrencyHelper;
 
 
 public class ChartFragment extends BaseFragment {
@@ -58,6 +60,9 @@ public class ChartFragment extends BaseFragment {
     private ListView favoriteListView;
     private TopCategoriesChartAdapter adapter;
     private TextView dividerTextView;
+    private ProgressBar incomesExpensesProgressBar;
+    private TextView incomesTextView;
+    private TextView expensesTextView;
 
     public static ChartFragment newInstance() {
 
@@ -82,6 +87,11 @@ public class ChartFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         pieChart = view.findViewById(R.id.pie_chart);
         dividerTextView = view.findViewById(R.id.divider_textview);
+        View incomesExpensesView = view.findViewById(R.id.incomes_expenses_view);
+        incomesExpensesProgressBar = incomesExpensesView.findViewById(R.id.progress_bar);
+        expensesTextView = incomesExpensesView.findViewById(R.id.expenses_textview);
+        incomesTextView = incomesExpensesView.findViewById(R.id.incomes_textview);
+
         categoryModelsHome = new ArrayList<>();
         favoriteListView = view.findViewById(R.id.favourite_categories_list_view);
         adapter = new TopCategoriesChartAdapter(categoryModelsHome, getActivity().getApplicationContext());
@@ -194,8 +204,15 @@ public class ChartFragment extends BaseFragment {
 
             DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
 
-            dividerTextView.setText("Top categories: (" + dateFormat.format(calendarStart.getTime())
-                    + "  -  " + dateFormat.format(calendarEnd.getTime()) + ")");
+            dividerTextView.setText("Date range: " + dateFormat.format(calendarStart.getTime())
+                    + "  -  " + dateFormat.format(calendarEnd.getTime()));
+
+            expensesTextView.setText(CurrencyHelper.formatCurrency(userData.currency, expensesSumInDateRange));
+            incomesTextView.setText(CurrencyHelper.formatCurrency(userData.currency, incomesSumInDateRange));
+
+            float progress = 100 * incomesSumInDateRange / (float) (incomesSumInDateRange - expensesSumInDateRange);
+            incomesExpensesProgressBar.setProgress((int)progress);
+
         }
 
     }

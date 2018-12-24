@@ -24,10 +24,36 @@
             android:orientation="vertical"
             android:paddingLeft="16dp"
             android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:fontFamily="sans-serif-medium"
+                android:text="Incomes/expenses comparasion:"
+                android:textColor="@color/secondary_text_material_light"
+                android:textSize="16sp" />
+
+
+        </RelativeLayout>
+        <include
+            android:id="@+id/incomes_expenses_view"
+            layout="@layout/income_expenses_comparasion_row" />
+
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#dedede"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
             android:paddingBottom="8dp">
 
             <TextView
-                android:id="@+id/divider_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -58,18 +84,21 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.4" />
+
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
+
         <com.github.mikephil.charting.charts.PieChart
 
             android:id="@+id/pie_chart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:clickable="false"
             app:layout_constraintBottom_toTopOf="@+id/guideline5"
@@ -80,6 +109,29 @@
         </com.github.mikephil.charting.charts.PieChart>
     </FrameLayout>
 
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#dedede"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/divider_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:fontFamily="sans-serif-medium"
+            android:text="Top expenses:"
+            android:textColor="@color/secondary_text_material_light"
+            android:textSize="16sp" />
+
+
+    </RelativeLayout>
 
 
 </android.support.constraint.ConstraintLayout>
