@@ -1,6 +1,7 @@
 package pl.cyfrogen.budget.ui.main.history;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +21,7 @@ import java.util.Calendar;
 import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.WalletEntriesHistoryViewModelFactory;
 import pl.cyfrogen.budget.base.BaseFragment;
+import pl.cyfrogen.budget.ui.options.OptionsActivity;
 
 public class HistoryFragment extends BaseFragment {
     public static final CharSequence TITLE = "History";
@@ -36,7 +38,7 @@ public class HistoryFragment extends BaseFragment {
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
@@ -72,6 +74,22 @@ public class HistoryFragment extends BaseFragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_date_range:
+                showSelectDateRangeDialog();
+                return true;
+            case R.id.action_options:
+                startActivity(new Intent(getActivity(), OptionsActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void updateCalendarIcon() {
         MenuItem calendarIcon = menu.findItem(R.id.action_date_range);
         if (calendarIcon == null) return;
@@ -82,17 +100,6 @@ public class HistoryFragment extends BaseFragment {
             calendarIcon.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar));
         }
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_date_range:
-                showSelectDateRangeDialog();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     private void showSelectDateRangeDialog() {

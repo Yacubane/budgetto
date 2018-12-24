@@ -34,14 +34,9 @@ public class MainActivity extends AppCompatActivity {
         addEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ActivityOptions options =
-                            ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, addEntryButton, addEntryButton.getTransitionName());
-                    startActivity(new Intent(MainActivity.this, AddWalletEntryActivity.class), options.toBundle());
-                } else {
-                    startActivity(new Intent(MainActivity.this, AddWalletEntryActivity.class));
-                }
+                ActivityOptions options =
+                        ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, addEntryButton, addEntryButton.getTransitionName());
+                startActivity(new Intent(MainActivity.this, AddWalletEntryActivity.class), options.toBundle());
 
             }
         });
@@ -49,31 +44,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.pager);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                ((AppBarLayout) toolbar.getParent()).setExpanded(true, true);
-                if (i == 0) {
-                    addEntryButton.show();
-                } else if (i == 1) {
-                    addEntryButton.show();
-
-                } else if (i == 2) {
-                    addEntryButton.hide();
-                }
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
-
         tabLayout = findViewById(R.id.tab);
         tabLayout.setupWithViewPager(viewPager);
 

@@ -11,12 +11,12 @@ import java.util.Calendar;
 
 import pl.cyfrogen.budget.firebase.viewmodels.WalletEntriesBaseViewModel;
 
-public class TopWalletEntriesViewModelFactory implements ViewModelProvider.Factory {
+public class TopWalletEntriesChartViewModelFactory implements ViewModelProvider.Factory {
     private Calendar endDate;
     private Calendar startDate;
     private String uid;
 
-    TopWalletEntriesViewModelFactory(String uid) {
+    TopWalletEntriesChartViewModelFactory(String uid) {
         this.uid = uid;
 
 
@@ -32,7 +32,7 @@ public class TopWalletEntriesViewModelFactory implements ViewModelProvider.Facto
     }
 
     public static Model getModel(String uid, FragmentActivity activity) {
-        return ViewModelProviders.of(activity, new TopWalletEntriesViewModelFactory(uid)).get(Model.class);
+        return ViewModelProviders.of(activity, new TopWalletEntriesChartViewModelFactory(uid)).get(Model.class);
     }
 
     public static class Model extends WalletEntriesBaseViewModel {
@@ -43,7 +43,6 @@ public class TopWalletEntriesViewModelFactory implements ViewModelProvider.Facto
         }
 
         public void setDateFilter(Calendar startDate, Calendar endDate) {
-            System.out.println("#JD SETTING FILTER " + startDate.getTimeInMillis() + " " + endDate.getTimeInMillis());
             liveData.setQuery(FirebaseDatabase.getInstance().getReference()
                     .child("wallet-entries").child(uid).child("default").orderByChild("timestamp")
                     .startAt(-endDate.getTimeInMillis()).endAt(-startDate.getTimeInMillis()));

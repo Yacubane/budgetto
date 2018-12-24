@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.ui.main.options;
+package pl.cyfrogen.budget.ui.options;
 
 import android.content.DialogInterface;
 import android.content.Intent;

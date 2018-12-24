@@ -21,6 +21,9 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+    }
 }
 
 dependencies {
@@ -40,5 +43,6 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation "android.arch.lifecycle:viewmodel:1.1.1"
     implementation 'com.leavjenn.smoothdaterangepicker:library:0.2.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 
 }

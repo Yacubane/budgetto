@@ -1,9 +1,13 @@
 package pl.cyfrogen.budget.ui.main.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -24,7 +28,9 @@ import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.models.UserSettings;
 import pl.cyfrogen.budget.base.BaseFragment;
+import pl.cyfrogen.budget.firebase.viewmodel_factories.WalletEntriesHistoryViewModelFactory;
 import pl.cyfrogen.budget.models.Category;
+import pl.cyfrogen.budget.ui.options.OptionsActivity;
 import pl.cyfrogen.budget.util.CurrencyHelper;
 import pl.cyfrogen.budget.models.DefaultCategories;
 import pl.cyfrogen.budget.R;
@@ -52,11 +58,16 @@ public class HomeFragment extends BaseFragment {
     private TextView gaugeRightLine1TextView;
     private TextView gaugeRightLine2TextView;
     private TextView gaugeBalanceLeftTextView;
-    private boolean firstUserUpdated;
 
     public static HomeFragment newInstance() {
 
         return new HomeFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -89,6 +100,16 @@ public class HomeFragment extends BaseFragment {
         favoriteListView.setAdapter(adapter);
 
 
+        TopWalletEntriesViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
+
+            @Override
+            public void onChanged(FirebaseElement<ListDataSet<WalletEntry>> firebaseElement) {
+                if (firebaseElement.hasNoError()) {
+                    HomeFragment.this.walletEntryListDataSet = firebaseElement.getElement();
+                    dataUpdated();
+                }
+            }
+        });
 
 
         UserProfileViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
@@ -101,26 +122,7 @@ public class HomeFragment extends BaseFragment {
                     Calendar startDate = getStartDate(userData);
                     Calendar endDate = getEndDate(userData);
 
-                    if(firstUserUpdated) {
-                        TopWalletEntriesViewModelFactory.getModel(getUid(), startDate, endDate, getActivity()).setDateFilter(startDate, endDate);
-
-                    } else {
-                        firstUserUpdated = true;
-                        TopWalletEntriesViewModelFactory.getModel(getUid(), startDate, endDate, getActivity()).observe(HomeFragment.this, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
-
-                            @Override
-                            public void onChanged(FirebaseElement<ListDataSet<WalletEntry>> firebaseElement) {
-                                if (firebaseElement.hasNoError()) {
-                                    HomeFragment.this.walletEntryListDataSet = firebaseElement.getElement();
-                                    dataUpdated();
-                                }
-                            }
-                        });
-
-
-                    }
-                    firstUserUpdated = true;
-
+                    TopWalletEntriesViewModelFactory.getModel(getUid(), getActivity()).setDateFilter(startDate, endDate);
                 }
             }
         });
@@ -128,18 +130,34 @@ public class HomeFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.home_fragment_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_options:
+                startActivity(new Intent(getActivity(), OptionsActivity.class));
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void dataUpdated() {
         if (userData == null || walletEntryListDataSet == null) return;
 
         List<WalletEntry> entryList = new ArrayList<>(walletEntryListDataSet.getList());
+        System.out.println("#JD LICZNOSC " + entryList.size());
 
 
         Calendar startDate = getStartDate(userData);
         Calendar endDate = getEndDate(userData);
 
         DateFormat dateFormat = new SimpleDateFormat("dd-MM");
-
-
 
 
         long expensesSumInDateRange = 0;
@@ -191,10 +209,10 @@ public class HomeFragment extends BaseFragment {
 
             long limit = userData.userSettings.limit;
             long expenses = -expensesSumInDateRange;
-            int percentage = (int) (expenses * 100 /(double) limit);
-            if(percentage > 100) percentage = 100;
+            int percentage = (int) (expenses * 100 / (double) limit);
+            if (percentage > 100) percentage = 100;
             gauge.setValue(percentage);
-            gaugeBalanceLeftTextView.setText(CurrencyHelper.formatCurrency(userData.currency, limit-expenses) + " left");
+            gaugeBalanceLeftTextView.setText(CurrencyHelper.formatCurrency(userData.currency, limit - expenses) + " left");
 
 
         } else {
@@ -209,7 +227,7 @@ public class HomeFragment extends BaseFragment {
             gauge.setPointEndColor(ContextCompat.getColor(getContext(), R.color.gauge_income));
             gauge.setStrokeColor(ContextCompat.getColor(getContext(), R.color.gauge_expense));
             if (incomesSumInDateRange - expensesSumInDateRange != 0)
-                gauge.setValue((int) (incomesSumInDateRange * 100 /(double) (incomesSumInDateRange - expensesSumInDateRange)));
+                gauge.setValue((int) (incomesSumInDateRange * 100 / (double) (incomesSumInDateRange - expensesSumInDateRange)));
 
             gaugeBalanceLeftTextView.setText(dateFormat.format(startDate.getTime()) + " - " +
                     dateFormat.format(endDate.getTime()));
@@ -223,14 +241,13 @@ public class HomeFragment extends BaseFragment {
         cal.clear(Calendar.MINUTE);
         cal.clear(Calendar.SECOND);
         cal.clear(Calendar.MILLISECOND);
-        if(userData.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
+        if (userData.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
             cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-            if(new Date().getTime() < cal.getTime().getTime())
+            if (new Date().getTime() < cal.getTime().getTime())
                 cal.add(Calendar.DATE, -7);
-        }
-         else {
-            cal.set(Calendar.DAY_OF_MONTH, userData.userSettings.dayOfMonthStart+1);
-            if(new Date().getTime() < cal.getTime().getTime())
+        } else {
+            cal.set(Calendar.DAY_OF_MONTH, userData.userSettings.dayOfMonthStart + 1);
+            if (new Date().getTime() < cal.getTime().getTime())
                 cal.add(Calendar.MONTH, -1);
         }
 
@@ -239,22 +256,14 @@ public class HomeFragment extends BaseFragment {
 
 
     private Calendar getEndDate(User userData) {
-        Calendar cal = Calendar.getInstance();
-        cal.setFirstDayOfWeek(getUserFirstDayOfWeek(userData));
+        Calendar cal = getStartDate(userData);
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
         cal.clear(Calendar.MILLISECOND);
-        if(userData.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
-            cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-            if(new Date().getTime() < cal.getTime().getTime())
-                cal.add(Calendar.DATE, -7);
+        if (userData.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
             cal.add(Calendar.DATE, 6);
-        }
-        else {
-            cal.set(Calendar.DAY_OF_MONTH, userData.userSettings.dayOfMonthStart+1);
-            if(new Date().getTime() < cal.getTime().getTime())
-                cal.add(Calendar.MONTH, -1);
+        } else {
             cal.add(Calendar.MONTH, 1);
             cal.add(Calendar.DATE, -1);
         }
@@ -263,13 +272,20 @@ public class HomeFragment extends BaseFragment {
 
     private int getUserFirstDayOfWeek(User userData) {
         switch (userData.userSettings.dayOfWeekStart) {
-            case 0 : return Calendar.MONDAY;
-            case 1 : return Calendar.TUESDAY;
-            case 2 : return Calendar.WEDNESDAY;
-            case 3 : return Calendar.THURSDAY;
-            case 4 : return Calendar.FRIDAY;
-            case 5 : return Calendar.SATURDAY;
-            case 6 : return Calendar.SUNDAY;
+            case 0:
+                return Calendar.MONDAY;
+            case 1:
+                return Calendar.TUESDAY;
+            case 2:
+                return Calendar.WEDNESDAY;
+            case 3:
+                return Calendar.THURSDAY;
+            case 4:
+                return Calendar.FRIDAY;
+            case 5:
+                return Calendar.SATURDAY;
+            case 6:
+                return Calendar.SUNDAY;
         }
         return 0;
     }
