@@ -265,13 +265,13 @@ public class OptionsFragment extends PreferenceFragmentCompat {
                 alert.setTitle("Set limit:");
                 View layout = getLayoutInflater().inflate(R.layout.set_limit_dialog, null);
                 TextInputEditText editText = layout.findViewById(R.id.edittext);
-                AddWalletEntryActivity.setupAmountEditText(editText, user);
+                CurrencyHelper.setupAmountEditText(editText, user);
                 alert.setView(layout);
                 alert.setNegativeButton("Cancel", null);
                 alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        user.userSettings.limit = AddWalletEntryActivity.convertAmountStringToLong(editText.getText().toString());
+                        user.userSettings.limit = CurrencyHelper.convertAmountStringToLong(editText.getText().toString());
                         saveUser(user);
                     }
                 });
