@@ -18,7 +18,7 @@ Spending Tracker Android application build with Material Design UI and Firebase
 
 ## Features
 
-* Always synchronized with Firebase Realtime Database - you will never lost your data
+* Always synchronized with Firebase Realtime Database - you will never lose your data
 * Offline mode (Data will be synchronized when you connect to internet)
 * Pie chart of your expenses
 * Monthly/weekly limit
