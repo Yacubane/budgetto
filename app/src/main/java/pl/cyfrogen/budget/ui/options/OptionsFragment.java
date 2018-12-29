@@ -19,7 +19,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import pl.cyfrogen.budget.R;
+import pl.cyfrogen.budget.firebase.models.WalletEntryCategory;
 import pl.cyfrogen.budget.ui.add_entry.AddWalletEntryActivity;
+import pl.cyfrogen.budget.ui.options.categories.CustomCategoriesActivity;
 import pl.cyfrogen.budget.ui.signin.SignInActivity;
 import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
@@ -66,12 +68,22 @@ public class OptionsFragment extends PreferenceFragmentCompat {
         logoutPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 FirebaseAuth.getInstance().signOut();
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction("pl.cyfrogen.budget.ACTION_LOGOUT");
+                getActivity().sendBroadcast(broadcastIntent);
                 getActivity().startActivity(new Intent(getActivity(), SignInActivity.class));
                 getActivity().finish();
                 return true;
             }
         });
 
+        Preference customCategoriesPreference = findPreference(getString(R.string.pref_key_custom_categories));
+        customCategoriesPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                getActivity().startActivity(new Intent(getActivity(), CustomCategoriesActivity.class));
+                return true;
+            }
+        });
 
     }
 

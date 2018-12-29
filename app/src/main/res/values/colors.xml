@@ -21,4 +21,7 @@
     <color name="secondary_text_material_light">#8a000000</color>
     <color name="help_text_material_light">#9b9b9b</color>
 
+    <color name="hint_foreground_material_light">#00000000</color>
+    <color name="hint_foreground_material_dark">#00000000</color>
+
 </resources>

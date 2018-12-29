@@ -104,11 +104,7 @@ public class EditWalletEntryActivity extends BaseActivity {
         });
 
 
-        final List<Category> categories = Arrays.asList(DefaultCategories.getCategories());
-        NewEntryCategoriesAdapter categoryAdapter = new NewEntryCategoriesAdapter(this,
-                R.layout.new_entry_type_spinner_row, categories);
-        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectCategorySpinner.setAdapter(categoryAdapter);
+
         editEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,6 +162,12 @@ public class EditWalletEntryActivity extends BaseActivity {
 
     public void onDataGot() {
         if (walletEntry == null || user == null) return;
+
+        final List<Category> categories = DefaultCategories.getCategories(user);
+        NewEntryCategoriesAdapter categoryAdapter = new NewEntryCategoriesAdapter(this,
+                R.layout.new_entry_type_spinner_row, categories);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectCategorySpinner.setAdapter(categoryAdapter);
 
         CurrencyHelper.setupAmountEditText(selectAmountEditText, user);
         choosedDate.setTimeInMillis(-walletEntry.timestamp);

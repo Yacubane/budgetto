@@ -17,8 +17,7 @@ public class OptionsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Options");
     }
     @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem)
-    {
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
         onBackPressed();
         return true;
     }

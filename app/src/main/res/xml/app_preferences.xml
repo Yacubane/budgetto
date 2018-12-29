@@ -20,6 +20,9 @@
             android:summary="$"
             android:title="Currency" />
         <Preference
+            android:key="@string/pref_key_custom_categories"
+            android:title="Custom categories" />
+        <Preference
             android:key="@string/pref_key_first_month_day"
             android:summary="Monday"
             android:title="Set first month day" />
@@ -27,6 +30,7 @@
             android:key="@string/pref_key_first_week_day"
             android:summary="1"
             android:title="Set first week day" />
+
         <Preference
             android:key="@string/pref_key_logout"
             android:title="Logout" />

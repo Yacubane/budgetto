@@ -72,7 +72,7 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
             public void onChanged(FirebaseElement<User> firebaseElement) {
                 if(firebaseElement.hasNoError()) {
                     user = firebaseElement.getElement();
-                    CurrencyHelper.setupAmountEditText(selectAmountEditText, user);
+                    onDataGot();
                 }
             }
         });
@@ -103,11 +103,6 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
         });
 
 
-        final List<Category> categories = Arrays.asList(DefaultCategories.getCategories());
-        NewEntryCategoriesAdapter categoryAdapter = new NewEntryCategoriesAdapter(this,
-                R.layout.new_entry_type_spinner_row, categories);
-        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectCategorySpinner.setAdapter(categoryAdapter);
         addEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +117,18 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
 
     }
 
+    private void onDataGot() {
+        if(user == null) return;
+
+        final List<Category> categories = DefaultCategories.getCategories(user);
+        NewEntryCategoriesAdapter categoryAdapter = new NewEntryCategoriesAdapter(this,
+                R.layout.new_entry_type_spinner_row, categories);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectCategorySpinner.setAdapter(categoryAdapter);
+
+        CurrencyHelper.setupAmountEditText(selectAmountEditText, user);
+
+    }
 
 
     private void updateDate() {

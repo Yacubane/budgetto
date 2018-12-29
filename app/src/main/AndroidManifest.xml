@@ -31,7 +31,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.main.MainActivity" />
         </activity>
-
         <activity android:name=".ui.options.OptionsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -42,6 +41,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.main.MainActivity" />
         </activity>
+        <activity
+            android:name=".ui.options.categories.CustomCategoriesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.options.categories.AddCustomCategoryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.options.categories.EditCustomCategoryActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

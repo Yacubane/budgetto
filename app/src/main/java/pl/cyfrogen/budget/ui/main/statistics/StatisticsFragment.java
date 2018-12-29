@@ -147,7 +147,7 @@ public class StatisticsFragment extends BaseFragment {
                     continue;
                 }
                 expensesSumInDateRange += walletEntry.balanceDifference;
-                Category category = DefaultCategories.searchCategory(walletEntry.categoryID);
+                Category category = DefaultCategories.searchCategory(user, walletEntry.categoryID);
                 if (categoryModels.get(category) != null)
                     categoryModels.put(category, categoryModels.get(category) + walletEntry.balanceDifference);
                 else

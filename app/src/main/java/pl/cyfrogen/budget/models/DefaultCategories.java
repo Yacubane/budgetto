@@ -2,7 +2,14 @@ package pl.cyfrogen.budget.models;
 
 import android.graphics.Color;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import pl.cyfrogen.budget.R;
+import pl.cyfrogen.budget.firebase.models.User;
+import pl.cyfrogen.budget.firebase.models.WalletEntryCategory;
 
 public  class DefaultCategories {
     private static Category[] categories = new Category[]{
@@ -31,14 +38,33 @@ public  class DefaultCategories {
                 Color.parseColor("#26a69a"));
     }
 
-    public static Category searchCategory(String categoryName) {
+    public static Category searchCategory(User user, String categoryName) {
         for(Category category : categories) {
             if(category.getCategoryID().equals(categoryName)) return category;
+        }
+        for(Map.Entry<String, WalletEntryCategory> entry : user.customCategories.entrySet()) {
+            if(entry.getKey().equals(categoryName)) {
+                return new Category(categoryName, entry.getValue().visibleName, R.drawable.category_default, Color.parseColor(entry.getValue().htmlColorCode));
+            }
         }
         return createDefaultCategoryModel(categoryName);
     }
 
-    public static Category[] getCategories() {
+    public static List<Category> getCategories(User user) {
+        ArrayList<Category> categories = new ArrayList<>(Arrays.asList(DefaultCategories.categories));
+        for(Map.Entry<String, WalletEntryCategory> entry : user.customCategories.entrySet()) {
+            String categoryName = entry.getKey();
+            categories.add(new Category(categoryName, entry.getValue().visibleName, R.drawable.category_default, Color.parseColor(entry.getValue().htmlColorCode)));
+        }
+        return categories;
+    }
+
+    public static List<Category> getCustomCategories(User user) {
+        ArrayList<Category> categories = new ArrayList<>();
+        for(Map.Entry<String, WalletEntryCategory> entry : user.customCategories.entrySet()) {
+            String categoryName = entry.getKey();
+            categories.add(new Category(categoryName, entry.getValue().visibleName, R.drawable.category_default, Color.parseColor(entry.getValue().htmlColorCode)));
+        }
         return categories;
     }
 }

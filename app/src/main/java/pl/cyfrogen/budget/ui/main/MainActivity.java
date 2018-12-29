@@ -1,7 +1,10 @@
 package pl.cyfrogen.budget.ui.main;
 
 import android.app.ActivityOptions;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import android.support.design.widget.AppBarLayout;
@@ -23,6 +26,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(findViewById(R.id.toolbar));
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("pl.cyfrogen.budget.ACTION_LOGOUT");
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                finish();
+            }
+        }, intentFilter);
 
         FloatingActionButton addEntryButton = findViewById(R.id.add_wallet_entry_fab);
         addEntryButton.setOnClickListener(new View.OnClickListener() {

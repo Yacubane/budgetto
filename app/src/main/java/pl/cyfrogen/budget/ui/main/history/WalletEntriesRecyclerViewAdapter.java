@@ -81,7 +81,7 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
     public void onBindViewHolder(WalletEntryHolder holder, int position) {
         String id = walletEntries.getIDList().get(position);
         WalletEntry walletEntry = walletEntries.getList().get(position);
-        Category category = DefaultCategories.searchCategory(walletEntry.categoryID);
+        Category category = DefaultCategories.searchCategory(user, walletEntry.categoryID);
         holder.iconImageView.setImageResource(category.getIconResourceID());
         holder.iconImageView.setBackgroundTintList(ColorStateList.valueOf(category.getIconColor()));
         holder.categoryTextView.setText(category.getCategoryVisibleName(fragmentActivity));

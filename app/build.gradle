@@ -44,5 +44,5 @@ dependencies {
     implementation "android.arch.lifecycle:viewmodel:1.1.1"
     implementation 'com.leavjenn.smoothdaterangepicker:library:0.2.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
-
+    implementation 'com.pes.materialcolorpicker:library:1.0.2'
 }
