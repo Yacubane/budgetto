@@ -208,9 +208,10 @@ public class OptionsFragment extends PreferenceFragmentCompat {
             counterTypePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
+                    View layout = getLayoutInflater().inflate(R.layout.set_counter_type_dialog, null);
+                    RadioGroup radioGroup = layout.findViewById(R.id.radio_group);
                     AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                     alert.setTitle("Set counter type:");
-
                     ((RadioButton) radioGroup.getChildAt(user.userSettings.homeCounterType)).setChecked(true);
                     alert.setView(layout);
                     alert.setNegativeButton("Cancel", null);
@@ -240,6 +241,8 @@ public class OptionsFragment extends PreferenceFragmentCompat {
                 public boolean onPreferenceClick(Preference preference) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                     alert.setTitle("Set counter period:");
+                    View layout = getLayoutInflater().inflate(R.layout.set_counter_period_dialog, null);
+                    RadioGroup radioGroup = layout.findViewById(R.id.radio_group);
                     ((RadioButton) radioGroup.getChildAt(user.userSettings.homeCounterPeriod)).setChecked(true);
                     alert.setView(layout);
                     alert.setNegativeButton("Cancel", null);
