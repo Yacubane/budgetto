@@ -1,6 +1,8 @@
 package pl.cyfrogen.budget.ui.main.statistics;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -163,7 +165,14 @@ public class StatisticsFragment extends BaseFragment {
                 float minPercentageToShowLabelOnChart = 0.1f;
                 categoryModelsHome.add(new TopCategoryStatisticsListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()),
                         user.currency, categoryModel.getValue(), percentage));
-                pieEntries.add(new PieEntry(-categoryModel.getValue(), percentage > minPercentageToShowLabelOnChart ? categoryModel.getKey().getCategoryVisibleName(getContext()) : ""));
+                if (percentage > minPercentageToShowLabelOnChart) {
+                    Drawable drawable = getContext().getDrawable(categoryModel.getKey().getIconResourceID());
+                    drawable.setTint(Color.parseColor("#FFFFFF"));
+                    pieEntries.add(new PieEntry(-categoryModel.getValue(), drawable));
+
+                } else {
+                    pieEntries.add(new PieEntry(-categoryModel.getValue()));
+                }
                 pieColors.add(categoryModel.getKey().getIconColor());
             }
 
@@ -210,7 +219,7 @@ public class StatisticsFragment extends BaseFragment {
             incomesTextView.setText(CurrencyHelper.formatCurrency(user.currency, incomesSumInDateRange));
 
             float progress = 100 * incomesSumInDateRange / (float) (incomesSumInDateRange - expensesSumInDateRange);
-            incomesExpensesProgressBar.setProgress((int)progress);
+            incomesExpensesProgressBar.setProgress((int) progress);
 
         }
 
