@@ -5,14 +5,10 @@ import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -33,7 +29,6 @@ import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.models.CategoriesHelper;
 import pl.cyfrogen.budget.models.Category;
 import pl.cyfrogen.budget.util.CurrencyHelper;
-import pl.cyfrogen.budget.models.DefaultCategories;
 import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
 
@@ -49,7 +44,7 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
     private User user;
 
     public AddWalletEntryActivity() {
-        super(R.layout.activity_add_budget_entry, R.id.activity_contact_fab, R.id.root_layout, R.id.root_layout2);
+        super(R.layout.activity_add_wallet_entry, R.id.activity_contact_fab, R.id.root_layout, R.id.root_layout2);
     }
 
     @Override
