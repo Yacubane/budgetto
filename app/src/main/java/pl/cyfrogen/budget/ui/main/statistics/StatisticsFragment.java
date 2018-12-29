@@ -117,13 +117,13 @@ public class StatisticsFragment extends BaseFragment {
             public void onChanged(FirebaseElement<User> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
                     StatisticsFragment.this.user = firebaseElement.getElement();
-                    dataUpdated();
 
                     calendarStart = getStartDate(user);
                     calendarEnd = getEndDate(user);
 
                     updateCalendarIcon(false);
                     calendarUpdated();
+                    dataUpdated();
 
                 }
             }
@@ -134,9 +134,7 @@ public class StatisticsFragment extends BaseFragment {
 
     private void dataUpdated() {
         if (calendarStart != null && calendarEnd != null && walletEntryListDataSet != null) {
-
             List<WalletEntry> entryList = new ArrayList<>(walletEntryListDataSet.getList());
-
 
             long expensesSumInDateRange = 0;
             long incomesSumInDateRange = 0;

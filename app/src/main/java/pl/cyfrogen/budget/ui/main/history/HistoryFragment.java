@@ -108,6 +108,8 @@ public class HistoryFragment extends BaseFragment {
                     + "  -  " + dateFormat.format(model.getEndDate().getTime()));
         } else {
             calendarIcon.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar));
+
+            dividerTextView.setText("Last 100 elements:");
         }
 
     }
