@@ -131,6 +131,7 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<FirebaseElement<ListDa
             String key = dataSnapshot.getKey();
 
             int index = liveDataSetIndexes.indexOf(key);
+            if(index == -1) return;
             liveDataSetEntries.remove(index);
             liveDataSetIndexes.remove(index);
             int newPosition;
