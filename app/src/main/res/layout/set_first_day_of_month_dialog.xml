@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="16dp">
 
     <android.support.design.widget.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

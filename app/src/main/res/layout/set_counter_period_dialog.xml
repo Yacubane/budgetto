@@ -3,17 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="16dp">
 
     <RadioGroup
         android:id="@+id/radio_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:text="Monthly" />
+
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="54dp"
