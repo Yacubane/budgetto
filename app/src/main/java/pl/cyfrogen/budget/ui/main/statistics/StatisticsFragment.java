@@ -43,6 +43,7 @@ import pl.cyfrogen.budget.firebase.models.UserSettings;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.TopWalletEntriesStatisticsViewModelFactory;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFactory;
+import pl.cyfrogen.budget.models.CategoriesHelper;
 import pl.cyfrogen.budget.models.Category;
 import pl.cyfrogen.budget.models.DefaultCategories;
 import pl.cyfrogen.budget.ui.options.OptionsActivity;
@@ -147,7 +148,7 @@ public class StatisticsFragment extends BaseFragment {
                     continue;
                 }
                 expensesSumInDateRange += walletEntry.balanceDifference;
-                Category category = DefaultCategories.searchCategory(user, walletEntry.categoryID);
+                Category category = CategoriesHelper.searchCategory(user, walletEntry.categoryID);
                 if (categoryModels.get(category) != null)
                     categoryModels.put(category, categoryModels.get(category) + walletEntry.balanceDifference);
                 else

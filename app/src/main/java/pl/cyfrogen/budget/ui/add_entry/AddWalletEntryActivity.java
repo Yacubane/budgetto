@@ -30,6 +30,7 @@ import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFactory;
 import pl.cyfrogen.budget.firebase.models.User;
+import pl.cyfrogen.budget.models.CategoriesHelper;
 import pl.cyfrogen.budget.models.Category;
 import pl.cyfrogen.budget.util.CurrencyHelper;
 import pl.cyfrogen.budget.models.DefaultCategories;
@@ -120,7 +121,7 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
     private void onDataGot() {
         if(user == null) return;
 
-        final List<Category> categories = DefaultCategories.getCategories(user);
+        final List<Category> categories = CategoriesHelper.getCategories(user);
         NewEntryCategoriesAdapter categoryAdapter = new NewEntryCategoriesAdapter(this,
                 R.layout.new_entry_type_spinner_row, categories);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

@@ -29,6 +29,7 @@ import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFacto
 import pl.cyfrogen.budget.firebase.viewmodel_factories.WalletEntriesHistoryViewModelFactory;
 import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
+import pl.cyfrogen.budget.models.CategoriesHelper;
 import pl.cyfrogen.budget.models.Category;
 import pl.cyfrogen.budget.util.CurrencyHelper;
 import pl.cyfrogen.budget.models.DefaultCategories;
@@ -81,7 +82,7 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
     public void onBindViewHolder(WalletEntryHolder holder, int position) {
         String id = walletEntries.getIDList().get(position);
         WalletEntry walletEntry = walletEntries.getList().get(position);
-        Category category = DefaultCategories.searchCategory(user, walletEntry.categoryID);
+        Category category = CategoriesHelper.searchCategory(user, walletEntry.categoryID);
         holder.iconImageView.setImageResource(category.getIconResourceID());
         holder.iconImageView.setBackgroundTintList(ColorStateList.valueOf(category.getIconColor()));
         holder.categoryTextView.setText(category.getCategoryVisibleName(fragmentActivity));

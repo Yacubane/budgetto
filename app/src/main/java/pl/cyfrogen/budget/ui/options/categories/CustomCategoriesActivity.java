@@ -17,6 +17,7 @@ import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.TopWalletEntriesViewModelFactory;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFactory;
+import pl.cyfrogen.budget.models.CategoriesHelper;
 import pl.cyfrogen.budget.models.Category;
 import pl.cyfrogen.budget.models.DefaultCategories;
 import pl.cyfrogen.budget.ui.main.home.HomeFragment;
@@ -63,7 +64,7 @@ public class CustomCategoriesActivity extends BaseActivity {
     private void dataUpdated() {
         if (user == null) return;
         customCategoriesList.clear();
-        customCategoriesList.addAll(DefaultCategories.getCustomCategories(user));
+        customCategoriesList.addAll(CategoriesHelper.getCustomCategories(user));
         customCategoriesAdapter.notifyDataSetChanged();
 
     }
