@@ -40,7 +40,7 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
     private ListDataSet<WalletEntry> walletEntries;
 
     private User user;
-    boolean firstUserSync = false;
+    private boolean firstUserSync = false;
 
     public WalletEntriesRecyclerViewAdapter(FragmentActivity fragmentActivity, String uid) {
         this.fragmentActivity = fragmentActivity;

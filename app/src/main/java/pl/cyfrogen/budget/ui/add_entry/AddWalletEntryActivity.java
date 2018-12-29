@@ -38,7 +38,6 @@ import pl.cyfrogen.budget.firebase.models.WalletEntry;
 
 public class AddWalletEntryActivity extends CircullarRevealActivity {
 
-    private Button addEntryButton;
     private Spinner selectCategorySpinner;
     private TextInputEditText selectNameEditText;
     private Calendar choosedDate;
@@ -61,7 +60,7 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
         selectCategorySpinner = findViewById(R.id.select_category_spinner);
         selectNameEditText = findViewById(R.id.select_name_edittext);
         selectTypeSpinner = findViewById(R.id.select_type_spinner);
-        addEntryButton = findViewById(R.id.add_entry_button);
+        Button addEntryButton = findViewById(R.id.add_entry_button);
         chooseTimeTextView = findViewById(R.id.choose_time_textview);
         chooseDayTextView = findViewById(R.id.choose_day_textview);
         selectAmountEditText = findViewById(R.id.select_amount_edittext);

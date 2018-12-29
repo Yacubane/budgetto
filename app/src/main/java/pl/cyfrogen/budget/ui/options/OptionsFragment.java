@@ -28,16 +28,8 @@ import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.util.CurrencyHelper;
 
 public class OptionsFragment extends PreferenceFragmentCompat {
-    public static final CharSequence TITLE = "Options";
-
     User user;
-
     ArrayList<Preference> preferences = new ArrayList<>();
-
-    public static OptionsFragment newInstance() {
-
-        return new OptionsFragment();
-    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -70,9 +62,8 @@ public class OptionsFragment extends PreferenceFragmentCompat {
         });
 
 
-        Preference myPref = findPreference("logout");
-        myPref.setEnabled(false);
-        myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        Preference logoutPreference = findPreference(getString(R.string.pref_key_logout));
+        logoutPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 FirebaseAuth.getInstance().signOut();
                 getActivity().startActivity(new Intent(getActivity(), SignInActivity.class));

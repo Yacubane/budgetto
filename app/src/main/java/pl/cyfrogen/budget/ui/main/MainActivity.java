@@ -17,11 +17,6 @@ import pl.cyfrogen.budget.ui.add_entry.AddWalletEntryActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ViewPager viewPager;
-    private ViewPagerAdapter viewPagerAdapter;
-    private TabLayout tabLayout;
-    private FloatingActionButton addEntryButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(findViewById(R.id.toolbar));
 
-        addEntryButton = findViewById(R.id.add_wallet_entry_fab);
+        FloatingActionButton addEntryButton = findViewById(R.id.add_wallet_entry_fab);
         addEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -40,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        viewPager = findViewById(R.id.pager);
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        ViewPager viewPager = findViewById(R.id.pager);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -59,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        tabLayout = findViewById(R.id.tab);
+        TabLayout tabLayout = findViewById(R.id.tab);
         tabLayout.setupWithViewPager(viewPager);
 
 

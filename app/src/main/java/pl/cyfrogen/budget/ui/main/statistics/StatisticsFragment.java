@@ -53,11 +53,10 @@ public class StatisticsFragment extends BaseFragment {
     private Menu menu;
     private Calendar calendarStart;
     private Calendar calendarEnd;
-    private User userData;
+    private User user;
     private ListDataSet<WalletEntry> walletEntryListDataSet;
     private PieChart pieChart;
     private ArrayList<TopCategoryStatisticsListViewModel> categoryModelsHome;
-    private ListView favoriteListView;
     private TopCategoriesStatisticsAdapter adapter;
     private TextView dividerTextView;
     private ProgressBar incomesExpensesProgressBar;
@@ -93,7 +92,7 @@ public class StatisticsFragment extends BaseFragment {
         incomesTextView = incomesExpensesView.findViewById(R.id.incomes_textview);
 
         categoryModelsHome = new ArrayList<>();
-        favoriteListView = view.findViewById(R.id.favourite_categories_list_view);
+        ListView favoriteListView = view.findViewById(R.id.favourite_categories_list_view);
         adapter = new TopCategoriesStatisticsAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
 
@@ -114,11 +113,11 @@ public class StatisticsFragment extends BaseFragment {
             @Override
             public void onChanged(FirebaseElement<User> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
-                    StatisticsFragment.this.userData = firebaseElement.getElement();
+                    StatisticsFragment.this.user = firebaseElement.getElement();
                     dataUpdated();
 
-                    calendarStart = getStartDate(userData);
-                    calendarEnd = getEndDate(userData);
+                    calendarStart = getStartDate(user);
+                    calendarEnd = getEndDate(user);
 
                     updateCalendarIcon(false);
                     calendarUpdated();
@@ -163,7 +162,7 @@ public class StatisticsFragment extends BaseFragment {
                 float percentage = categoryModel.getValue() / (float) expensesSumInDateRange;
                 float minPercentageToShowLabelOnChart = 0.1f;
                 categoryModelsHome.add(new TopCategoryStatisticsListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()),
-                        userData.currency, categoryModel.getValue(), percentage));
+                        user.currency, categoryModel.getValue(), percentage));
                 pieEntries.add(new PieEntry(-categoryModel.getValue(), percentage > minPercentageToShowLabelOnChart ? categoryModel.getKey().getCategoryVisibleName(getContext()) : ""));
                 pieColors.add(categoryModel.getKey().getIconColor());
             }
@@ -207,8 +206,8 @@ public class StatisticsFragment extends BaseFragment {
             dividerTextView.setText("Date range: " + dateFormat.format(calendarStart.getTime())
                     + "  -  " + dateFormat.format(calendarEnd.getTime()));
 
-            expensesTextView.setText(CurrencyHelper.formatCurrency(userData.currency, expensesSumInDateRange));
-            incomesTextView.setText(CurrencyHelper.formatCurrency(userData.currency, incomesSumInDateRange));
+            expensesTextView.setText(CurrencyHelper.formatCurrency(user.currency, expensesSumInDateRange));
+            incomesTextView.setText(CurrencyHelper.formatCurrency(user.currency, incomesSumInDateRange));
 
             float progress = 100 * incomesSumInDateRange / (float) (incomesSumInDateRange - expensesSumInDateRange);
             incomesExpensesProgressBar.setProgress((int)progress);
@@ -274,19 +273,19 @@ public class StatisticsFragment extends BaseFragment {
         //todo library doesn't respect other method than deprecated
     }
 
-    private Calendar getStartDate(User userData) {
+    private Calendar getStartDate(User user) {
         Calendar cal = Calendar.getInstance();
-        cal.setFirstDayOfWeek(getUserFirstDayOfWeek(userData));
+        cal.setFirstDayOfWeek(getUserFirstDayOfWeek(user));
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.clear(Calendar.MINUTE);
         cal.clear(Calendar.SECOND);
         cal.clear(Calendar.MILLISECOND);
-        if (userData.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
+        if (user.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
             cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
             if (new Date().getTime() < cal.getTime().getTime())
                 cal.add(Calendar.DATE, -7);
         } else {
-            cal.set(Calendar.DAY_OF_MONTH, userData.userSettings.dayOfMonthStart + 1);
+            cal.set(Calendar.DAY_OF_MONTH, user.userSettings.dayOfMonthStart + 1);
             if (new Date().getTime() < cal.getTime().getTime())
                 cal.add(Calendar.MONTH, -1);
         }
@@ -295,13 +294,13 @@ public class StatisticsFragment extends BaseFragment {
     }
 
 
-    private Calendar getEndDate(User userData) {
-        Calendar cal = getStartDate(userData);
+    private Calendar getEndDate(User user) {
+        Calendar cal = getStartDate(user);
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
         cal.clear(Calendar.MILLISECOND);
-        if (userData.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
+        if (user.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
             cal.add(Calendar.DATE, 6);
         } else {
             cal.add(Calendar.MONTH, 1);
@@ -310,8 +309,8 @@ public class StatisticsFragment extends BaseFragment {
         return cal;
     }
 
-    private int getUserFirstDayOfWeek(User userData) {
-        switch (userData.userSettings.dayOfWeekStart) {
+    private int getUserFirstDayOfWeek(User user) {
+        switch (user.userSettings.dayOfWeekStart) {
             case 0:
                 return Calendar.MONDAY;
             case 1:
