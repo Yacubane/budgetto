@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import pl.cyfrogen.budget.R;
+import pl.cyfrogen.budget.exceptions.NumberRangeException;
 import pl.cyfrogen.budget.firebase.models.WalletEntryCategory;
 import pl.cyfrogen.budget.ui.add_entry.AddWalletEntryActivity;
 import pl.cyfrogen.budget.ui.options.categories.CustomCategoriesActivity;
@@ -178,18 +179,22 @@ public class OptionsFragment extends PreferenceFragmentCompat {
                             @Override
                             public void onClick(View view) {
                                 try {
-                                    int number = Integer.parseInt(editText.getText().toString());
-                                    if (number <= 0 || number >= 29) {
-                                        editText.setError("Number must be in 1-29 range");
-                                    } else {
-                                        user.userSettings.dayOfMonthStart = number - 1;
-                                        saveUser(user);
-                                        alertDialog.dismiss();
-                                    }
-                                } catch (NumberFormatException e) {
-                                    editText.setError("You must write number");
+                                    setDate(editText.getText().toString());
+                                } catch (NumberRangeException e) {
+                                    editText.setError(e.getMessage());
                                 }
 
+                            }
+
+                            private void setDate(String s) throws NumberRangeException {
+                                int number = Integer.parseInt(s);
+                                if (number <= 0 || number >= 29) {
+                                    throw new NumberRangeException("Number must be in 1-29 range");
+                                } else {
+                                    user.userSettings.dayOfMonthStart = number - 1;
+                                    saveUser(user);
+                                    alertDialog.dismiss();
+                                }
                             }
                         });
                     }

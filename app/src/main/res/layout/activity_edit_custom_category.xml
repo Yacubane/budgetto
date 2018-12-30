@@ -123,11 +123,13 @@
                 android:background="@color/divider_color" />
 
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/select_name_inputlayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginBottom="16dp"
                 android:hint="Name"
                 app:layout_constraintTop_toBottomOf="@+id/sign_out_button">
 
@@ -135,7 +137,7 @@
                     android:id="@+id/select_name_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp" />
+                     />
 
             </android.support.design.widget.TextInputLayout>
 

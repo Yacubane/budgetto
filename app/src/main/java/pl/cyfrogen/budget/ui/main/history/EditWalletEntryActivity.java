@@ -6,15 +6,12 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -27,8 +24,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import pl.cyfrogen.budget.activities.CircullarRevealActivity;
 import pl.cyfrogen.budget.base.BaseActivity;
+import pl.cyfrogen.budget.exceptions.EmptyStringException;
+import pl.cyfrogen.budget.exceptions.ZeroBalanceDifferenceException;
 import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFactory;
@@ -40,7 +38,6 @@ import pl.cyfrogen.budget.ui.add_entry.NewEntryCategoriesAdapter;
 import pl.cyfrogen.budget.ui.add_entry.NewEntryTypeListViewModel;
 import pl.cyfrogen.budget.ui.add_entry.NewEntryTypesAdapter;
 import pl.cyfrogen.budget.util.CurrencyHelper;
-import pl.cyfrogen.budget.models.DefaultCategories;
 import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
 
@@ -58,7 +55,8 @@ public class EditWalletEntryActivity extends BaseActivity {
     private Button removeEntryButton;
     private Button editEntryButton;
     private String walletId;
-
+    private TextInputLayout selectAmountInputLayout;
+    private TextInputLayout selectNameInputLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,12 +70,14 @@ public class EditWalletEntryActivity extends BaseActivity {
 
         selectCategorySpinner = findViewById(R.id.select_category_spinner);
         selectNameEditText = findViewById(R.id.select_name_edittext);
+        selectNameInputLayout = findViewById(R.id.select_name_inputlayout);
         selectTypeSpinner = findViewById(R.id.select_type_spinner);
         editEntryButton = findViewById(R.id.edit_entry_button);
         removeEntryButton = findViewById(R.id.remove_entry_button);
         chooseTimeTextView = findViewById(R.id.choose_time_textview);
         chooseDayTextView = findViewById(R.id.choose_day_textview);
         selectAmountEditText = findViewById(R.id.select_amount_edittext);
+        selectAmountInputLayout = findViewById(R.id.select_amount_inputlayout);
 
         choosedDate = Calendar.getInstance();
 
@@ -109,11 +109,17 @@ public class EditWalletEntryActivity extends BaseActivity {
         editEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editWalletEntry(((selectTypeSpinner.getSelectedItemPosition() * 2) - 1) *
-                                CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
-                        choosedDate.getTime(),
-                        ((Category) selectCategorySpinner.getSelectedItem()).getCategoryID(),
-                        selectNameEditText.getText().toString());
+                try {
+                    editWalletEntry(((selectTypeSpinner.getSelectedItemPosition() * 2) - 1) *
+                                    CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
+                            choosedDate.getTime(),
+                            ((Category) selectCategorySpinner.getSelectedItem()).getCategoryID(),
+                            selectNameEditText.getText().toString());
+                }  catch (EmptyStringException e) {
+                    selectNameInputLayout.setError(e.getMessage());
+                } catch (ZeroBalanceDifferenceException e) {
+                    selectAmountInputLayout.setError(e.getMessage());
+                }
             }
         });
 
@@ -142,7 +148,7 @@ public class EditWalletEntryActivity extends BaseActivity {
             public void onChanged(FirebaseElement<User> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
                     user = firebaseElement.getElement();
-                    onDataGot();
+                    dataUpdated();
                 }
             }
         });
@@ -153,7 +159,7 @@ public class EditWalletEntryActivity extends BaseActivity {
             public void onChanged(FirebaseElement<WalletEntry> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
                     walletEntry = firebaseElement.getElement();
-                    onDataGot();
+                    dataUpdated();
                 }
             }
         });
@@ -161,7 +167,7 @@ public class EditWalletEntryActivity extends BaseActivity {
 
     }
 
-    public void onDataGot() {
+    public void dataUpdated() {
         if (walletEntry == null || user == null) return;
 
         final List<Category> categories = CategoriesHelper.getCategories(user);
@@ -209,13 +215,21 @@ public class EditWalletEntryActivity extends BaseActivity {
         chooseTimeTextView.setText(dataFormatter2.format(choosedDate.getTime()));
     }
 
-    public void editWalletEntry(long balanceDifference, Date entryDate, String entryCategory, String entryType) {
+    public void editWalletEntry(long balanceDifference, Date entryDate, String entryCategory, String entryName) throws EmptyStringException, ZeroBalanceDifferenceException {
+        if (balanceDifference == 0) {
+            throw new ZeroBalanceDifferenceException("Balance difference should not be 0");
+        }
+
+        if (entryName == null || entryName.length() == 0) {
+            throw new EmptyStringException("Entry name length should be > 0");
+        }
+
         long finalBalanceDifference = balanceDifference - walletEntry.balanceDifference;
         user.wallet.sum += finalBalanceDifference;
         UserProfileViewModelFactory.saveModel(getUid(), user);
 
         FirebaseDatabase.getInstance().getReference().child("wallet-entries").child(getUid())
-                .child("default").child(walletId).setValue(new WalletEntry(entryCategory, entryType, entryDate.getTime(), balanceDifference));
+                .child("default").child(walletId).setValue(new WalletEntry(entryCategory, entryName, entryDate.getTime(), balanceDifference));
         finish();
     }
 

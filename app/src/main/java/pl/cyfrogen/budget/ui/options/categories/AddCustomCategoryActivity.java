@@ -1,8 +1,10 @@
 package pl.cyfrogen.budget.ui.options.categories;
 
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.design.widget.TextInputEditText;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +15,7 @@ import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
 
 import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.base.BaseActivity;
+import pl.cyfrogen.budget.exceptions.EmptyStringException;
 import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.models.User;
@@ -26,7 +29,8 @@ public class AddCustomCategoryActivity extends BaseActivity {
     private Button addCustomCategoryButton;
     private User user;
     private ImageView iconImageView;
-    private int selectedColor;
+    private int selectedColor = Color.parseColor("#000000");
+    private TextInputLayout selectNameInputLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +56,9 @@ public class AddCustomCategoryActivity extends BaseActivity {
     private void dataUpdated() {
         if (user == null) return;
         iconImageView = findViewById(R.id.icon_imageview);
+        iconImageView.setBackgroundTintList(ColorStateList.valueOf(selectedColor));
         selectNameEditText = findViewById(R.id.select_name_edittext);
+        selectNameInputLayout = findViewById(R.id.select_name_inputlayout);
         selectColorButton = findViewById(R.id.select_color_button);
         selectColorButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,15 +86,26 @@ public class AddCustomCategoryActivity extends BaseActivity {
         addCustomCategoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseDatabase.getInstance().getReference()
-                        .child("users").child(getUid()).child("customCategories").push().setValue(
-                        new WalletEntryCategory(selectNameEditText.getText().toString(),  "#" + Integer.toHexString(selectedColor)));
-                finish();
+                try {
+                    addCustomCategory(selectNameEditText.getText().toString(), "#" + Integer.toHexString(selectedColor));
+                } catch (EmptyStringException e) {
+                    selectNameInputLayout.setError(e.getMessage());
+                }
+
 
             }
         });
     }
 
+    private void addCustomCategory(String categoryName, String categoryHtmlCode) throws EmptyStringException {
+        if(categoryName == null || categoryName.length() == 0)
+            throw new EmptyStringException("Entry name length should be > 0");
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("users").child(getUid()).child("customCategories").push().setValue(
+                new WalletEntryCategory(categoryName,  categoryHtmlCode));
+        finish();
+    }
 
 
     @Override

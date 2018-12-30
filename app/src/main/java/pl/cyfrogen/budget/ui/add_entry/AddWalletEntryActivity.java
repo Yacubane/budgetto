@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,8 @@ import java.util.Date;
 import java.util.List;
 
 import pl.cyfrogen.budget.activities.CircullarRevealActivity;
+import pl.cyfrogen.budget.exceptions.EmptyStringException;
+import pl.cyfrogen.budget.exceptions.ZeroBalanceDifferenceException;
 import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFactory;
@@ -42,6 +45,8 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
     private TextView chooseTimeTextView;
     private Spinner selectTypeSpinner;
     private User user;
+    private TextInputLayout selectAmountInputLayout;
+    private TextInputLayout selectNameInputLayout;
 
     public AddWalletEntryActivity() {
         super(R.layout.activity_add_wallet_entry, R.id.activity_contact_fab, R.id.root_layout, R.id.root_layout2);
@@ -55,24 +60,24 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
 
         selectCategorySpinner = findViewById(R.id.select_category_spinner);
         selectNameEditText = findViewById(R.id.select_name_edittext);
+        selectNameInputLayout = findViewById(R.id.select_name_inputlayout);
         selectTypeSpinner = findViewById(R.id.select_type_spinner);
         Button addEntryButton = findViewById(R.id.add_entry_button);
         chooseTimeTextView = findViewById(R.id.choose_time_textview);
         chooseDayTextView = findViewById(R.id.choose_day_textview);
         selectAmountEditText = findViewById(R.id.select_amount_edittext);
-
+        selectAmountInputLayout = findViewById(R.id.select_amount_inputlayout);
         choosedDate = Calendar.getInstance();
 
         UserProfileViewModelFactory.getModel(getUid(), this).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
             @Override
             public void onChanged(FirebaseElement<User> firebaseElement) {
-                if(firebaseElement.hasNoError()) {
+                if (firebaseElement.hasNoError()) {
                     user = firebaseElement.getElement();
-                    onDataGot();
+                    dateUpdated();
                 }
             }
         });
-
 
 
         NewEntryTypesAdapter typeAdapter = new NewEntryTypesAdapter(this,
@@ -102,19 +107,25 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
         addEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addToWallet(((selectTypeSpinner.getSelectedItemPosition() * 2) - 1) *
-                                CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
-                        choosedDate.getTime(),
-                        ((Category) selectCategorySpinner.getSelectedItem()).getCategoryID(),
-                        selectNameEditText.getText().toString());
+                try {
+                    addToWallet(((selectTypeSpinner.getSelectedItemPosition() * 2) - 1) *
+                                    CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
+                            choosedDate.getTime(),
+                            ((Category) selectCategorySpinner.getSelectedItem()).getCategoryID(),
+                            selectNameEditText.getText().toString());
+                } catch (EmptyStringException e) {
+                    selectNameInputLayout.setError(e.getMessage());
+                } catch (ZeroBalanceDifferenceException e) {
+                    selectAmountInputLayout.setError(e.getMessage());
+                }
             }
         });
 
 
     }
 
-    private void onDataGot() {
-        if(user == null) return;
+    private void dateUpdated() {
+        if (user == null) return;
 
         final List<Category> categories = CategoriesHelper.getCategories(user);
         NewEntryCategoriesAdapter categoryAdapter = new NewEntryCategoriesAdapter(this,
@@ -135,9 +146,17 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
         chooseTimeTextView.setText(dataFormatter2.format(choosedDate.getTime()));
     }
 
-    public void addToWallet(long balanceDifference, Date entryDate, String entryCategory, String entryType) {
+    public void addToWallet(long balanceDifference, Date entryDate, String entryCategory, String entryName) throws ZeroBalanceDifferenceException, EmptyStringException {
+        if (balanceDifference == 0) {
+            throw new ZeroBalanceDifferenceException("Balance difference should not be 0");
+        }
+
+        if (entryName == null || entryName.length() == 0) {
+            throw new EmptyStringException("Entry name length should be > 0");
+        }
+
         FirebaseDatabase.getInstance().getReference().child("wallet-entries").child(getUid())
-                .child("default").push().setValue(new WalletEntry(entryCategory, entryType, entryDate.getTime(), balanceDifference));
+                .child("default").push().setValue(new WalletEntry(entryCategory, entryName, entryDate.getTime(), balanceDifference));
         user.wallet.sum += balanceDifference;
         UserProfileViewModelFactory.saveModel(getUid(), user);
         finishWithAnimation();
@@ -173,12 +192,10 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem)
-    {
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
         onBackPressed();
         return true;
     }
-
 
 
 }
