@@ -34,10 +34,6 @@ import pl.cyfrogen.budget.ui.main.MainActivity;
 
 
 public class SignInActivity extends AppCompatActivity {
-    static {
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-    }
-
     private static final int RC_SIGN_IN = 123;
     private static final String TAG = "Budgetto";
     private FirebaseAuth mAuth;
