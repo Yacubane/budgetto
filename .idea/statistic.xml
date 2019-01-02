@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Statistic">
+    <option name="excludedDirectories">
+      <list>
+        <option value="$PROJECT_DIR$/app/build" />
+        <option value="$PROJECT_DIR$/app/libs" />
+        <option value="$PROJECT_DIR$/app/src/androidTest" />
+        <option value="$PROJECT_DIR$/app/src/test" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pl/cyfrogen/budget/libraries" />
+      </list>
+    </option>
+  </component>
+</project>

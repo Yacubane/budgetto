@@ -11,8 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -29,12 +27,12 @@ import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFacto
 import pl.cyfrogen.budget.firebase.viewmodel_factories.WalletEntriesHistoryViewModelFactory;
 import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
-import pl.cyfrogen.budget.models.CategoriesHelper;
+import pl.cyfrogen.budget.util.CategoriesHelper;
 import pl.cyfrogen.budget.models.Category;
+import pl.cyfrogen.budget.ui.main.history.edit_entry.EditWalletEntryActivity;
 import pl.cyfrogen.budget.util.CurrencyHelper;
-import pl.cyfrogen.budget.models.DefaultCategories;
 
-public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<WalletEntriesRecyclerViewAdapter.WalletEntryHolder> {
+public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<WalletEntryHolder> {
 
     private final String uid;
     private final FragmentActivity fragmentActivity;
@@ -147,27 +145,6 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
 
     public void setDateRange(Calendar calendarStart, Calendar calendarEnd) {
         WalletEntriesHistoryViewModelFactory.getModel(uid, fragmentActivity).setDateFilter(calendarStart, calendarEnd);
-    }
-
-    public class WalletEntryHolder extends RecyclerView.ViewHolder {
-
-        private final TextView dateTextView;
-        private final TextView moneyTextView;
-        private final TextView categoryTextView;
-        private final TextView nameTextView;
-        private final ImageView iconImageView;
-        public View view;
-
-        public WalletEntryHolder(View itemView) {
-            super(itemView);
-            this.view = itemView;
-            moneyTextView = itemView.findViewById(R.id.money_textview);
-            categoryTextView = itemView.findViewById(R.id.category_textview);
-            nameTextView = itemView.findViewById(R.id.name_textview);
-            dateTextView = itemView.findViewById(R.id.date_textview);
-            iconImageView = itemView.findViewById(R.id.icon_imageview);
-
-        }
     }
 
 

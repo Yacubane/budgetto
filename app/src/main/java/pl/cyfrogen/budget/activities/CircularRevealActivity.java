@@ -15,7 +15,7 @@ import pl.cyfrogen.budget.base.BaseActivity;
 import pl.cyfrogen.budget.libraries.GUIUtils;
 import pl.cyfrogen.budget.libraries.OnRevealAnimationListener;
 
-public abstract class CircullarRevealActivity extends BaseActivity {
+public abstract class CircularRevealActivity extends BaseActivity {
     private final int layoutID;
     private final int fabID;
     private final int container1ID;
@@ -24,7 +24,7 @@ public abstract class CircullarRevealActivity extends BaseActivity {
     private View container1;
     private View container2;
 
-    public CircullarRevealActivity(int layoutID, int fabID, int container1ID, int container2ID) {
+    public CircularRevealActivity(int layoutID, int fabID, int container1ID, int container2ID) {
         this.layoutID = layoutID;
         this.fabID = fabID;
         this.container1ID = container1ID;

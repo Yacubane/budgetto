@@ -22,24 +22,24 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import pl.cyfrogen.budget.activities.CircullarRevealActivity;
+import pl.cyfrogen.budget.activities.CircularRevealActivity;
 import pl.cyfrogen.budget.exceptions.EmptyStringException;
 import pl.cyfrogen.budget.exceptions.ZeroBalanceDifferenceException;
 import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFactory;
 import pl.cyfrogen.budget.firebase.models.User;
-import pl.cyfrogen.budget.models.CategoriesHelper;
+import pl.cyfrogen.budget.util.CategoriesHelper;
 import pl.cyfrogen.budget.models.Category;
 import pl.cyfrogen.budget.util.CurrencyHelper;
 import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
 
-public class AddWalletEntryActivity extends CircullarRevealActivity {
+public class AddWalletEntryActivity extends CircularRevealActivity {
 
     private Spinner selectCategorySpinner;
     private TextInputEditText selectNameEditText;
-    private Calendar choosedDate;
+    private Calendar chosenDate;
     private TextInputEditText selectAmountEditText;
     private TextView chooseDayTextView;
     private TextView chooseTimeTextView;
@@ -67,7 +67,7 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
         chooseDayTextView = findViewById(R.id.choose_day_textview);
         selectAmountEditText = findViewById(R.id.select_amount_edittext);
         selectAmountInputLayout = findViewById(R.id.select_amount_inputlayout);
-        choosedDate = Calendar.getInstance();
+        chosenDate = Calendar.getInstance();
 
         UserProfileViewModelFactory.getModel(getUid(), this).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
             @Override
@@ -80,11 +80,11 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
         });
 
 
-        NewEntryTypesAdapter typeAdapter = new NewEntryTypesAdapter(this,
+        EntryTypesAdapter typeAdapter = new EntryTypesAdapter(this,
                 R.layout.new_entry_type_spinner_row, Arrays.asList(
-                new NewEntryTypeListViewModel("Expense", Color.parseColor("#ef5350"),
+                new EntryTypeListViewModel("Expense", Color.parseColor("#ef5350"),
                         R.drawable.money_icon),
-                new NewEntryTypeListViewModel("Income", Color.parseColor("#66bb6a"),
+                new EntryTypeListViewModel("Income", Color.parseColor("#66bb6a"),
                         R.drawable.money_icon)));
 
         selectTypeSpinner.setAdapter(typeAdapter);
@@ -110,7 +110,7 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
                 try {
                     addToWallet(((selectTypeSpinner.getSelectedItemPosition() * 2) - 1) *
                                     CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
-                            choosedDate.getTime(),
+                            chosenDate.getTime(),
                             ((Category) selectCategorySpinner.getSelectedItem()).getCategoryID(),
                             selectNameEditText.getText().toString());
                 } catch (EmptyStringException e) {
@@ -128,7 +128,7 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
         if (user == null) return;
 
         final List<Category> categories = CategoriesHelper.getCategories(user);
-        NewEntryCategoriesAdapter categoryAdapter = new NewEntryCategoriesAdapter(this,
+        EntryCategoriesAdapter categoryAdapter = new EntryCategoriesAdapter(this,
                 R.layout.new_entry_type_spinner_row, categories);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectCategorySpinner.setAdapter(categoryAdapter);
@@ -140,10 +140,10 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
 
     private void updateDate() {
         SimpleDateFormat dataFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        chooseDayTextView.setText(dataFormatter.format(choosedDate.getTime()));
+        chooseDayTextView.setText(dataFormatter.format(chosenDate.getTime()));
 
         SimpleDateFormat dataFormatter2 = new SimpleDateFormat("HH:mm");
-        chooseTimeTextView.setText(dataFormatter2.format(choosedDate.getTime()));
+        chooseTimeTextView.setText(dataFormatter2.format(chosenDate.getTime()));
     }
 
     public void addToWallet(long balanceDifference, Date entryDate, String entryCategory, String entryName) throws ZeroBalanceDifferenceException, EmptyStringException {
@@ -166,12 +166,12 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
         new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                choosedDate.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                choosedDate.set(Calendar.MINUTE, minute);
+                chosenDate.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                chosenDate.set(Calendar.MINUTE, minute);
                 updateDate();
 
             }
-        }, choosedDate.get(Calendar.HOUR_OF_DAY), choosedDate.get(Calendar.MINUTE), true).show();
+        }, chosenDate.get(Calendar.HOUR_OF_DAY), chosenDate.get(Calendar.MINUTE), true).show();
     }
 
     private void pickDate() {
@@ -184,7 +184,7 @@ public class AddWalletEntryActivity extends CircullarRevealActivity {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        choosedDate.set(year, monthOfYear, dayOfMonth);
+                        chosenDate.set(year, monthOfYear, dayOfMonth);
                         updateDate();
 
                     }

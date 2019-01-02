@@ -7,14 +7,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class ListDataSet<T> {
-    public void clone(ListDataSet<T> walletEntries) {
-        ids.addAll(walletEntries.getIDList());
-        list.addAll(walletEntries.getList());
-        lastOperation = walletEntries.getLastOperation();
-        index = walletEntries.index;
-        index2 = walletEntries.index2;
-    }
-
     public enum Operation {
         ITEM_CHANGED, ITEM_INSERTED, ITEM_REMOVED, ITEM_MOVED, ITEMS_CLEARED, NOTHING;
     }
@@ -87,4 +79,5 @@ public class ListDataSet<T> {
     public ArrayList<String> getIDList() {
         return ids;
     }
+
 }

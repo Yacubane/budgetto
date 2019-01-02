@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.activities;
+package pl.cyfrogen.budget.ui.splash_screen;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

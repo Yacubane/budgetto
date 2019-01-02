@@ -85,7 +85,6 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<FirebaseElement<ListDa
                     insertedPosition = nextIndex;
                 }
 
-                //notifyItemInserted(insertedPosition);
                 liveDataSet.setItemInserted(insertedPosition);
                 setValue(new FirebaseElement<>(liveDataSet));
             }
@@ -100,7 +99,6 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<FirebaseElement<ListDa
                 int index = liveDataSetIndexes.indexOf(key);
                 T oldItem = liveDataSetEntries.get(index);
                 liveDataSetEntries.set(index, item);
-                //notifyItemChanged(index);
                 liveDataSet.setItemChanged(index);
                 setValue(new FirebaseElement<>(liveDataSet));
 
@@ -118,8 +116,6 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<FirebaseElement<ListDa
 
                 liveDataSetIndexes.remove(index);
                 liveDataSetEntries.remove(index);
-
-                //notifyItemRemoved(index);
                 liveDataSet.setItemRemoved(index);
                 setValue(new FirebaseElement<>(liveDataSet));
             }
@@ -151,7 +147,6 @@ public class FirebaseQueryLiveDataSet<T> extends LiveData<FirebaseElement<ListDa
                 }
                 newPosition = nextIndex;
             }
-            //notifyItemMoved(index, newPosition);
             liveDataSet.setItemMoved(index, newPosition);
             setValue(new FirebaseElement<>(liveDataSet));
 

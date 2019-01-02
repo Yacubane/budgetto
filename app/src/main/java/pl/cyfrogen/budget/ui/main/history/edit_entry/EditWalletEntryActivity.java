@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.ui.main.history;
+package pl.cyfrogen.budget.ui.main.history.edit_entry;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -32,11 +32,11 @@ import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFactory;
 import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.WalletEntryViewModelFactory;
-import pl.cyfrogen.budget.models.CategoriesHelper;
+import pl.cyfrogen.budget.util.CategoriesHelper;
 import pl.cyfrogen.budget.models.Category;
-import pl.cyfrogen.budget.ui.add_entry.NewEntryCategoriesAdapter;
-import pl.cyfrogen.budget.ui.add_entry.NewEntryTypeListViewModel;
-import pl.cyfrogen.budget.ui.add_entry.NewEntryTypesAdapter;
+import pl.cyfrogen.budget.ui.add_entry.EntryCategoriesAdapter;
+import pl.cyfrogen.budget.ui.add_entry.EntryTypeListViewModel;
+import pl.cyfrogen.budget.ui.add_entry.EntryTypesAdapter;
 import pl.cyfrogen.budget.util.CurrencyHelper;
 import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
@@ -81,11 +81,11 @@ public class EditWalletEntryActivity extends BaseActivity {
 
         choosedDate = Calendar.getInstance();
 
-        NewEntryTypesAdapter typeAdapter = new NewEntryTypesAdapter(this,
+        EntryTypesAdapter typeAdapter = new EntryTypesAdapter(this,
                 R.layout.new_entry_type_spinner_row, Arrays.asList(
-                new NewEntryTypeListViewModel("Expense", Color.parseColor("#ef5350"),
+                new EntryTypeListViewModel("Expense", Color.parseColor("#ef5350"),
                         R.drawable.money_icon),
-                new NewEntryTypeListViewModel("Income", Color.parseColor("#66bb6a"),
+                new EntryTypeListViewModel("Income", Color.parseColor("#66bb6a"),
                         R.drawable.money_icon)));
 
         selectTypeSpinner.setAdapter(typeAdapter);
@@ -171,7 +171,7 @@ public class EditWalletEntryActivity extends BaseActivity {
         if (walletEntry == null || user == null) return;
 
         final List<Category> categories = CategoriesHelper.getCategories(user);
-        NewEntryCategoriesAdapter categoryAdapter = new NewEntryCategoriesAdapter(this,
+        EntryCategoriesAdapter categoryAdapter = new EntryCategoriesAdapter(this,
                 R.layout.new_entry_type_spinner_row, categories);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectCategorySpinner.setAdapter(categoryAdapter);
@@ -192,7 +192,7 @@ public class EditWalletEntryActivity extends BaseActivity {
         selectCategorySpinner.post(new Runnable() {
             @Override
             public void run() {
-                NewEntryCategoriesAdapter adapter = (NewEntryCategoriesAdapter) selectCategorySpinner.getAdapter();
+                EntryCategoriesAdapter adapter = (EntryCategoriesAdapter) selectCategorySpinner.getAdapter();
                 selectCategorySpinner.setSelection(adapter.getItemIndex(walletEntry.categoryID));
             }
         });

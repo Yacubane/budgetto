@@ -1,4 +1,4 @@
-package pl.cyfrogen.budget.models;
+package pl.cyfrogen.budget.util;
 
 import android.graphics.Color;
 
@@ -10,6 +10,8 @@ import java.util.Map;
 import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.firebase.models.User;
 import pl.cyfrogen.budget.firebase.models.WalletEntryCategory;
+import pl.cyfrogen.budget.models.Category;
+import pl.cyfrogen.budget.models.DefaultCategories;
 
 public class CategoriesHelper {
     public static Category searchCategory(User user, String categoryName) {
@@ -25,11 +27,9 @@ public class CategoriesHelper {
     }
 
     public static List<Category> getCategories(User user) {
-        ArrayList<Category> categories = new ArrayList<>(Arrays.asList(DefaultCategories.getDefaultCategories()));
-        for(Map.Entry<String, WalletEntryCategory> entry : user.customCategories.entrySet()) {
-            String categoryName = entry.getKey();
-            categories.add(new Category(categoryName, entry.getValue().visibleName, R.drawable.category_default, Color.parseColor(entry.getValue().htmlColorCode)));
-        }
+        List<Category> categories = new ArrayList<>();
+        categories.addAll(Arrays.asList(DefaultCategories.getDefaultCategories()));
+        categories.addAll(getCustomCategories(user));
         return categories;
     }
 

@@ -49,7 +49,5 @@ public class CurrencyHelper {
     public static long convertAmountStringToLong(CharSequence s) {
         String cleanString = s.toString().replaceAll("[^0-9]", "");
         return Long.valueOf(cleanString);
-
     }
-
 }

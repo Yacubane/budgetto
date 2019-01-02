@@ -1,27 +1,21 @@
 package pl.cyfrogen.budget.ui.options.categories;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.base.BaseActivity;
 import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.models.User;
-import pl.cyfrogen.budget.firebase.viewmodel_factories.TopWalletEntriesViewModelFactory;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFactory;
-import pl.cyfrogen.budget.models.CategoriesHelper;
+import pl.cyfrogen.budget.util.CategoriesHelper;
 import pl.cyfrogen.budget.models.Category;
-import pl.cyfrogen.budget.models.DefaultCategories;
-import pl.cyfrogen.budget.ui.main.home.HomeFragment;
-import pl.cyfrogen.budget.ui.main.home.TopCategoriesAdapter;
 
 public class CustomCategoriesActivity extends BaseActivity {
 

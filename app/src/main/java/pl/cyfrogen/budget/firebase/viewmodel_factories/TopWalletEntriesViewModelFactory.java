@@ -12,18 +12,10 @@ import java.util.Calendar;
 import pl.cyfrogen.budget.firebase.viewmodels.WalletEntriesBaseViewModel;
 
 public class TopWalletEntriesViewModelFactory implements ViewModelProvider.Factory {
-    private Calendar endDate;
-    private Calendar startDate;
     private String uid;
 
     TopWalletEntriesViewModelFactory(String uid) {
         this.uid = uid;
-
-
-    }
-    public void setDate(Calendar startDate, Calendar endDate){
-        this.startDate=startDate;
-        this.endDate=endDate;
     }
 
     @Override

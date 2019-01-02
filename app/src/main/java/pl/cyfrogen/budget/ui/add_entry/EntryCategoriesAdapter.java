@@ -12,13 +12,15 @@ import android.widget.TextView;
 import java.util.List;
 
 import pl.cyfrogen.budget.R;
+import pl.cyfrogen.budget.models.Category;
 
-public class NewEntryTypesAdapter extends ArrayAdapter<String> {
-    private final List<NewEntryTypeListViewModel> items;
+public class EntryCategoriesAdapter extends ArrayAdapter<String> {
+
+    private final List<Category> items;
     private final Context context;
 
-    public NewEntryTypesAdapter(Context context, int resource,
-                                List objects) {
+    public EntryCategoriesAdapter(Context context, int resource,
+                                  List objects) {
         super(context, resource, 0, objects);
         this.context = context;
         items = objects;
@@ -41,10 +43,18 @@ public class NewEntryTypesAdapter extends ArrayAdapter<String> {
         TextView textView = view.findViewById(R.id.item_category);
         ImageView iconImageView = view.findViewById(R.id.icon_imageview);
 
-        iconImageView.setImageResource(items.get(position).iconID);
-        iconImageView.setBackgroundTintList(ColorStateList.valueOf(items.get(position).color));
-        textView.setText(items.get(position).name);
+        iconImageView.setImageResource(items.get(position).getIconResourceID());
+        iconImageView.setBackgroundTintList(ColorStateList.valueOf(items.get(position).getIconColor()));
+        textView.setText(items.get(position).getCategoryVisibleName(context));
 
         return view;
     }
+
+    public int getItemIndex(String categoryID) {
+        for(int i = 0; i < items.size(); i++) {
+            if(items.get(i).getCategoryID().equals(categoryID)) return i;
+        }
+        return -1;
+    }
 }
+

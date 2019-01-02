@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,13 +38,12 @@ import pl.cyfrogen.budget.firebase.FirebaseElement;
 import pl.cyfrogen.budget.firebase.FirebaseObserver;
 import pl.cyfrogen.budget.firebase.ListDataSet;
 import pl.cyfrogen.budget.firebase.models.User;
-import pl.cyfrogen.budget.firebase.models.UserSettings;
 import pl.cyfrogen.budget.firebase.models.WalletEntry;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.TopWalletEntriesStatisticsViewModelFactory;
 import pl.cyfrogen.budget.firebase.viewmodel_factories.UserProfileViewModelFactory;
-import pl.cyfrogen.budget.models.CategoriesHelper;
+import pl.cyfrogen.budget.util.CalendarHelper;
+import pl.cyfrogen.budget.util.CategoriesHelper;
 import pl.cyfrogen.budget.models.Category;
-import pl.cyfrogen.budget.models.DefaultCategories;
 import pl.cyfrogen.budget.ui.options.OptionsActivity;
 import pl.cyfrogen.budget.util.CurrencyHelper;
 
@@ -118,8 +116,8 @@ public class StatisticsFragment extends BaseFragment {
                 if (firebaseElement.hasNoError()) {
                     StatisticsFragment.this.user = firebaseElement.getElement();
 
-                    calendarStart = getStartDate(user);
-                    calendarEnd = getEndDate(user);
+                    calendarStart = CalendarHelper.getUserPeriodStartDate(user);
+                    calendarEnd = CalendarHelper.getUserPeriodEndDate(user);
 
                     updateCalendarIcon(false);
                     calendarUpdated();
@@ -161,7 +159,7 @@ public class StatisticsFragment extends BaseFragment {
 
             for (Map.Entry<Category, Long> categoryModel : categoryModels.entrySet()) {
                 float percentage = categoryModel.getValue() / (float) expensesSumInDateRange;
-                float minPercentageToShowLabelOnChart = 0.1f;
+                final float minPercentageToShowLabelOnChart = 0.1f;
                 categoryModelsHome.add(new TopCategoryStatisticsListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()),
                         user.currency, categoryModel.getValue(), percentage));
                 if (percentage > minPercentageToShowLabelOnChart) {
@@ -185,8 +183,6 @@ public class StatisticsFragment extends BaseFragment {
             pieChart.setTouchEnabled(false);
             pieChart.getLegend().setEnabled(false);
             pieChart.getDescription().setEnabled(false);
-            pieChart.setDrawHoleEnabled(false);
-
 
             pieChart.setDrawHoleEnabled(true);
             pieChart.setHoleColor(ContextCompat.getColor(getContext(), R.color.backgroundPrimary));
@@ -281,61 +277,6 @@ public class StatisticsFragment extends BaseFragment {
         //todo library doesn't respect other method than deprecated
     }
 
-    private Calendar getStartDate(User user) {
-        Calendar cal = Calendar.getInstance();
-        cal.setFirstDayOfWeek(getUserFirstDayOfWeek(user));
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.clear(Calendar.MINUTE);
-        cal.clear(Calendar.SECOND);
-        cal.clear(Calendar.MILLISECOND);
-        if (user.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
-            cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-            if (new Date().getTime() < cal.getTime().getTime())
-                cal.add(Calendar.DATE, -7);
-        } else {
-            cal.set(Calendar.DAY_OF_MONTH, user.userSettings.dayOfMonthStart + 1);
-            if (new Date().getTime() < cal.getTime().getTime())
-                cal.add(Calendar.MONTH, -1);
-        }
-
-        return cal;
-    }
-
-
-    private Calendar getEndDate(User user) {
-        Calendar cal = getStartDate(user);
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 59);
-        cal.set(Calendar.SECOND, 59);
-        cal.clear(Calendar.MILLISECOND);
-        if (user.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
-            cal.add(Calendar.DATE, 6);
-        } else {
-            cal.add(Calendar.MONTH, 1);
-            cal.add(Calendar.DATE, -1);
-        }
-        return cal;
-    }
-
-    private int getUserFirstDayOfWeek(User user) {
-        switch (user.userSettings.dayOfWeekStart) {
-            case 0:
-                return Calendar.MONDAY;
-            case 1:
-                return Calendar.TUESDAY;
-            case 2:
-                return Calendar.WEDNESDAY;
-            case 3:
-                return Calendar.THURSDAY;
-            case 4:
-                return Calendar.FRIDAY;
-            case 5:
-                return Calendar.SATURDAY;
-            case 6:
-                return Calendar.SUNDAY;
-        }
-        return 0;
-    }
 
     private void calendarUpdated() {
         TopWalletEntriesStatisticsViewModelFactory.getModel(getUid(), getActivity()).setDateFilter(calendarStart, calendarEnd);
