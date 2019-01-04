@@ -1,4 +1,9 @@
+// based on
+// https://www.thedroidsonroids.com/blog/android/meaningful-motion-with-shared-element-transition-and-circular-reveal-animation/
+// https://github.com/DroidsOnRoids/MaterialShowcase
+
 package pl.cyfrogen.budget.libraries;
+
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

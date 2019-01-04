@@ -1,3 +1,6 @@
+// based on https://github.com/pkleczko/CustomGauge
+// with email permission
+
 package pl.cyfrogen.budget.libraries;
 
 import android.content.Context;
