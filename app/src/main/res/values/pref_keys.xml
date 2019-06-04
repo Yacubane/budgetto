@@ -6,5 +6,6 @@
     <string name="pref_key_currency">currencyHelper</string>
     <string name="pref_key_first_month_day">first_month_day</string>
     <string name="pref_key_first_week_day">first_week_day</string>
+    <string name="pref_key_policy">privacy_policy</string>
     <string name="pref_key_logout">logout</string>
 </resources>

@@ -2,6 +2,7 @@ package pl.cyfrogen.budget.ui.options;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
@@ -18,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import pl.cyfrogen.budget.Links;
 import pl.cyfrogen.budget.R;
 import pl.cyfrogen.budget.exceptions.NumberRangeException;
 import pl.cyfrogen.budget.firebase.models.WalletEntryCategory;
@@ -61,6 +63,15 @@ public class OptionsFragment extends PreferenceFragmentCompat {
                 if (!element.hasNoError()) return;
                 OptionsFragment.this.user = element.getElement();
                 dataUpdated();
+            }
+        });
+        Preference policyPreference = findPreference(getString(R.string.pref_key_policy));
+        policyPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(Links.PRIVACY_POLICY_LINK));
+                startActivity(browserIntent);
+                return true;
             }
         });
 
