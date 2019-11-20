@@ -73,6 +73,9 @@ You can also get SHA-1 key of keystore by invoking android > signingReport task 
 More info on how to get SHA-1 key [here](https://developers.google.com/android/guides/client-auth)
 > :warning: You will need to delete this key if you want to run on production.
 
+4. Download and copy google-services.json to project app/ folder
+<img src="https://raw.githubusercontent.com/jakubdybczak/Budgetto/master/readme_assets/building/download_config.png" width="300"/>
+
 ### Compile & Run & Test
 1. Compile and run app to verify Firebase configuration
 <img src="https://raw.githubusercontent.com/jakubdybczak/Budgetto/master/readme_assets/building/add_app4.png" width="500"/>
