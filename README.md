@@ -1,6 +1,4 @@
-
 <h1 align="center">
-  <br>
   <img src="https://raw.githubusercontent.com/jakubdybczak/Budgetto/master/app/src/main/res/drawable-xxxhdpi/logo.png" alt="Budgetto" width="200">
   <br>Budgetto<br>
 </h1>
